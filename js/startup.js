@@ -49,7 +49,7 @@ $(function(){
         //msg += "★iphoneのsafariで画面移動ができない現象があるようです。その場合はブラウザをクローム等に変えてみてください。<br>";
         msg += "★背景が多くなりすぎたのでカテゴリわけしています。<br>";
         msg += "★<a href='http://www.gsi.go.jp/bousaichiri/bousaichiri61013.html' target='_blank'>宮崎県立佐土原高校情報技術部 防災アプリ大賞受賞!！</a><br>";
-        msg += "★背景のうち(MVT)(VT)とついているものは3D化できません！<br>";
+        msg += "★背景のうち(MVT/VT)とついているものは3D化できません！<br>";
         msg += "★詳しい追加情報等は<a href='https://www.facebook.com/hinatagis' target='_blank'><i class='fa fa-facebook-square fa-fw' style='color:navy;'></i>FBへ</a><br>";
 
         //msg += "<canvas id='canvas1'></canvas>";
