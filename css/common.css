@@ -1,0 +1,597 @@
+body{
+    margin:0;
+    padding:0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', '游ゴシック  Medium', meiryo, sans-serif;
+    overflow:hidden;
+}
+#loading-fa{
+    position:absolute;
+    top:40%;
+    left:50%;
+    margin-top:-21px;
+    margin-left:-27px;
+    z-index:9999;
+    display:none;
+    color:rgba(51,122,183,0.9);
+}
+label{/*bootstrapのcssと被っている*/
+    font-weight:normal;
+    cursor:pointer;
+    margin:0;
+}
+label:hover{
+    color:tomato;
+}
+#map1{
+    width:100%;
+    float:left;
+    position:relative;
+    border-right:solid 1px dimgrey;
+    border-bottom:solid 1px dimgray;
+    /*高さはstartup.jsで起動時に設定している。*/
+}
+#map2{
+    width:100%;
+    height:1px;
+    position:relative;
+    float:left;
+}
+.zoom-div{
+    background:white;
+    position:absolute;
+    left:10px;
+    bottom:10px;
+    z-index:1;
+    padding:0 5px;
+    border-radius:6px;
+}
+.flood-div{
+    position:absolute;
+    bottom:15px;
+    width:100%;
+    z-index:1;
+    padding:0 80px;
+    display:none;
+}
+.hidden-div{
+    padding-top:5px;
+    display:none;
+}
+.level-text-div{
+    position:absolute;
+    bottom:0px;
+    left:50%;
+    width:140px;
+    margin-left:-70px;
+    color:white;
+    text-align:center;
+    font-size:20px;
+    z-index:2;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    pointer-events:none;
+}
+#sync-btn{
+    width:70px;
+    position:absolute;
+    top:50%;
+    left:50%;
+    margin-top:-17px;
+    margin-left:-35px;
+    display:none;
+}
+.my-hr{/*bootstrapのcssに重ねるため*/
+    margin-top:5px;
+    margin-bottom:5px;
+    border-top:1px solid gainsboro;
+}
+.dropdown-div{
+    display:inline-block;
+    position:relative;
+}
+/*----------------------------------------------------------------------------*/
+#mouseMessage{
+    position: absolute;
+    z-index: 1;
+    font-size:22px;
+    /*color:white;*/
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    pointer-events:none;
+}
+/*----------------------------------------------------------------------------*/
+/*現在不使用。汎用性を求めてjsで書き直した。
+.btn:active{
+    margin-top:5px;
+    margin-bottom:-5px;
+}*/
+/*ol31関係---------------------------------------------------------------------*/
+.ol-rotate{
+    right:49%;
+    top:50px;
+}
+.ol-zoom{
+    /*display:none;*/
+    bottom:40px;
+    top:auto;
+}
+/*画面上部のボタン--------------------------------------------------------------*/
+.top-left-div{
+    position:absolute;
+    z-index:1;
+    top:15px;
+    left:10px;
+}
+.here-btn{
+}
+.d3d2-div{/*現在使っていない*/
+    position:absolute;
+    z-index:1;
+    top:10px;
+    right:10px;
+}
+.top-div{
+    position:absolute;
+    z-index:1;
+    top:15px;
+    right:10px;
+}
+.haikei-btn{
+}
+/*データテーブル----------------------------------------------------------------*/
+.data-tbl-div{
+    overflow-y:scroll;
+}
+.data-td-sort{
+    cursor:move;
+}
+#map1 .data-td-slider,#map2 .data-td-slider{/*bootstrapのcssにかぶせるため*/
+    vertical-align:middle;
+}
+#map1 .data-td-info,#map2 .data-td-info{
+    vertical-align:middle;
+    padding:2px;
+    margin:0;
+    cursor:pointer;
+}
+.data-td-slider{
+    width:60px;
+}
+.data-slider{
+    width:100%;
+}
+/*データインフォメーションのテーブル----------------------------------------------*/
+.data-info-tbl{
+    width:200px;
+    margin-bottom:5px;
+}
+.data-info-tbl tr td:nth-child(1){
+    width:60px;
+    text-align:center;
+}
+/*背景テーブル-----------------------------------------------------------------*/
+.haikei-tbl-div{
+    overflow-y:scroll;
+}
+.td-sort{
+    cursor:move;
+}
+#map1 .td-slider,#map2 .td-slider{/*bootstrapのcssにかぶせるため*/
+    vertical-align:middle;
+}
+#map1 .td-info,#map2 .td-info{
+    vertical-align:middle;
+    padding:2px;
+    margin:0;
+    cursor:pointer;
+}
+.haikei-slider{
+    width:50px;
+}
+/*背景インフォメーションのテーブル-----------------------------------------------*/
+.info-tbl{
+    width:300px;
+    margin:0 0 10px 0;
+}
+.info-tbl tr td:nth-child(1){
+    width:50px;
+    text-align:center;
+}
+/*セシウムのボタン-------------------------------------------------------------*/
+.cesium-btn-div{
+	position:absolute;
+	top:50%;
+	right:0px;
+	z-index:999999999;
+	display:none;
+	height:145px;
+	width:145px;
+    margin-left:-72px;
+    /*margin-top:-72px;*/
+    margin-top:20px;
+	background:rgba(0,0,0,0.1);
+	border-radius:145px 0 0 145px;
+	-moz-user-select:none;
+	-webkit-user-select:none;
+	-ms-user-select:none;
+	cursor:move;
+}
+.cesiun-btn-container{
+    position:relative;
+    height:100%;
+}
+.cesium-btn-up{
+    position:absolute;
+    top:10px;
+    left:50%;
+    padding:0;
+    width:40px;
+    height:40px;
+    margin-left:-20px;
+    display:none;
+}
+.cesium-btn-down{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    padding:0;
+    width:40px;
+    height:40px;
+    margin-left:-20px;
+    display:none;
+}
+.cesium-btn-left{
+    position:absolute;
+    top:50%;
+    left:10px;
+    padding:0;
+    width:40px;
+    height:40px;
+    margin-top:-20px;
+}
+.cesium-btn-right{
+    position:absolute;
+    top:50%;
+    right:10px;
+    padding:0;
+    width:40px;
+    height:40px;
+    margin-top:-20px;
+}
+.elevMag{
+    position:absolute;
+    top:60px;
+    left:50%;
+    padding:0;
+    /*width:40px;*/
+    /*height:40px;*/
+    margin-left:-20px;
+    text-align:center;
+    display:none;
+}
+
+.cesium-btn-div .ui-spinner{
+    font-size:10px;
+    width:30px;
+    background:rgba(0,0,0,0);
+    border:none;
+}
+/*webフォント用-----------------------------------------------------------------*/
+.primary{
+    color:rgba(51,122,183,1.0);
+    cursor:pointer;
+}
+.primary:hover{
+    color:tomato;
+}
+.wf-icon{
+    margin:0 3px;
+}
+/*セレクトボックス select2を使用-------------------------------------------------*/
+.select2-container .select2-choice {
+    padding: 5px 10px;
+    height: 40px;
+    width: 132px;
+    font-size: 11.2em;
+}
+
+
+.select2-results__options {
+    max-height:1500px;!important
+}
+
+/*estat関係--------------------------------------------------------------------*/
+.estat-tbl-div{
+    /*margin-top:10px;*/
+    /*max-height:200px;*/
+    overflow:auto;
+}
+.estat-tbl th{
+    font-weight:normal;
+    font-size:10px;
+    /*text-align:center;*/
+    padding:2px!important;
+}
+.estat-tbl td{
+    padding:2px!important;
+}
+.estat-zinkou-td{
+    text-align:right;
+}
+.estat-value-td{
+    text-align:right;
+}
+.estat-division-td{
+    text-align:right;
+    /*width:20px;*/
+    font-size:10px;
+}
+.estat-year-div{
+    margin:5px 0;
+}
+.estat-chart-icon{
+    color:rgb(51,122,183);
+    cursor:pointer;
+}
+.estat-pref-select{
+    height:500px;
+}
+/*resasのグラフ関係-------------------------------------------------------------*/
+.resas-chart-pyramid-div{
+    height:495px;
+    width:470px;
+    /*
+    height:400px;
+    width:400px;
+    */
+}
+.resas-pyramid-btn-group-div{
+    padding-left:30px;
+    margin-top:-20px;
+}
+.resas-chart-suii-div{
+    /*height:495px;*/
+    width:700px;
+}
+/*estatのグラフ関係-------------------------------------------------------------*/
+.estat-chart-div{
+    height:600px;
+}
+.estat-chart-pyramid-div{
+    height:450px;
+    width:470px;
+    /*
+    height:400px;
+    width:400px;
+    */
+}
+/*resas関係--------------------------------------------------------------------*/
+.resas-tbl-div{
+    overflow:auto;
+}
+.resas-tbl th{
+    font-weight:normal;
+    font-size:10px;
+    /*text-align:center;*/
+    padding:2px!important;
+}
+.resas-tbl td{
+    padding:2px!important;
+}
+.resas-zinkou-td,.resas-zougen-td,.resas-zougenritu-td,.resas-kizyun-td{
+    text-align:right;
+}
+.resas-year-div{
+    margin:5px 0;
+}
+/*weather関係--------------------------------------------------------------------*/
+.weather-tbl{
+    margin-bottom:10px;
+}
+.weather-td{
+    width:60px;
+}
+.weather-span{
+    font-size: 14px;
+}
+/*レイヤー追加関係----------------------------------------------------------------*/
+.plus-div{
+    text-align:right;
+    margin-top:10px;
+}
+.plus-input{
+    width:400px;
+    font-size:12px;
+}
+/*パノラマ関係-------------------------------------------------------------------*/
+#pano-div{
+    width:100%;;
+    float:left;
+    background:gainsboro;
+    text-align:center;
+}
+.fullscreen-btn{
+    position:absolute;
+    bottom:5px;
+    width:70px;
+    margin-left:-35px;
+    z-index:2;
+}
+/*マウスムーブ時のメッセージ-----------------------------------------------------*/
+#moveinfo-div{
+    position:absolute;
+    top:50%;
+    left:10%;
+    background:white;
+    font-size:16px;
+    color:black;
+    padding:2px;
+}
+/*CSV関係--------------------------------------------------------------------*/
+.csv-tbl-div{
+    /*margin-top:10px;*/
+    /*max-height:200px;*/
+    overflow:auto;
+}
+.csv-tbl th{
+    font-weight:normal;
+    font-size:10px;
+    /*text-align:center;*/
+    padding:2px!important;
+}
+.csv-tbl td{
+    padding:2px!important;
+}
+/*コンテキストメニュー関係（人口----------------------------------------------*/
+.myContextOverlay-div{
+    padding:10px;
+    background:white;
+    border-radius:4px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+    /*border:1px solid rgba(51,122,183,1.0);*/
+    z-index:3;
+}
+.csv-zinkou-slider,.csv-keizai-slider{
+    margin:10px 10px;
+}
+/*img取り込み機能関係-------------------------------------------------------*/
+.centerLon,.centerLat{
+    width:130px;
+}
+.scaleX,.scaleY{
+    width:50px;
+}
+.scaleXY{
+    width:50px;
+}
+.imgopa-slider{
+    margin:10px 10px;
+    width:200px;
+}
+/*現在地取得ボタン---------------------------------------------------------*/
+.here-btn{
+    bottom:5.5em;
+    right:0.5em;
+}
+/*ポップアップ関係---------------------------------------------------------*/
+.popup-tbl{
+    width:200px;
+    table-layout:fixed;
+    margin-bottom:5px;
+}
+.popup-th{
+    /*width:50px;*/
+    color:white;
+    background:rgba(51,122,183,1.0);
+    font-weight:normal;
+    text-align:center;
+    padding:2px!important;
+}
+.popup-td{
+    width:150px;
+    word-break:break-all;
+    padding:2px!important;
+}
+.popup-tbl img{
+    width:140px;
+}
+/*ホバー関係----------------------------------------------------------------*/
+.hoverMsg-div{
+    position: absolute;
+    bottom: 12px;
+    left: -50px;
+    width:200px;
+    font-size: 14px;
+    color: orangered;
+    text-shadow: 1px 1px 2px white,
+                -1px 1px 2px white,
+                1px -1px 2px white,
+                -1px -1px 2px white;
+}
+.hoverMsg-div img{
+    width:150px;
+    border-radius:10px;
+    border:5px solid rgba(255,255,255,0.8);
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.4);
+}
+/*エディット関係------------------------------------------------------------*/
+.edit-btn{
+    margin-top:5px;
+}
+.sp-container{
+    background-color:white!important;
+    border:1px solid rgba(51,122,183,1.0)!important;
+}
+/*bigメッセージ-------------------------------------------------------------*/
+.big-msg-div{
+    position: absolute;
+    top:40%;
+    width:100%;
+    text-align:center;
+    z-index:999999999;
+    white-space:nowrap;
+    -moz-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    pointer-events:none;
+}
+/*modal-img -------------------------------------------------------------*/
+.modal-img{
+    text-align:center;
+}
+.modal-img img{
+    max-width:100%;
+}
+.modal-header{
+    padding:10px;
+}
+.modal-content{
+    background-color: rgba(255,255,255,0.8);
+}
+/*選挙区のグラフ関係-------------------------------------------------------------*/
+.senkyoku-chart-pyramid-div{
+    height:495px;
+    width:470px;
+    /*
+    height:400px;
+    width:400px;
+    */
+}
+/*小地域のグラフ関係-------------------------------------------------------------*/
+.syoutiiki-chart-suii-div{
+    /*height:495px;*/
+    width:300px;
+}
+/*ドロー関係-------------------------------------------------------------------*/
+#drow-div{
+    /*
+    position:absolute;
+    top:100px;
+    left:20px;
+    */
+}
+.drow-div2{
+    margin:0 0 0 10px;
+}
+
+.prop-input-text-name,.prop-input-text-val{
+    width:100%
+}
+.prop-td{
+    padding:2px!important;
+}
+.prop-th0,.prop-th1{
+    color:white;
+    background:rgba(51,122,183,1.0);
+    font-weight:normal;
+    text-align:center;
+    padding:2px!important;
+}
+.prop-th0{
+    width:100px;
+}
+.prop-th1{
+    width:200px;
+}

@@ -1,0 +1,339 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+
+    {
+      "type": "Feature",
+      "properties": {
+        "xml":"tour06.xml",
+        "名称": "青島海水浴場",
+        "説明": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.468421,
+          31.8035490
+        ]
+      }
+    },
+
+    {
+      "type": "Feature",
+      "properties": {
+        "xml":"tour01.xml",
+        "名称": "青島神社　本殿",
+        "説明": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.474906,
+          31.8046113
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "xml":"tour02.xml",
+        "名称": "青島神社　祈りの古道",
+        "説明": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.475222,
+          31.8046529
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "xml":"tour03.xml",
+        "名称": "青島神社",
+        "説明": ""
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          131.475674,
+          31.8048538
+        ]
+      }
+    },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-erekottyaa.xml",
+         "名称": "えれこっちゃ宮崎",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.422802,
+           31.9144060
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-shibasakura.xml",
+         "名称": "新富芝桜",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.453355,
+           32.110616
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-tanada.xml",
+         "名称": "日南棚田",
+         "説明": "ギガピクセル。ズームしてみてください。"
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.259405,
+           31.656332
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-tsuno_winery.xml",
+         "名称": "都農ワイナリー",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.552279,
+           32.275719
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-Virginia_Beach.xml",
+         "名称": "バージニアビーチ広場",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.421192,
+           31.912313
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-morotsuka_yamagishi.xml",
+         "名称": "諸塚やましぎの杜",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.294171,
+           32.523401
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-planetarium.xml",
+         "名称": "プラネタリウム",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.433715,
+           31.914470
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-toimisaki.xml",
+         "名称": "都井岬",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.345471,
+           31.367155
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-hakubutkan_sakura.xml",
+         "名称": "博物館　桜",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.423671,
+           31.940051
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-bunnkamori_1.xml",
+         "名称": "文化の森1",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.4177751,
+           31.93345480
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-bunnkamori_2.xml",
+         "名称": "文化の森2",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.4187751,
+           31.93345480
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-bunnkamori_3.xml",
+         "名称": "文化の森3",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.41994763,
+           31.934286701
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-miyazaki_marina.xml",
+         "名称": "サンマリーナ宮崎",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.469720,
+           31.925158
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-minamimiyazaki_st.xml",
+         "名称": "南宮崎駅",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.422269,
+           31.895095
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-morotsuka_primary_school.xml",
+         "名称": "諸塚小学校",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.334191,
+           32.519096
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-tachibanaST_HIGH.xml",
+         "名称": "橘通",
+         "説明": ""
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.422983,
+           31.9151613
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-miyazaki_harbor.xml",
+         "名称": "宮崎港",
+         "説明": "ギガピクセル。ズームしてみてください。"
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.457842,
+           31.910903
+         ]
+       }
+     },
+     {
+       "type": "Feature",
+       "properties": {
+         "xml":"tour-kenritsubijutsukan.xml",
+         "名称": "県立美術館",
+         "説明": "ギガピクセル。ズームしてみてください。"
+       },
+       "geometry": {
+         "type": "Point",
+         "coordinates": [
+           131.41969,
+           31.934286701
+         ]
+       }
+     }
+
+
+  ]
+}

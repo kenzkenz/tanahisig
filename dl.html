@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
+    <title>hinataDl</title>
+    <link rel="shortcut icon" href="favicon.ico">
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/cupertino/jquery-ui.css" />
+    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div style="padding:20px;background:orange;">
+        <h2>CSVのサンプル</h2>
+        サンプルを地図上にドラッグアンドドロップすると宮崎県の市町村が塗り分けられて表示されます。
+        市町村コードをキーにしています。ヘッダーの市「町村コード」、「数値」、「色」は変更しないでください。<br>
+        <a href="dl/miyazaki.csv" download>宮崎県市町村</a>
+
+        <h2>GPXのサンプル</h2>
+        <a href="http://umiyama-cycling.jp" target="_blank">うみやまサイクリング</a>さんが配布しているGPXデータです。サンプルを地図上にドラッグアンドドロップするとサイクリンクコースが表示されます。<br>
+        <a href="dl/umiyama.gpx" download>うみやまコース</a><br>
+        <a href="dl/nonbiri.gpx" download>のんびり観光コース</a><br>
+        <a href="dl/ube.gpx" download>宇部コース</a><br>
+        
+    </div>
+
+    <script type="text/javascript">
+        window._pt_lt = new Date().getTime();
+        window._pt_sp_2 = [];
+        _pt_sp_2.push('setAccount,50f42e22');
+        var _protocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+        (function() {
+            var atag = document.createElement('script'); atag.type = 'text/javascript'; atag.async = true;
+            atag.src = _protocol + 'js.ptengine.jp/pta.js';
+            var stag = document.createElement('script'); stag.type = 'text/javascript'; stag.async = true;
+            stag.src = _protocol + 'js.ptengine.jp/pts.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(atag, s); s.parentNode.insertBefore(stag, s);
+        })();
+    </script>
+
+</body>
+</html>
