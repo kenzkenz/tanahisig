@@ -10,12 +10,14 @@ $(function() {
             selectHtml += "形状 ";
             selectHtml += "<select id='drawType'>";
                 selectHtml += "<option value='0' selected>なし</option>";
-                selectHtml += "<option value='Point'>点(Point)</option>";
-                selectHtml += "<option value='LineString'>線(LineString)</option>";
-                selectHtml += "<option value='Polygon'>面(Polygon)</option>";
+                selectHtml += "<option value='Point'>点を描く</option>";
+                selectHtml += "<option value='LineString'>ラインを描く</option>";
+                selectHtml += "<option value='Polygon'>面を描く</option>";
                 selectHtml += "<option value='PolygonHole'>面に穴を開ける</option>";
-                selectHtml += "<option value='Transform'>面の移動と回転</option>";
-                selectHtml += "<option value='Circle'>円</option>";
+                selectHtml += "<option value='Transform'>面の移動と回転と変形</option>";
+                selectHtml += "<option value='Circle'>円を描く</option>";
+                selectHtml += "<option value='Dome'>東京ドーム一個分</option>";
+                selectHtml += "<option value='Nintoku'>仁徳天皇陵</option>";
             selectHtml += "</select>";
         selectHtml += "</div>";
         selectHtml += "<hr class='my-hr'>";
@@ -187,11 +189,32 @@ $(function() {
                     }
                 });
                 break;
+            case "Dome":
+                draw = new ol.interaction.Draw({
+                    source:drawSource,
+                    type:"Point",
+                    geometryFunction:function(coordinates, geometry){
+                        console.log(coordinates);
+                        this.domeCoord = coordinates;
+                    }
+                });
+                break;
+            case "Nintoku":
+                draw = new ol.interaction.Draw({
+                    source:drawSource,
+                    type:"Point",
+                    geometryFunction:function(coordinates, geometry){
+                        console.log(coordinates);
+                        this.nintokuCoord = coordinates;
+                    }
+                });
+                break;
             default:
                 draw = new ol.interaction.Draw({
                     source:drawSource,
                     type:typeVal
                 });
+                break;
         }
         circle = new ol.interaction.Draw({
             source:drawSource,
@@ -295,6 +318,57 @@ $(function() {
                 });
                 */
 
+                break;
+
+            case "Dome":
+                console.log("Dome");
+                map1.addInteraction(modify);
+                map1.addInteraction(draw);
+                map1.addInteraction(snap);
+                draw.on("drawend", function(e) {
+                    console.log(draw.domeCoord);
+                    var coord = ol.proj.transform(draw.domeCoord,"EPSG:3857","EPSG:4326");
+                    console.log(coord);
+                    var precisionCircle = ol.geom.Polygon.circular(
+                        // WGS84 Sphere //
+                        new ol.Sphere(6378137),
+                        //[131.423860, 31.911069],
+                        coord,
+                        115,
+                        // Number of verticies //
+                        32).transform('EPSG:4326', 'EPSG:3857');
+                    var precisionCircleFeature = new ol.Feature(precisionCircle);
+                    precisionCircleFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+                    drawSource.addFeature(precisionCircleFeature);
+                    //featureSelect.getFeatures().clear();
+                });
+                break;
+            case "Nintoku":
+                console.log("Nintoku");
+                map1.addInteraction(modify);
+                map1.addInteraction(draw);
+                map1.addInteraction(snap);
+                draw.on("drawend", function(e) {
+                    //console.log(draw.nintokuCoord);
+                    var hereCoord = draw.nintokuCoord;
+                    var nintokuPolygon = [[[15082094.774117399,4104609.5068460507],[15082096.900639175,4104606.4857429783],[15082129.36019615,4104587.9136047],[15082158.916738488,4104572.306140754],[15082183.353193704,4104557.322071505],[15082221.886320226,4104536.908816471],[15082240.82597234,4104525.31045447],[15082280.496823255,4104504.5777457976],[15082308.445844315,4104487.6706930636],[15082337.947520278,4104469.779253533],[15082390.09980167,4104440.8386413353],[15082400.883508094,4104435.93976219],[15082411.651620751,4104431.5952606387],[15082414.815917248,4104431.101141366],[15082416.235399486,4104431.4055465586],[15082418.54266863,4104432.608369839],[15082419.937057696,4104434.1806772905],[15082421.521496361,4104436.447800941],[15082427.009965366,4104454.879444051],[15082430.057861516,4104469.987335986],[15082432.76305801,4104497.395223116],[15082436.589521732,4104520.4220090453],[15082453.457944872,4104593.6575348037],[15082455.966293145,4104602.6447479874],[15082462.9474467,4104618.8700968116],[15082469.593465274,4104643.368812974],[15082476.032643614,4104655.791178121],[15082489.172744228,4104668.0491904155],[15082495.15720876,4104677.123115205],[15082500.388640255,4104702.6481256126],[15082499.844445901,4104707.9955029287],[15082491.42598106,4104724.7911858247],[15082490.097177617,4104733.967353733],[15082491.62370374,4104743.213095668],[15082494.47001047,4104750.056926742],[15082499.26063454,4104754.3726565684],[15082519.594241023,4104765.160360975],[15082535.24421257,4104774.77877781],[15082569.723446434,4104798.321254086],[15082574.513390971,4104802.923017857],[15082581.186626643,4104811.0218469477],[15082592.218740754,4104827.143829122],[15082603.202797184,4104849.9334887816],[15082610.70653026,4104870.5350143723],[15082614.23770702,4104899.575604842],[15082612.742333326,4104927.4677995597],[15082610.699768946,4104945.9617093275],[15082606.097076781,4104962.2840096937],[15082599.436096366,4104979.383390734],[15082594.5711201,4104988.428047911],[15082585.392075567,4105001.1993277944],[15082573.50520068,4105013.6449827263],[15082559.487443242,4105026.256633181],[15082555.819094103,4105029.449688042],[15082550.49415403,4105032.3369536605],[15082524.345005738,4105046.8270806298],[15082517.346961377,4105050.06779451],[15082504.86766149,4105053.6034897193],[15082483.043220563,4105058.4288857896],[15082458.068962704,4105058.338669127],[15082433.7395421,4105054.8248715545],[15082402.254035477,4105044.544120258],[15082394.308519885,4105042.6508389693],[15082376.150814196,4105033.6496001976],[15082361.619949661,4105022.992898947],[15082347.029209228,4105008.4210490733],[15082339.432012385,4104999.8714636876],[15082332.553682752,4104989.7453425243],[15082326.74097972,4104978.98683948],[15082319.7685783,4104963.4278181517],[15082312.197944123,4104941.7673923736],[15082305.404411748,4104903.601544872],[15082305.349247223,4104870.2978359447],[15082303.73963396,4104862.783921267],[15082296.2914638,4104845.7051192774],[15082292.096452475,4104840.226593593],[15082266.467592461,4104831.4093341734],[15082253.543322515,4104823.6211601417],[15082243.834028618,4104807.32036678],[15082240.833312675,4104795.03568187],[15082239.872530354,4104779.7700620275],[15082238.361695852,4104775.928960714],[15082231.004781727,4104764.5550692645],[15082219.358568018,4104750.162790346],[15082202.01088199,4104736.5284958654],[15082187.075004881,4104721.896824502],[15082170.57968637,4104695.066375912],[15082131.000579158,4104659.372154799],[15082110.448062543,4104638.741330116],[15082094.744524784,4104612.8413440487],[15082094.774117399,4104609.5068460507]]]
+                    //console.log(nintokuPolygon[0]);
+                    var lonPlus = nintokuPolygon[0][0][0] - hereCoord[0] + 300;
+                    var latPlus = nintokuPolygon[0][0][1] - hereCoord[1] + 200;
+                    console.log(lonPlus,latPlus);
+                    for(var i = 0; i <nintokuPolygon[0].length; i++){
+                        var coord = nintokuPolygon[0][i];
+                        console.log(coord)
+                        coord = [coord[0] - lonPlus,coord[1] - latPlus];
+                        //console.log(coord)
+                        nintokuPolygon[0][i] = coord;
+                    }
+                    var nintokuFeature = new ol.Feature({
+                        geometry: new ol.geom.Polygon(nintokuPolygon)
+                    });
+                    nintokuFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+                    drawSource.addFeature(nintokuFeature);
+                });
                 break;
         }
     }
