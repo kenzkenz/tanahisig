@@ -63,6 +63,7 @@ function mydialog(options){
 	var minMax = opts.minMax;
 	var plus =  opts.plus;
     var download =  opts.download;
+    var info = opts.info;
 
 	if(!right){
 		$(".dialog-base:visible").each(function(){
@@ -117,6 +118,10 @@ function mydialog(options){
     if(download){
         htmlStr += '<span class="dialog-download winicon"><i class="fa fa-download fa-2x"></i></span>';
     }
+    if(info){
+        htmlStr += '<span class="dialog-info winicon"><i class="fa fa-info-circle fa-2x"></i></span>';
+    }
+
     htmlStr += 		'<span class="dialog-hidden winicon" data-remove="' + rmDialog + '"><i class="fa fa-window-close-o fa-2x"></i></span>';
     //htmlStr += 		'<span class="dialog-hidden" data-remove="' + rmDialog + '"><i class="fa fa-times fa-2x"></i></span>';
 	htmlStr += 	'</div>';

@@ -1,4 +1,3 @@
-
 /** Interaction rotate
  * @constructor
  * @extends {ol.interaction.Pointer}
@@ -110,10 +109,10 @@ ol.interaction.Transform.prototype.setMap = function(map)
  * @api stable
  */
 ol.interaction.Transform.prototype.setActive = function(b)
-{	ol.interaction.Pointer.prototype.setActive.call (this, b);
-    if (b) this.select(null);
+{	this.select(null);
+    this.overlayLayer_.setVisible(b);
+    ol.interaction.Pointer.prototype.setActive.call (this, b);
 };
-
 
 /** Set efault sketch style
  */

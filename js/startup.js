@@ -161,6 +161,7 @@ $(function(){
     //editLayer.set("selectable",true);
 
 
+
     var DragRotateAndZoom = new ol.interaction.DragRotateAndZoom();//shift+ドラッグで回転可能に
     //id map1に起動時に表示されるレイヤーをセット
     map1 = new ol.Map({

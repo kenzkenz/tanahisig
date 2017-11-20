@@ -1,113 +1,78 @@
 var drawSource = null;
-var drawLayer = null
+var drawLayer = null;
+
 $(function() {
+    var copyCoord = [];
     var selectedFeature = null;
     var selectHtml = "";
-        selectHtml += "<div id='draw-div'>";
-        //selectHtml += "ドロー実験中。まだ動作しません。<br><br>";
-        selectHtml += "<h4>step1 形を作る</h4>";
-        selectHtml += "<div class='draw-div2'>";
-            selectHtml += "形状 ";
-            selectHtml += "<select id='drawType'>";
-                selectHtml += "<option value='0' selected>なし</option>";
-                selectHtml += "<option value='Point'>点を描く</option>";
-                selectHtml += "<option value='LineString'>ラインを描く</option>";
-                selectHtml += "<option value='Polygon'>面を描く</option>";
-                selectHtml += "<option value='PolygonHole'>面に穴を開ける</option>";
-                selectHtml += "<option value='Transform'>面の移動と回転と変形</option>";
-                selectHtml += "<option value='Circle'>円を描く</option>";
-                selectHtml += "<option value='Dome'>東京ドーム一個分</option>";
-                selectHtml += "<option value='Nintoku'>仁徳天皇陵</option>";
-            selectHtml += "</select>";
-        selectHtml += "</div>";
-        selectHtml += "<hr class='my-hr'>";
-        selectHtml += "<h4>step2 色を塗る</h4>";
-        selectHtml += "<div class='draw-div2'>";
-            selectHtml += "選択モード ";
-            selectHtml += "<select class='drawSelect'>";
-                selectHtml += "<option value='off'>オフ</option>";
-                selectHtml += "<option value='on'>オン</option>";
-            selectHtml += "</select>";
-            selectHtml += "　色選択 ";
-            selectHtml += "<select id='drawColor'>";
-                selectHtml += "<option value='red'>赤</option>";
-                selectHtml += "<option value='green'>緑</option>";
-                selectHtml += "<option value='blue'>青</option>";
-                selectHtml += "<option value='yellow'>黄</option>";
-                selectHtml += "<option value='gray'>灰</option>";
-                selectHtml += "<option value='silver'>銀</option>";
-                selectHtml += "<option value='black'>黒</option>";
-                selectHtml += "<option value='maroon'>maroon</option>";
-                selectHtml += "<option value='purple'>purple</option>";
-                selectHtml += "<option value='olive'>olive</option>";
-                selectHtml += "<option value='navy'>navy</option>";
-                selectHtml += "<option value='teal'>teal</option>";
-                selectHtml += "<option value='fuchsia'>fuchsia</option>";
-                selectHtml += "<option value='lime'>lime</option>";
-                selectHtml += "<option value='aqua'>aqua</option>";
-            selectHtml += "</select>";
-            selectHtml += "　　<button type='button' id='colorSave-btn' class='btn btn-xs btn-primary'>　反映　</button>";
-        selectHtml += "</div>";
-
-        selectHtml += "<hr class='my-hr'>";
-        selectHtml += "<h4>step3 項目</h4>";
-        selectHtml += "<div class='draw-div2'>";
-        //selectHtml += "作成中";
-        selectHtml += "選択モード ";
-        selectHtml += "<select class='drawSelect'>";
-        selectHtml += "<option value='off'>オフ</option>";
-        selectHtml += "<option value='on'>オン</option>";
-        selectHtml += "</select>";
-
-        selectHtml += "<table id='propTable' class='popup-tbl table table-bordered table-hover'>";
-        selectHtml += "<tr><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-        selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-
-        selectHtml += "</table>";
-        selectHtml += "<button type='button' id='propSave-btn' class='btn btn-xs btn-primary btn-block'>反映</button>";
-        /*
-        selectHtml += "<div class='btn-group btn-group-justified' style='width:300px;'>";
-        selectHtml += "<div class='btn-group'><button type='button' id='propCancel-btn' class='btn btn-xs btn-primary'>戻す</button></div>";
-        selectHtml += "<div class='btn-group'><button type='button' id='propSave-btn' class='btn btn-xs btn-primary'>反映</button></div>";
-        selectHtml += "</div>";
-        */
-        selectHtml += "</div>";
-
-        selectHtml += "<hr class='my-hr'>";
-        selectHtml += "<h4>step4 保存</h4>";
-        selectHtml += "<div class='draw-div2'>";
-        //selectHtml += "保存 ";
-
-        selectHtml += "<div class='btn-group btn-group-justified' style='width:300px;'>";
-        selectHtml += "<div class='btn-group'><button type='button' id='drawGeojson-btn' class='btn btn-xs btn-primary'>GEOJSON</button></div>";
-        selectHtml += "<div class='btn-group'><button type='button' id='drawCsv-btn' class='btn btn-xs btn-primary'>CSV</button></div>";
-        selectHtml += "</div>";
-
-        selectHtml += "</div>";
-
-        selectHtml += "</div>";
-
-        //$("#map1").append(selectHtml);
-
-        var content = selectHtml;
-        /*
-        mydialog({
-            id:"draw-dialog",
-            class:"draw-dialog",
-            map:"map1",
-            title:"ドロー実験中",
-            content:content,
-            top:"100px",
-            left:"20px",
-            //rmDialog:true
-        });
-        */
-
+    selectHtml += "<div id='draw-div'>";
+    selectHtml += "選択モード：";
+    selectHtml += "<input type='checkbox' data-toggle='toggle' class='select-toggle bs-toggle' data-size='small'>";
+    selectHtml += "色、形状変更、項目追加はOn";
+    selectHtml += "<h4>step1 形を作る</h4>";
+    selectHtml += "<div class='draw-div2'>";
+    selectHtml += "形状 ";
+    selectHtml += "<select id='drawType'>";
+    selectHtml += "<option value='0' selected>なし</option>";
+    selectHtml += "<option value='Point'>点を描く</option>";
+    selectHtml += "<option value='LineString'>ラインを描く</option>";
+    selectHtml += "<option value='Polygon'>面を描く</option>";
+    selectHtml += "<option value='DrawHole'>面に穴を開ける</option>";
+    selectHtml += "<option value='Transform'>移動と回転と変形</option>";
+    //selectHtml += "<option value='Translate'>移動</option>";
+    selectHtml += "<option value='Circle'>円を描く</option>";
+    selectHtml += "<option value='Dome'>東京ドーム一個分(正確ではありません。)</option>";
+    selectHtml += "<option value='Nintoku'>仁徳天皇陵(正確ではありません。)</option>";
+    selectHtml += "<option value='Paste'>テスト 最後に選択したポリゴンをペースト</option>";
+    selectHtml += "</select>";
+    selectHtml += "</div>";
+    selectHtml += "<hr class='my-hr'>";
+    selectHtml += "<h4>step2 色を塗る</h4>";
+    selectHtml += "<div class='draw-div2'>";
+    selectHtml += "　色選択 ";
+    selectHtml += "<select id='drawColor'>";
+    selectHtml += "<option value='red'>赤</option>";
+    selectHtml += "<option value='green'>緑</option>";
+    selectHtml += "<option value='blue'>青</option>";
+    selectHtml += "<option value='yellow'>黄</option>";
+    selectHtml += "<option value='gray'>灰</option>";
+    selectHtml += "<option value='silver'>銀</option>";
+    selectHtml += "<option value='black'>黒</option>";
+    selectHtml += "<option value='maroon'>maroon</option>";
+    selectHtml += "<option value='purple'>purple</option>";
+    selectHtml += "<option value='olive'>olive</option>";
+    selectHtml += "<option value='navy'>navy</option>";
+    selectHtml += "<option value='teal'>teal</option>";
+    selectHtml += "<option value='fuchsia'>fuchsia</option>";
+    selectHtml += "<option value='lime'>lime</option>";
+    selectHtml += "<option value='aqua'>aqua</option>";
+    selectHtml += "</select>";
+    selectHtml += "　　<button type='button' id='colorSave-btn' class='btn btn-xs btn-primary'>　反映　</button>";
+    selectHtml += "</div>";
+    selectHtml += "<hr class='my-hr'>";
+    selectHtml += "<h4>step3 項目</h4>";
+    selectHtml += "<div class='draw-div2'>";
+    selectHtml += "<table id='propTable' class='popup-tbl table table-bordered table-hover'>";
+    selectHtml += "<tr><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "</table>";
+    selectHtml += "<button type='button' id='propSave-btn' class='btn btn-xs btn-primary btn-block'>反映</button>";
+    selectHtml += "</div>";
+    selectHtml += "<hr class='my-hr'>";
+    selectHtml += "<h4>step4 保存</h4>";
+    selectHtml += "<div class='draw-div2'>";
+    selectHtml += "<div class='btn-group btn-group-justified' style='width:300px;'>";
+    selectHtml += "<div class='btn-group'><button type='button' id='drawGeojson-btn' class='btn btn-xs btn-primary'>GEOJSON</button></div>";
+    selectHtml += "<div class='btn-group'><button type='button' id='drawCsv-btn' class='btn btn-xs btn-primary'>CSV</button></div>";
+    selectHtml += "</div>";
+    selectHtml += "</div>";
+    selectHtml += "</div>";
+    var content = selectHtml;
     $(".draw-btn").click(function(){
         mydialog({
             id:"draw-dialog",
@@ -117,148 +82,428 @@ $(function() {
             content:content,
             top:"60px",
             left:"10px",
+            info:true
             //rmDialog:true
         });
+        $(".bs-toggle").bootstrapToggle();
     });
-    
+    //-----------------------------------------------------------------------
+    $("body").on("click","#mydialog-draw-dialog .dialog-info",function(){
+        var content = "<div id='geojson-text' style='width:440px'></div>";
+        mydialog({
+            id:"draw-dialog-info",
+            class:"draw-dialog-info",
+            map:"map1",
+            title:"geojson",
+            content:content,
+            top:"60px",
+            right:"10px",
+            //rmDialog:true
+        });
+        geojsonText();
+    });
+    //----------------------------------------------------------------------
     drawSource = new ol.source.Vector();
     drawLayer = new ol.layer.Vector({
         source:drawSource,
         name:"drawLayer",
         style:commonstyleFunction
         /*
-        style: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.2)'
-            }),
-            stroke: new ol.style.Stroke({
-                color: '#ffcc33',
-                width: 2
-            }),
-            image: new ol.style.Circle({
-                radius: 7,
-                fill: new ol.style.Fill({
-                    color: '#ffcc33'
-                })
-            })
-        })
-        */
+         style: new ol.style.Style({
+         fill: new ol.style.Fill({
+         color: 'rgba(255, 255, 255, 0.2)'
+         }),
+         stroke: new ol.style.Stroke({
+         color: '#ffcc33',
+         width: 2
+         }),
+         image: new ol.style.Circle({
+         radius: 7,
+         fill: new ol.style.Fill({
+         color: '#ffcc33'
+         })
+         })
+         })
+         */
     });
-
     map1.addLayer(drawLayer);
     drawLayer.set("selectable",true);
     drawLayer.set("altitudeMode","clampToGround");
     drawLayer.setZIndex(9999);
-    var modify = new ol.interaction.Modify({source:drawSource});
+    //------------------------------------------------------
+    drawSource.on("change", function(e) {
+        geojsonText();
+    });
+    function geojsonText(){
+        var features = drawSource.getFeatures();
+        if(!features.length) return;
+        var geojsonChar = new ol.format.GeoJSON().writeFeatures(features, {
+            featureProjection: "EPSG:3857"
+        });
+        geojsonChar = JSON.stringify(JSON.parse(geojsonChar),null,1);
+        var height = $(window).height() - 200;
+        $("#geojson-text").html("<pre style='height:" + height + "px'>" + geojsonChar + "</pre>");
+    }
+
+    //フィーチャーセレクト
+    var featureSelect = new ol.interaction.Select({
+        layers:function(layer){
+            return layer.get("selectable") == true;
+        },
+        style:function(feature, resolution) {
+            //console.log(feature);
+            var prop = feature.getProperties();
+            var fillColor = prop["_fillColor"];
+            var geoType = feature.getGeometry().getType();
+            switch (geoType) {
+                case "Point":
+                    var styles = [
+                        new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: fillColor
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: 'red',
+                                width: 2
+                            })
+                        }),
+                        new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({
+                                    color: "red"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "white",
+                                    width: 1
+                                }),
+                                points: 5,
+                                radius: 16,
+                                radius2: 8,
+                                angle: 0
+                            }),
+                            text: new ol.style.Text({
+                                font: "14px sans-serif",
+                                text: "選",
+                                fill: new ol.style.Fill({
+                                    color: "white"
+                                }),
+                                offsetY: 0
+                            })
+                        })
+                    ];
+                    break;
+                case "Polygon":
+                    var coordAr = feature.getGeometry().getCoordinates();
+                    for(var i = 0; i <coordAr.length; i++) {
+                        for (var j = 0; j < coordAr[i].length; j++) {
+                            coordAr[i][j] = ol.proj.transform(coordAr[i][j], "EPSG:3857", "EPSG:4326");
+                            console.log(coordAr[i][j]);
+                        }
+                    }
+                    var tPolygon = turf.polygon(coordAr);
+                    var tArea = turf.area(tPolygon);//面積計算
+                    console.log(tArea);
+                    copyCoord = feature.getGeometry().getCoordinates();//ポリゴンを保存
+                    console.log(copyCoord);
+
+                    var styles = [
+                        new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: fillColor
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: 'red',
+                                width: 2
+                            }),
+                            text: new ol.style.Text({
+                                font: "14px sans-serif",
+                                //text: "選択中",
+                                text: "選択中\n" + String(Math.floor(tArea*100)/100) + "m2",
+                                fill: new ol.style.Fill({
+                                    color: "white"
+                                }),
+                                offsetY: 0
+                            })
+                        }),
+                        new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({
+                                    color: "white"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "red",
+                                    width: 1
+                                }),
+                                points: 6,
+                                radius: 8,
+                                //radius2: 8,
+                                angle: 45
+                            }),
+                            geometry: function (feature) {
+                                var coord = feature.getGeometry().getCoordinates()[0];
+                                console.log(coord);
+                                return new ol.geom.MultiPoint(coord)
+                            }
+                        })
+                    ];
+                    break;
+                case "LineString":
+                    var styles = [
+                        new ol.style.Style({
+                            fill: new ol.style.Fill({
+                                color: fillColor
+                            }),
+                            stroke: new ol.style.Stroke({
+                                color: 'red',
+                                width: 4
+                            })
+                        }),
+                        new ol.style.Style({
+                            image: new ol.style.RegularShape({
+                                fill: new ol.style.Fill({
+                                    color: "white"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "red",
+                                    width: 1
+                                }),
+                                points: 6,
+                                radius: 8,
+                                //radius2: 8,
+                                angle: 45
+                            }),
+                            geometry: function (feature) {
+                                var coord = feature.getGeometry().getCoordinates();
+                                console.log(coord);
+                                return new ol.geom.MultiPoint(coord)
+                            }
+                        })
+                    ];
+                    break;
+                default:
+            }
+            return styles;
+        }
+    });
+    featureSelect.on("select", function(e) {
+        var features = e.selected;
+        console.log(features);
+        selectedFeature = features[0];
+        $(".prop-input-text-name").val("");
+        $(".prop-input-text-val").val("");
+        if(!features.length) return;
+        var prop = features[0].getProperties();
+        console.log(prop);
+        var i = 0;
+        for(key in prop){
+            //console.log(prop[key]);
+            //console.log(key);
+            if(key!=="geometry" && key.substr(0,1)!=="_"){
+                console.log(key);
+                $(".prop-input-text-name").eq(i).val(key);
+                $(".prop-input-text-val").eq(i).val(prop[key]);
+                i++
+            }
+        }
+        //----------------
+        //copyCoord = features[0].getGeometry().getCoordinates();
+        //console.log(copyCoord);
+    });
+    var snap = new ol.interaction.Snap({source:drawSource});
+    var modify = new ol.interaction.Modify({
+        //source:drawSource,
+        features:featureSelect.getFeatures(),
+        deleteCondition:ol.events.condition.singleClick//削除をシングルクリックのみでできるようにしたｓ
+    });
+    //map1.addInteraction(modify);
     modify.on("modifyend", function(e) {
         console.log(e)
     });
+    var drawPoint = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Point"
+    });
+    drawPoint.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+    });
+    var drawPolygon = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Polygon",
+        geometryFunction:function(coordinates, geometry) {
+            this.nbpts = coordinates[0].length;
+            if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
+            else geometry = new ol.geom.Polygon(coordinates);
+            return geometry;
+        }
+    });
+    drawPolygon.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+    });
+    var drawhole  = new ol.interaction.DrawHole ({
+        layers:[drawLayer]
+    });
+    var drawLineString = new ol.interaction.Draw({
+        source:drawSource,
+        type:"LineString",
+        geometryFunction:function(coordinates, geometry) {
+            if (geometry) geometry.setCoordinates(coordinates);
+            else geometry = new ol.geom.LineString(coordinates);
+            this.nbpts = geometry.getCoordinates().length;
+            return geometry;
+        }
+    });
+    drawLineString.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+    });
+    var drawCircle = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Circle",
+        geometryFunction:ol.interaction.Draw.createRegularPolygon(32)
+    });
+    drawCircle.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+    });
+    var drawDome = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Point",
+        geometryFunction:function(coordinates, geometry){
+            console.log(coordinates);
+            this.domeCoord = coordinates;
+        }
+    });
+    drawDome.on("drawend", function(e) {
+        console.log(drawDome.domeCoord);
+        var coord = ol.proj.transform(drawDome.domeCoord,"EPSG:3857","EPSG:4326");
+        console.log(coord);
+        var precisionCircle = ol.geom.Polygon.circular(
+            new ol.Sphere(6378137),// WGS84 Sphere //
+            coord,//[131.423860, 31.911069]
+            115, // Number of verticies //
+            32).transform('EPSG:4326', 'EPSG:3857');
+        var precisionCircleFeature = new ol.Feature(precisionCircle);
+        precisionCircleFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+        drawSource.addFeature(precisionCircleFeature);
+    });
+    var drawNintoku = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Point",
+        geometryFunction:function(coordinates, geometry){
+            console.log(coordinates);
+            this.nintokuCoord = coordinates;
+        }
+    });
+    drawNintoku.on("drawend", function(e) {
+        var nintokuPolygon = [[[15082094.774117399,4104609.5068460507],[15082096.900639175,4104606.4857429783],[15082129.36019615,4104587.9136047],[15082158.916738488,4104572.306140754],[15082183.353193704,4104557.322071505],[15082221.886320226,4104536.908816471],[15082240.82597234,4104525.31045447],[15082280.496823255,4104504.5777457976],[15082308.445844315,4104487.6706930636],[15082337.947520278,4104469.779253533],[15082390.09980167,4104440.8386413353],[15082400.883508094,4104435.93976219],[15082411.651620751,4104431.5952606387],[15082414.815917248,4104431.101141366],[15082416.235399486,4104431.4055465586],[15082418.54266863,4104432.608369839],[15082419.937057696,4104434.1806772905],[15082421.521496361,4104436.447800941],[15082427.009965366,4104454.879444051],[15082430.057861516,4104469.987335986],[15082432.76305801,4104497.395223116],[15082436.589521732,4104520.4220090453],[15082453.457944872,4104593.6575348037],[15082455.966293145,4104602.6447479874],[15082462.9474467,4104618.8700968116],[15082469.593465274,4104643.368812974],[15082476.032643614,4104655.791178121],[15082489.172744228,4104668.0491904155],[15082495.15720876,4104677.123115205],[15082500.388640255,4104702.6481256126],[15082499.844445901,4104707.9955029287],[15082491.42598106,4104724.7911858247],[15082490.097177617,4104733.967353733],[15082491.62370374,4104743.213095668],[15082494.47001047,4104750.056926742],[15082499.26063454,4104754.3726565684],[15082519.594241023,4104765.160360975],[15082535.24421257,4104774.77877781],[15082569.723446434,4104798.321254086],[15082574.513390971,4104802.923017857],[15082581.186626643,4104811.0218469477],[15082592.218740754,4104827.143829122],[15082603.202797184,4104849.9334887816],[15082610.70653026,4104870.5350143723],[15082614.23770702,4104899.575604842],[15082612.742333326,4104927.4677995597],[15082610.699768946,4104945.9617093275],[15082606.097076781,4104962.2840096937],[15082599.436096366,4104979.383390734],[15082594.5711201,4104988.428047911],[15082585.392075567,4105001.1993277944],[15082573.50520068,4105013.6449827263],[15082559.487443242,4105026.256633181],[15082555.819094103,4105029.449688042],[15082550.49415403,4105032.3369536605],[15082524.345005738,4105046.8270806298],[15082517.346961377,4105050.06779451],[15082504.86766149,4105053.6034897193],[15082483.043220563,4105058.4288857896],[15082458.068962704,4105058.338669127],[15082433.7395421,4105054.8248715545],[15082402.254035477,4105044.544120258],[15082394.308519885,4105042.6508389693],[15082376.150814196,4105033.6496001976],[15082361.619949661,4105022.992898947],[15082347.029209228,4105008.4210490733],[15082339.432012385,4104999.8714636876],[15082332.553682752,4104989.7453425243],[15082326.74097972,4104978.98683948],[15082319.7685783,4104963.4278181517],[15082312.197944123,4104941.7673923736],[15082305.404411748,4104903.601544872],[15082305.349247223,4104870.2978359447],[15082303.73963396,4104862.783921267],[15082296.2914638,4104845.7051192774],[15082292.096452475,4104840.226593593],[15082266.467592461,4104831.4093341734],[15082253.543322515,4104823.6211601417],[15082243.834028618,4104807.32036678],[15082240.833312675,4104795.03568187],[15082239.872530354,4104779.7700620275],[15082238.361695852,4104775.928960714],[15082231.004781727,4104764.5550692645],[15082219.358568018,4104750.162790346],[15082202.01088199,4104736.5284958654],[15082187.075004881,4104721.896824502],[15082170.57968637,4104695.066375912],[15082131.000579158,4104659.372154799],[15082110.448062543,4104638.741330116],[15082094.744524784,4104612.8413440487],[15082094.774117399,4104609.5068460507]]]
+        var origin = ol.proj.transform(nintokuPolygon[0][0],"EPSG:3857","EPSG:4326");
+        //var target = [131.423860,31.911069];
+        var target = ol.proj.transform(drawNintoku.nintokuCoord,"EPSG:3857","EPSG:4326");
+        nintokuPolygon[0].forEach(function(v,i,a){
+            var v2 = ol.proj.transform(v,"EPSG:3857","EPSG:4326");
+            var tFeature = turf.destination(
+                target,
+                turf.distance(origin,v2),
+                turf.bearing(origin,v2)
+            );
+            nintokuPolygon[0][i] = ol.proj.transform(tFeature["geometry"]["coordinates"],"EPSG:4326","EPSG:3857");
+        });
+        console.log(nintokuPolygon);
+        var nintokuFeature = new ol.Feature({
+            geometry: new ol.geom.Polygon(nintokuPolygon)
+        });
+        nintokuFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+        drawSource.addFeature(nintokuFeature);
+    });
+    var drawPaste = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Point",
+        geometryFunction:function(coordinates, geometry){
+            console.log(coordinates);
+            this.coord = coordinates;
+        }
+    });
+    drawPaste.on("drawend", function(e) {
+        var origin = ol.proj.transform(copyCoord[0][0],"EPSG:3857","EPSG:4326");
+        //var target = [131.423860,31.911069];
+        var target = ol.proj.transform(drawPaste.coord,"EPSG:3857","EPSG:4326");
+        var coordAr = copyCoord;
+        for(var i = 0; i <coordAr.length; i++) {
+            for (var j = 0; j < coordAr[i].length; j++) {
+                var to = ol.proj.transform(coordAr[i][j], "EPSG:3857", "EPSG:4326");
+                var tFeature = turf.destination(
+                    target,
+                    turf.distance(origin,to),
+                    turf.bearing(origin,to)
+                );
+                coordAr[i][j] = ol.proj.transform(tFeature["geometry"]["coordinates"],"EPSG:4326","EPSG:3857");
+            }
+        }
+        /*
+        copyCoord[0].forEach(function(v,i,a){
+            var v2 = ol.proj.transform(v,"EPSG:3857","EPSG:4326");
+            var tFeature = turf.destination(
+                target,
+                turf.distance(origin,v2),
+                turf.bearing(origin,v2)
+            );
+            copyCoord[0][i] = ol.proj.transform(tFeature["geometry"]["coordinates"],"EPSG:4326","EPSG:3857");
+        });
+        */
+        console.log(copyCoord);
+        var copyCoordFeature = new ol.Feature({
+            geometry: new ol.geom.Polygon(copyCoord)
+        });
+        copyCoordFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+        drawSource.addFeature(copyCoordFeature);
+    });
+    var transform = new ol.interaction.Transform ({
+        translateFeature:false,
+        scale:true,
+        rotate:true,
+        keepAspectRatio:ol.events.condition.always,
+        translate:true,
+        stretch:true
+    });
+    var translate = new ol.interaction.Translate ();
 
-
-
-    map1.addInteraction(modify);
-    var draw,snap,drawhole,transform,circle;
     //------------------------------------------------------------------------------------------------------------------
-    
     function addInteractions() {
         var typeVal = $("#drawType").val();
         console.log(typeVal);
-        //if(typeVal==="0") return;
+        map1.removeInteraction(drawPoint);
+        map1.removeInteraction(drawPolygon);
+        map1.removeInteraction(drawhole);
+        map1.removeInteraction(drawLineString);
+        map1.removeInteraction(drawCircle);
+        map1.removeInteraction(snap);
+        map1.removeInteraction(transform);
+        map1.removeInteraction(translate);
+        map1.removeInteraction(drawDome);
+        map1.removeInteraction(drawNintoku);
+        map1.removeInteraction(drawPaste);
         switch (typeVal) {
-            case "Polygon":
-                draw = new ol.interaction.Draw({
-                    source:drawSource,
-                    type:typeVal,
-                    geometryFunction:function(coordinates, geometry) {
-                        this.nbpts = coordinates[0].length;
-                        if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
-                        else geometry = new ol.geom.Polygon(coordinates);
-                        return geometry;
-                    }
-                });
-                break;
-            case "LineString":
-                draw = new ol.interaction.Draw({
-                    source:drawSource,
-                    type:typeVal,
-                    geometryFunction:function(coordinates, geometry) {
-                        if (geometry) geometry.setCoordinates(coordinates);
-                        else geometry = new ol.geom.LineString(coordinates);
-                        this.nbpts = geometry.getCoordinates().length;
-                        return geometry;
-                    }
-                });
-                break;
-            case "Dome":
-                draw = new ol.interaction.Draw({
-                    source:drawSource,
-                    type:"Point",
-                    geometryFunction:function(coordinates, geometry){
-                        console.log(coordinates);
-                        this.domeCoord = coordinates;
-                    }
-                });
-                break;
-            case "Nintoku":
-                draw = new ol.interaction.Draw({
-                    source:drawSource,
-                    type:"Point",
-                    geometryFunction:function(coordinates, geometry){
-                        console.log(coordinates);
-                        this.nintokuCoord = coordinates;
-                    }
-                });
-                break;
-            default:
-                draw = new ol.interaction.Draw({
-                    source:drawSource,
-                    type:typeVal
-                });
-                break;
-        }
-        circle = new ol.interaction.Draw({
-            source:drawSource,
-            type:"Circle",
-            geometryFunction:ol.interaction.Draw.createRegularPolygon(32)
-        });
-        snap = new ol.interaction.Snap({source:drawSource});
-        drawhole  = new ol.interaction.DrawHole ({
-            layers:[drawLayer]
-        });
-        transform = new ol.interaction.Transform ({
-            /*
-             translateFeature: $("#translateFeature").prop('checked'),
-             scale: $("#scale").prop('checked'),
-             rotate: $("#rotate").prop('checked'),
-             keepAspectRatio: $("#keepAspectRatio").prop('checked') ? ol.events.condition.always : undefined,
-             translate: $("#translate").prop('checked'),
-             stretch: $("#stretch").prop('checked'),
-             */
-        });
-
-        switch (typeVal) {
-            case "0":
-                return;
-                break;
-            case "Polygon":
-            case "LineString":
             case "Point":
-                map1.addInteraction(modify);
-                map1.addInteraction(draw);
-                map1.addInteraction(snap);
-                draw.on("drawend", function(e) {
-                    var prop = e["feature"]["D"];
-                    prop["_fillColor"] = "rgba(51,122,255,0.7)";
-                    //if(editLayer.get("name")==="editLayer-import"){
-                    //    editLayer.getSource().addFeature(e["feature"]);
-                    //}
-                    //featureSelect.setActive(false);
-                    featureSelect.getFeatures().clear();
-                });
+                map1.addInteraction(drawPoint);
+                map1.addInteraction(snap);//ドロー系の後でないとうまくどうさしない
                 break;
-            case "PolygonHole":
-                map1.addInteraction(modify)
+            case "Polygon":
+                map1.addInteraction(drawPolygon);
+                map1.addInteraction(snap);
+                break;
+            case "DrawHole":
+                console.log("DrawHole");
                 map1.addInteraction(drawhole);
+                drawhole.setActive(active);
+                break;
+            case "LineString":
+                map1.addInteraction(drawLineString);
                 map1.addInteraction(snap);
                 break;
             case "Transform":
@@ -266,113 +511,29 @@ $(function() {
                 map1.addInteraction(snap);
                 setHandleStyle();
                 break;
-            case "Circle":
-                map1.addInteraction(circle);
-                circle.on("drawend", function(e) {
-                    var prop = e["feature"]["D"];
-                    prop["_fillColor"] = "rgba(51,122,255,0.7)";
-                    featureSelect.getFeatures().clear();
-                });
-
-
-                /*
-                map1.on("singleclick",function(evt) {
-                    var coord = ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326");
-                    console.log(coord);
-                    var precisionCircle = ol.geom.Polygon.circular(
-                        // WGS84 Sphere //
-                        new ol.Sphere(6378137),
-                        //[131.423860, 31.911069],
-                        coord,
-                        2000,
-                        // Number of verticies //
-                        32).transform('EPSG:4326', 'EPSG:3857');
-                    var precisionCircleFeature = new ol.Feature(precisionCircle);
-                    drawSource.addFeature(precisionCircleFeature);
-                });
-                */
-
-
-                /*
-                map1.on("singleclick",function(evt){
-                    console.log(ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326"));
-                    var coord = evt.coordinate;
-                    var circleCenterX = coord[0];//15438034; //the X center of your circle
-                    var circleCenterY = coord[1];//4186771; //the Y center of your circle
-
-                    var km = 5;
-                    //var circleCenterX = coord1[0];//15438034; //the X center of your circle
-                    //var circleCenterY = coord1[1];//4186771; //the Y center of your circle
-                    var circleRadius = km * 1179;
-                    var pointsToFind = 30;
-                    var circleCoords1 = createCirclePointCoords(circleCenterX, circleCenterY, circleRadius, pointsToFind);
-                    console.log(circleCoords1);
-                    var circlesource = new ol.source.Vector({
-                        features: [
-                            new ol.Feature({
-                                id: 1,
-                                geometry: new ol.geom.Polygon([circleCoords1])
-                            })
-                        ]
-                    });
-                });
-                */
-
-                break;
-
-            case "Dome":
-                console.log("Dome");
-                map1.addInteraction(modify);
-                map1.addInteraction(draw);
+            case "Translate":
+                map1.addInteraction(translate);
                 map1.addInteraction(snap);
-                draw.on("drawend", function(e) {
-                    console.log(draw.domeCoord);
-                    var coord = ol.proj.transform(draw.domeCoord,"EPSG:3857","EPSG:4326");
-                    console.log(coord);
-                    var precisionCircle = ol.geom.Polygon.circular(
-                        // WGS84 Sphere //
-                        new ol.Sphere(6378137),
-                        //[131.423860, 31.911069],
-                        coord,
-                        115,
-                        // Number of verticies //
-                        32).transform('EPSG:4326', 'EPSG:3857');
-                    var precisionCircleFeature = new ol.Feature(precisionCircle);
-                    precisionCircleFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
-                    drawSource.addFeature(precisionCircleFeature);
-                    //featureSelect.getFeatures().clear();
-                });
+                break;
+            case "Circle":
+                map1.addInteraction(drawCircle);
+                break;
+            case "Dome":
+                map1.addInteraction(drawDome);
+                map1.addInteraction(snap);
                 break;
             case "Nintoku":
-                console.log("Nintoku");
-                map1.addInteraction(modify);
-                map1.addInteraction(draw);
+                map1.addInteraction(drawNintoku);
                 map1.addInteraction(snap);
-                draw.on("drawend", function(e) {
-                    //console.log(draw.nintokuCoord);
-                    var hereCoord = draw.nintokuCoord;
-                    var nintokuPolygon = [[[15082094.774117399,4104609.5068460507],[15082096.900639175,4104606.4857429783],[15082129.36019615,4104587.9136047],[15082158.916738488,4104572.306140754],[15082183.353193704,4104557.322071505],[15082221.886320226,4104536.908816471],[15082240.82597234,4104525.31045447],[15082280.496823255,4104504.5777457976],[15082308.445844315,4104487.6706930636],[15082337.947520278,4104469.779253533],[15082390.09980167,4104440.8386413353],[15082400.883508094,4104435.93976219],[15082411.651620751,4104431.5952606387],[15082414.815917248,4104431.101141366],[15082416.235399486,4104431.4055465586],[15082418.54266863,4104432.608369839],[15082419.937057696,4104434.1806772905],[15082421.521496361,4104436.447800941],[15082427.009965366,4104454.879444051],[15082430.057861516,4104469.987335986],[15082432.76305801,4104497.395223116],[15082436.589521732,4104520.4220090453],[15082453.457944872,4104593.6575348037],[15082455.966293145,4104602.6447479874],[15082462.9474467,4104618.8700968116],[15082469.593465274,4104643.368812974],[15082476.032643614,4104655.791178121],[15082489.172744228,4104668.0491904155],[15082495.15720876,4104677.123115205],[15082500.388640255,4104702.6481256126],[15082499.844445901,4104707.9955029287],[15082491.42598106,4104724.7911858247],[15082490.097177617,4104733.967353733],[15082491.62370374,4104743.213095668],[15082494.47001047,4104750.056926742],[15082499.26063454,4104754.3726565684],[15082519.594241023,4104765.160360975],[15082535.24421257,4104774.77877781],[15082569.723446434,4104798.321254086],[15082574.513390971,4104802.923017857],[15082581.186626643,4104811.0218469477],[15082592.218740754,4104827.143829122],[15082603.202797184,4104849.9334887816],[15082610.70653026,4104870.5350143723],[15082614.23770702,4104899.575604842],[15082612.742333326,4104927.4677995597],[15082610.699768946,4104945.9617093275],[15082606.097076781,4104962.2840096937],[15082599.436096366,4104979.383390734],[15082594.5711201,4104988.428047911],[15082585.392075567,4105001.1993277944],[15082573.50520068,4105013.6449827263],[15082559.487443242,4105026.256633181],[15082555.819094103,4105029.449688042],[15082550.49415403,4105032.3369536605],[15082524.345005738,4105046.8270806298],[15082517.346961377,4105050.06779451],[15082504.86766149,4105053.6034897193],[15082483.043220563,4105058.4288857896],[15082458.068962704,4105058.338669127],[15082433.7395421,4105054.8248715545],[15082402.254035477,4105044.544120258],[15082394.308519885,4105042.6508389693],[15082376.150814196,4105033.6496001976],[15082361.619949661,4105022.992898947],[15082347.029209228,4105008.4210490733],[15082339.432012385,4104999.8714636876],[15082332.553682752,4104989.7453425243],[15082326.74097972,4104978.98683948],[15082319.7685783,4104963.4278181517],[15082312.197944123,4104941.7673923736],[15082305.404411748,4104903.601544872],[15082305.349247223,4104870.2978359447],[15082303.73963396,4104862.783921267],[15082296.2914638,4104845.7051192774],[15082292.096452475,4104840.226593593],[15082266.467592461,4104831.4093341734],[15082253.543322515,4104823.6211601417],[15082243.834028618,4104807.32036678],[15082240.833312675,4104795.03568187],[15082239.872530354,4104779.7700620275],[15082238.361695852,4104775.928960714],[15082231.004781727,4104764.5550692645],[15082219.358568018,4104750.162790346],[15082202.01088199,4104736.5284958654],[15082187.075004881,4104721.896824502],[15082170.57968637,4104695.066375912],[15082131.000579158,4104659.372154799],[15082110.448062543,4104638.741330116],[15082094.744524784,4104612.8413440487],[15082094.774117399,4104609.5068460507]]]
-                    //console.log(nintokuPolygon[0]);
-                    var lonPlus = nintokuPolygon[0][0][0] - hereCoord[0] + 300;
-                    var latPlus = nintokuPolygon[0][0][1] - hereCoord[1] + 200;
-                    console.log(lonPlus,latPlus);
-                    for(var i = 0; i <nintokuPolygon[0].length; i++){
-                        var coord = nintokuPolygon[0][i];
-                        console.log(coord)
-                        coord = [coord[0] - lonPlus,coord[1] - latPlus];
-                        //console.log(coord)
-                        nintokuPolygon[0][i] = coord;
-                    }
-                    var nintokuFeature = new ol.Feature({
-                        geometry: new ol.geom.Polygon(nintokuPolygon)
-                    });
-                    nintokuFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
-                    drawSource.addFeature(nintokuFeature);
-                });
                 break;
+            case "Paste":
+                map1.addInteraction(drawPaste);
+                map1.addInteraction(snap);
+                break;
+            default:
         }
     }
-
+    //------------------------------------------------------------------------
     function setHandleStyle() {
         if (!transform instanceof ol.interaction.Transform) return;
         var circle = new ol.style.RegularShape({
@@ -411,134 +572,47 @@ $(function() {
                         stroke: new ol.style.Stroke({ width:2, color:'red' })
                     })
                 }));
-
-        transform.set('translate', interactionTransform.get('translate'));
+        transform.set('translate', transform.get('translate'));
     }
-
-    //drawhole.setActive(false);
-    //フィーチャーセレクト
-    var featureSelect = new ol.interaction.Select({
-        layers:function(layer){
-            return layer.get("selectable") == true;
-        },
-        style: new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: 'rgba(255, 255, 255, 0.8)'
-            }),
-            stroke: new ol.style.Stroke({
-                color: 'red',
-                width: 2
-            }),
-            image: new ol.style.RegularShape({
-                fill: new ol.style.Fill({
-                    color:"red"
-                }),
-                stroke: new ol.style.Stroke({
-                    color: "white",
-                    width: 1
-                }),
-                points:5,
-                radius: 16,
-                radius2: 8,
-                angle:0
-            }),
-            text: new ol.style.Text({
-                font: "14px sans-serif",
-                text: "選",
-                fill: new ol.style.Fill({
-                    color:"white"
-                }),
-                offsetY:0,
-                /*
-                 stroke: new ol.style.Stroke({
-                 color: "white",
-                 width: 3
-                 })
-                 */
-            })
-            /*
-            image: new ol.style.Circle({
-                radius: 20,
-                fill: new ol.style.Fill({
-                    color: '#ffcc33'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: "white",
-                    width: 1
-                })
-            })
-            */
-        })
-    });
-
-    featureSelect.on("select", function(e) {
-        var features = e.selected;
-        console.log(features);
-        selectedFeature = features[0];
-        $(".prop-input-text-name").val("");
-        $(".prop-input-text-val").val("");
-        if(!features) return;
-        var prop = features[0].getProperties();
-        console.log(prop);
-        var i = 0;
-        for(key in prop){
-            //console.log(prop[key]);
-            //console.log(key);
-            if(key!=="geometry" && key.substr(0,1)!=="_"){
-                console.log(key);
-                $(".prop-input-text-name").eq(i).val(key);
-                $(".prop-input-text-val").eq(i).val(prop[key]);
-                i++
-            }
-        }
-    });
+    //------------------------------------------------------------------------
 
     //ドロータイプ選択
     $("body").on("change","#drawType",function(){
-        map1.removeInteraction(modify);
-        map1.removeInteraction(draw);
-        map1.removeInteraction(drawhole);
-        map1.removeInteraction(snap);
-        map1.removeInteraction(transform);
-        map1.removeInteraction(circle);
-        map1.removeInteraction(featureSelect);
         featureSelect.getFeatures().clear();
         addInteractions();
-        $(".drawSelect").val("off");
-        $(".drawSelect").css({
-            color:"black"
-        })
+        $(".select-toggle").bootstrapToggle("off");
     });
-    //フィーチャー選択
-    $("body").on("change",".drawSelect",function(){
-        var val = $(this).val();
-        $(".drawSelect").val(val);
+    //選択モードトグルを押したとき
+    $("body").on("change",".select-toggle",function(){
+        featureSelect.getFeatures().clear();
+        console.log("作成中");
         var interactions = map1.getInteractions().getArray();
         var DragRotateAndZoomInteraction = interactions.filter(function(interaction) {
             return interaction instanceof ol.interaction.DragRotateAndZoom;
         })[0];
-        if (val === "on"){
-            map1.removeInteraction(modify);
-            map1.removeInteraction(draw);
+        if($(this).prop("checked")) {
+            console.log("checked");
+            map1.removeInteraction(drawPoint);
+            map1.removeInteraction(drawPolygon);
             map1.removeInteraction(drawhole);
+            map1.removeInteraction(drawLineString);
+            map1.removeInteraction(drawCircle);
             map1.removeInteraction(snap);
             map1.removeInteraction(transform);
-            map1.removeInteraction(circle);
+            map1.removeInteraction(translate);
+            map1.removeInteraction(drawDome);
+            map1.removeInteraction(drawNintoku);
+            map1.removeInteraction(drawPaste);
+
             map1.addInteraction(featureSelect);
+            map1.removeInteraction(modify);
+            map1.addInteraction(modify);
+            map1.addInteraction(snap);
             $("#drawType").val("0");
-            $(".drawSelect").css({
-                color:"red"
-            });
             DragRotateAndZoomInteraction.setActive(false);
         }else{
-            map1.addInteraction(modify);
-            map1.addInteraction(draw);
-            map1.removeInteraction(drawhole);
-            map1.addInteraction(snap);
+            console.log("off");
             map1.removeInteraction(featureSelect);
-            $(".drawSelect").css({
-                color:"black"
-            });
             DragRotateAndZoomInteraction.setActive(true);
         }
     });
@@ -576,7 +650,6 @@ $(function() {
         }
         featureSelect.getFeatures().clear();
         //alert("反映しました。")
-
     });
     //------------------------------------------------------------------------------------------------------------------
     //属性保存
@@ -599,11 +672,11 @@ $(function() {
             console.log(name,val);
             for (var j = 0; j < features.length; j++) {
                 /*
-                features[j].setProperties({
-                    //"_fillColor":colorVal
-                    "id": "9999"
-                });
-                */
+                 features[j].setProperties({
+                 //"_fillColor":colorVal
+                 "id": "9999"
+                 });
+                 */
                 console.log(features[j]["D"][name])
                 if(name) features[j]["D"][name] = val
             }
@@ -639,36 +712,37 @@ $(function() {
                 }
                 break;
             case 27:
-                console.log(draw.nbpts);
+                console.log(drawPolygon.nbpts);
                 //draw.removeLastPoint();
-                console.log(draw);
-                if (draw.nbpts>1) draw.removeLastPoint();
-
+                console.log(drawPolygon);
+                if (drawPolygon.nbpts>1) drawPolygon.removeLastPoint();
+                if (drawLineString.nbpts>1) drawLineString.removeLastPoint();
                 /*
-                try {
-                    if (draw.nbpts>=1) draw.removeLastPoint();
-                }catch(e){
-                    console.log("er")
-                }
-                */
+                 try {
+                 if (draw.nbpts>=1) draw.removeLastPoint();
+                 }catch(e){
+                 console.log("er")
+                 }
+                 */
                 break;
         }
     });
     //------------------------------------------------------------------------------------------------------------------
     //geojsonで保存
     $("body").on("click","#drawGeojson-btn",function(){
-    //$("#drawGeojson-btn").click(function(){
         var features = drawSource.getFeatures();
         console.log(features);
         if(!features.length) {
             alert("データがありません。");
             return;
         }
-
         var geojsonChar = new ol.format.GeoJSON().writeFeatures(features, {
             featureProjection: "EPSG:3857"
         });
+        geojsonChar = JSON.stringify(JSON.parse(geojsonChar),null,1);
         console.log(geojsonChar);
+        $("#geojson-text").html("<pre>" + geojsonChar + "</pre>");
+
         var type = "text/plain";
         var blob = new Blob([geojsonChar], {type: type});
         $(".geojson-save-a").remove();
@@ -845,7 +919,7 @@ $(function() {
         drawLayer.setZIndex(9999);
         drawLayer.set("selectable",true);
         var modify = new ol.interaction.Modify({source:drawSource});
-        map1.addInteraction(modify);
+        //map1.addInteraction(modify);
         var snap = new ol.interaction.Snap({source:drawSource});
         map1.addInteraction(snap);
     };
@@ -941,27 +1015,27 @@ $(function() {
             for (var i=0; i < csvarr.length; i++) {
                 if(i===0) {
                     /*
-                    for (var j = 0; j < csvarr[0].length; j++) {
-                        //-------------------------------------------
-                        if (csvarr[0][j] === "市町村コード") cityCode = j;
-                        if (csvarr[0][j] === "数値") suuti = j;
-                        if (csvarr[0][j] === "色") iro = j;
-                        if (csvarr[0][j] === "色"){
-                            csvType = "city";
-                        }
-                        //-------------------------------------------
-                        //ドローのcsv用
-                        if (csvarr[0][j] === "経度") csvlon = j;
-                        if (csvarr[0][j] === "緯度") csvlat = j;
+                     for (var j = 0; j < csvarr[0].length; j++) {
+                     //-------------------------------------------
+                     if (csvarr[0][j] === "市町村コード") cityCode = j;
+                     if (csvarr[0][j] === "数値") suuti = j;
+                     if (csvarr[0][j] === "色") iro = j;
+                     if (csvarr[0][j] === "色"){
+                     csvType = "city";
+                     }
+                     //-------------------------------------------
+                     //ドローのcsv用
+                     if (csvarr[0][j] === "経度") csvlon = j;
+                     if (csvarr[0][j] === "緯度") csvlat = j;
 
-                        if (csvarr[0][j] === "_type") csvGeoType = j;
-                        if (csvarr[0][j] === "_coord") csvCoord = j;
-                        if (csvarr[0][j] === "経度"){
-                            csvType = "draw";
-                        }
-                        columnAr.push(csvarr[0][j])
-                    }
-                    */
+                     if (csvarr[0][j] === "_type") csvGeoType = j;
+                     if (csvarr[0][j] === "_coord") csvCoord = j;
+                     if (csvarr[0][j] === "経度"){
+                     csvType = "draw";
+                     }
+                     columnAr.push(csvarr[0][j])
+                     }
+                     */
                 }else{
                     //-----------------------------------------------
                     switch (csvType) {
@@ -1041,7 +1115,7 @@ $(function() {
                     drawLayer.setZIndex(9999);
                     drawLayer.set("selectable",true);
                     var modify = new ol.interaction.Modify({source:drawSource});
-                    map1.addInteraction(modify);
+                    //map1.addInteraction(modify);
                     var snap = new ol.interaction.Snap({source:drawSource});
                     map1.addInteraction(snap);
                     break;
