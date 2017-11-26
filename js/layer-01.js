@@ -3714,6 +3714,7 @@ var sekiz1 = new ol.layer.Tile({
     source: new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図©アジア航測株式会社</a>"})],
         url:"https://mtile.pref.miyazaki.lg.jp/tile/sekisyokuzenkoku/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
         //minZoom :1,
         maxZoom:15
     })
@@ -3731,6 +3732,7 @@ var sekiz2 = new ol.layer.Tile({
     source: new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図©アジア航測株式会社</a>"})],
         url:"https://mtile.pref.miyazaki.lg.jp/tile/sekisyokuzenkoku/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
         //minZoom :1,
         maxZoom:15
     })

@@ -148,11 +148,13 @@ $(function(){
     //ドラッグアンドドロップでレイヤーを作る
     dragAndDropInteraction1.on('addfeatures', function(event) {
         mapName = "map1";
-        map1.removeLayer(editLayer);
+        //map1.removeLayer(editLayer);
         var fileExtension = event["file"]["name"].split(".")[event["file"]["name"].split(".").length - 1]
         console.log(fileExtension);
 
         if(fileExtension==="geojson") return;
+        if(fileExtension==="csv") return;
+        map1.removeLayer(editLayer);
 
         if (event.features == null) {
             var fileExtension = event["file"]["name"].split(".")[event["file"]["name"].split(".").length - 1];
