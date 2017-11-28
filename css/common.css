@@ -85,6 +85,7 @@ label:hover{
     margin-top:5px;
     margin-bottom:5px;
     border-top:1px solid gainsboro;
+    clear: both;
 }
 .dropdown-div{
     display:inline-block;
@@ -572,10 +573,21 @@ label:hover{
     left:20px;
     */
 }
-.drow-div2{
+.draw-div2{
     margin:0 0 0 10px;
+    position:relative;
 }
-
+#draw-div3-select{
+    float: left;
+}
+#draw-div3-effect{
+    float: right;
+    /*
+    position: absolute;
+    right:10px;
+    top:0;
+    */
+}
 .prop-input-text-name,.prop-input-text-val{
     width:100%
 }
@@ -603,10 +615,9 @@ label:hover{
     /*border:1px solid rgba(51,122,183,1.0);*/
     z-index:3;
 }
-#circle-radius-div{
+#circle-radius-div,#circle-radius2-div{
     display:none;
     font-size: x-small;
-
 }
 /*ツールチップ-----------------------------------------------------------------*/
 .tooltip {

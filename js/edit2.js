@@ -1,6 +1,7 @@
 $(function() {
     var drawSource = null;
     var drawLayer = null;
+    var drawLayerHeatmap = null
     var drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
     var geojsonSaveAr = []//取り消し用にgeojsonを保存する
@@ -22,11 +23,13 @@ $(function() {
     selectHtml += "<option value='Polygon'>面を描く</option>";
     selectHtml += "<option value='DrawHole'>面に穴を開ける</option>";
     selectHtml += "<option value='Transform'>回転と変形と移動</option>";
-    selectHtml += "<option value='Circle'>円を描く</option>";
+    //selectHtml += "<option value='Circle'>円を描く</option>";
+    selectHtml += "<option value='SingleCircle'>円を描く</option>";
+    selectHtml += "<option value='DoubleCircle'>円を描く（二重）</option>";
     selectHtml += "<option value='Dome'>東京ドーム一個分(正確ではありません。)</option>";
     selectHtml += "<option value='Nintoku'>仁徳天皇陵(正確ではありません。)</option>";
     selectHtml += "<option value='Paste'>最後に選択したポリゴンをペースト</option>";
-    selectHtml += "<option value='Circle2'>テスト</option>";
+
     selectHtml += "</select>";
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
@@ -69,13 +72,23 @@ $(function() {
     selectHtml += "<hr class='my-hr'>";
     selectHtml += "<h4>step4 効果</h4>";
     selectHtml += "<div class='draw-div2'>";
-    selectHtml += "効果 ";
-    selectHtml += "<select id='effectType'>";
+    //selectHtml += "効果 ";
+
+    selectHtml += "<div id='draw-div3-select'>";
+    selectHtml += "効果<select id='effectType'>";
     selectHtml += "<option value='0' selected>なし</option>";
-    selectHtml += "<option value='voronoi'>ボロノイ</option>";
+    selectHtml += "<option value='voronoi'>ボロノイ図</option>";
     selectHtml += "<option value='buffer'>バッファー</option>";
+    selectHtml += "<option value='heatmap'>ヒートマップ</option>";
     selectHtml += "</select>";
-    selectHtml += "　バッファー半径：<input id='buffer-radius-input' type='text' value='100' size='2'>m";
+    selectHtml += "</div>";
+
+    selectHtml += "<div id='draw-div3-effect'>";
+    selectHtml += "<div class='draw-div4'>バッファ半径：<input id='buffer-radius-input' type='text' value='100' size='2'>m</div>";
+    //selectHtml += "<div class='draw-div4'>test1</div>";
+    //selectHtml += "<div class='draw-div4'>test2</div>";
+    selectHtml += "</div>";
+
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
     selectHtml += "<h4>step5 保存</h4>";
@@ -131,48 +144,39 @@ $(function() {
         Overlaycontent += "<div>";
         Overlaycontent += "<button type='button' id='draw-remove-btn' class='btn btn-xs btn-primary'>削除</button>";
         Overlaycontent += "<div id='circle-radius-div'>半径：<input id='circle-radius-input' type='text' value='100' size='2'>m</div>";
+        Overlaycontent += "<div id='circle-radius2-div'>半径：<input id='circle-radius2-input' type='text' value='50' size='2'>m</div>";
         Overlaycontent += "</div>";
-        //content += "";
-        //content += "<div style='margin:10px 0;'>半径：<input type='text' class='kmtext' value='3' size='2'> KM</div>";
-        //content += "<button type='button' class='zinkoumesh-btn btn btn-primary btn-block'>500M人口メッシュ</button>";
-        //content += "<button type='button' class='zyuugyouinmesh-btn btn btn-primary btn-block'>500M従業員メッシュ</button>";
-        //content += "<button type='button' class='circlrdelete-btn btn btn-primary btn-block'>円削除</button>";
-
     $("#map1").append('<div id="drawMenuOverlay-div" class="drawMenuOverlay-div">' + Overlaycontent + '</div>');
     //------------------------------------------------------------------------------------------------------------------
-    //オーバーレイ上のスピンコントロール
-    var prevCircleFeature = null;
-    $("#circle-radius-input").spinner({
-        max:5000, min:1, step:1,
+    //オーバーレイ上のスピンコントロール　半径の操作 外円と内円共用
+    $("#circle-radius-input,#circle-radius2-input").spinner({
+        max:50000, min:0, step:10,
         spin:function(event,ui){
-            if(selectedFeature) {
-                var extent = selectedFeature.getGeometry().getExtent();
-                var extentCenter = ol.extent.getCenter(extent);
-                var coord = ol.proj.transform(extentCenter, "EPSG:3857", "EPSG:4326");
-            }else{
-                var extent = prevCircleFeature.getGeometry().getExtent();
-                var extentCenter = ol.extent.getCenter(extent);
-                var coord = ol.proj.transform(extentCenter, "EPSG:3857", "EPSG:4326");
+            var extent = selectedFeature.getGeometry().getExtent();
+            var center = ol.extent.getCenter(extent);
+            var geomType = selectedFeature.getGeometry().getType();
+            var options = {
+                units:"meters",
+                steps: 128
+            };
+            var radius = ui.value;
+            var point = turf.toWgs84(center);
+            var tCircle = turf.circle(point,radius,options);
+            tCircle = turf.toMercator(tCircle);
+            var coordAr = selectedFeature.getGeometry().getCoordinates();
+            switch (geomType) {
+                case "Polygon":
+                    var geometry = new ol.geom.Polygon(tCircle["geometry"]["coordinates"]);
+                    break;
+                case "MultiPolygon":
+                    if($(this).attr("id")==="circle-radius-input") {//外円と内円の判断
+                        var geometry = new ol.geom.MultiPolygon([tCircle["geometry"]["coordinates"],coordAr[1]]);//外円
+                    }else{
+                        var geometry = new ol.geom.MultiPolygon([coordAr[0],tCircle["geometry"]["coordinates"]]);//内円
+                    }
+                    break;
             }
-            var precisionCircle = ol.geom.Polygon.circular(
-                new ol.Sphere(6378137),// WGS84 Sphere //
-                coord,//[131.423860, 31.911069]
-                ui.value, // Number of verticies //
-                32).transform('EPSG:4326', 'EPSG:3857');
-            var precisionCircleFeature = new ol.Feature(precisionCircle);
-            precisionCircleFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
-
-            if(prevCircleFeature) drawSource.removeFeature(prevCircleFeature);
-
-            if(selectedFeature) {
-                drawSource.removeFeature(selectedFeature);
-                selectedFeature = null
-            }
-
-            drawSource.addFeature(precisionCircleFeature);
-            prevCircleFeature = precisionCircleFeature;
-
-            featureSelect.getFeatures().clear();
+            selectedFeature.setGeometry(geometry);
         }
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -199,39 +203,27 @@ $(function() {
         }
     });
     //------------------------------------------------------------------------------------------------------------------
-    //ドロー用のソース、レイヤーを設置
+    //ドロー用（通常）のソース、レイヤーを設置
     drawSource = new ol.source.Vector();
     drawLayer = new ol.layer.Vector({
         source:drawSource,
         name:"drawLayer",
         style:drawStyleFunction()
-        /*
-         style: new ol.style.Style({
-         fill: new ol.style.Fill({
-         color: 'rgba(255, 255, 255, 0.2)'
-         }),
-         stroke: new ol.style.Stroke({
-         color: '#ffcc33',
-         width: 2
-         }),
-         image: new ol.style.Circle({
-         radius: 7,
-         fill: new ol.style.Fill({
-         color: '#ffcc33'
-         })
-         })
-         })
-         */
     });
-    //スタイルファンクション---------------------
+    //------------------------------------------------------------------------------------------------------------------
+    //ドロー用（ヒートマップ）のレイヤーを設置
+    drawLayerHeatmap = new ol.layer.Heatmap({
+        source:drawSource,
+        name:"drawLayerHeatmap",
+        style:drawStyleFunction()
+    });
+    //スタイルファンクション-----------------------------------------------------------------------------------------------
     function drawStyleFunction() {
         return function(feature, resolution) {
-            //console.log(feature);
             var prop = feature.getProperties();
             var geoType = feature.getGeometry().getType();
             var fillColor = prop["_fillColor"];
-            //console.log(prop)
-            //console.log(fillColor)
+            var type = prop["_type"];
             if (resolution > 2445) {//ズーム６
                 var pointRadius = 2;
             } else if (resolution > 1222) {//ズーム７
@@ -250,6 +242,7 @@ $(function() {
                 var pointRadius = 12;
             }
             switch (geoType) {
+                //線（ライン）
                 case "LineString":
                     var TDistance = funcTDistance(feature);
                     console.log(TDistance);
@@ -287,14 +280,13 @@ $(function() {
                                 offsetY: 0
                             }),
                             geometry: function (feature) {
-                                //var coord = feature.getGeometry().getCoordinates();
-                                //console.log(coord);
                                 var lastCoord =  feature.getGeometry().getLastCoordinate();
                                 return new ol.geom.Point(lastCoord)
                             }
                         })
                     ];
                     break;
+                //点（ポイント）
                 case "Point":
                     var style = new ol.style.Style({
                         image: new ol.style.Circle({
@@ -306,9 +298,37 @@ $(function() {
                         })
                     });
                     break;
+                //面と円（ポリゴンとマルチポリゴン）
                 case "Polygon":
                 case "MultiPolygon":
-                    var tArea = funcTArea(feature);
+                    var text = "";
+                    var text2 = "";
+                    switch (type) {
+                        case "circle":
+                        case "buffer":
+                            var tRadius = funcTRadius(feature);
+                            switch (geoType) {
+                                case "Polygon":
+                                    text = "半径" + tRadius;
+                                    text2 = "";
+                                    var lastCoord =  feature.getGeometry().getLastCoordinate();
+                                    var returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
+                                    break;
+                                case "MultiPolygon":
+                                    text = "半径" + tRadius[0];
+                                    text2 = "半径" + tRadius[1];
+                                    var lastCoord =  feature.getGeometry().getCoordinates()[0][0][0];
+                                    var lastCoord2 =  feature.getGeometry().getCoordinates()[1][0][0];
+                                    var returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
+                                    var returnGeom2 = new ol.geom.Point(lastCoord2);//テキスト用ジオメトリー
+                                    break;
+                            }
+                            break;
+                        default:
+                            var tArea = funcTArea(feature);
+                            text = "面積\n" + tArea;
+                            var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
+                    }
                     var style = [
                         new ol.style.Style({
                             fill: new ol.style.Fill({
@@ -318,17 +338,46 @@ $(function() {
                                 color: "gray",
                                 width: 1
                             }),
+                            zIndex: 0
+                        }),
+                        new ol.style.Style({//通常および外円用テキスト用スタイル
                             text: new ol.style.Text({
                                 font: "14px sans-serif",
-                                text: "面積\n" + tArea,
+                                text: text,
                                 fill: new ol.style.Fill({
-                                    color: "white"
+                                    color: "black"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "white",
+                                    width: 3
                                 }),
                                 offsetY: 0
                             }),
+                            geometry: function (feature) {
+                                return returnGeom
+                            },
+                            zIndex: 0
+                        }),
+                        new ol.style.Style({//内円用テキスト用スタイル
+                            text: new ol.style.Text({
+                                font: "14px sans-serif",
+                                text: text2,
+                                fill: new ol.style.Fill({
+                                    color: "black"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "white",
+                                    width: 3
+                                }),
+                                offsetY: 0
+                            }),
+                            geometry: function (feature) {
+                                return returnGeom2
+                            },
                             zIndex: 0
                         })
                     ];
+                    console.log(style[1]);
                     break;
                 default:
             }
@@ -345,6 +394,8 @@ $(function() {
         var tDistance = 0;
         var fromCoord,toCoord;
         var coordAr = feature.getGeometry().getCoordinates();
+        var geomType = feature.getGeometry().getType();
+        if(geomType==="Point") return;//描き初めは１点でありPoint。そのときは抜ける。
         for(var i = 0; i <coordAr.length-1; i++){
             fromCoord = ol.proj.transform(coordAr[i], "EPSG:3857", "EPSG:4326");
             toCoord = ol.proj.transform(coordAr[i+1], "EPSG:3857", "EPSG:4326");
@@ -352,9 +403,9 @@ $(function() {
         }
         console.log(tDistance);
         if(tDistance<1) {
-            tDistance = String((Math.floor(tDistance*10000)/10000*1000).toLocaleString()) + "m";
+            tDistance = String((Math.round(tDistance*100)/100*1000).toLocaleString()) + "m";//10m単位で四捨五入
         }else{
-            tDistance = String((Math.floor(tDistance*1000)/1000).toLocaleString()) + "km";
+            tDistance = String((Math.round(tDistance*100)/100).toLocaleString()) + "km";//10m単位で四捨五入
         }
         return tDistance;
     }
@@ -375,6 +426,47 @@ $(function() {
             tArea = String((Math.floor(tArea/1000000*100)/100).toLocaleString()) + "km2";
         }
         return tArea;
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //円の半径を計算
+    function funcTRadius(feature){
+        var extent = feature.getGeometry().getExtent();
+        var center = ol.proj.transform(ol.extent.getCenter(extent), "EPSG:3857", "EPSG:4326");
+        var TRadius = 0;
+        var coordAr = feature.getGeometry().getCoordinates();
+        var geomType = feature.getGeometry().getType();
+        switch (geomType) {
+            case "Polygon":
+                var to = ol.proj.transform(coordAr[0][0], "EPSG:3857", "EPSG:4326");
+                TRadius = TRadius + turf.distance(center,to);
+                console.log(TRadius);
+                TRadius = funcMath(TRadius);
+                break;
+            case "MultiPolygon":
+                var TRadiusAr = [];
+                for(var i = 0; i <2; i++){
+                    var to = ol.proj.transform(coordAr[i][0][0], "EPSG:3857", "EPSG:4326");
+                    TRadius = turf.distance(center,to);
+                    console.log(TRadius);
+                    TRadius = funcMath(TRadius);
+                    TRadiusAr.push(TRadius);
+                }
+                console.log(TRadiusAr);
+                TRadius = TRadiusAr;
+                break;
+            default:
+        }
+        //-----------------------------
+        function funcMath(TRadius) {
+            if(TRadius<1) {
+                TRadius = String((Math.round(TRadius*100)/100*1000).toLocaleString()) + "m";//10m単位で四捨五入
+            }else{
+                TRadius = String((Math.round(TRadius*100)/100).toLocaleString()) + "km";//10m単位で四捨五入
+            }
+            return TRadius;
+        }
+        //-----------------------------
+        return TRadius;
     }
     //------------------------------------------------------------------------------------------------------------------
     //キーボード操作　キーダウン時　ctrl+zで戻す　同時押しはこちらに描く
@@ -449,7 +541,6 @@ $(function() {
     });
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
-
     drawSource.on("change", function(e) {
         if(drawSourceChangeFlg) geojsonText();
     });
@@ -474,6 +565,7 @@ $(function() {
         style:function(feature, resolution) {
             var prop = feature.getProperties();
             var fillColor = prop["_fillColor"];
+            var type = prop["_type"];
             var geoType = feature.getGeometry().getType();
             switch (geoType) {
                 case "Point":
@@ -512,9 +604,26 @@ $(function() {
                         })
                     ];
                     break;
+                case "MultiPolygon":
                 case "Polygon":
                     copyCoord = feature.getGeometry().getCoordinates();//ポリゴンを保存
-                    var tArea = funcTArea(feature);
+                    var text = "";
+                    switch (type) {
+                        case "circle":
+                        case "buffer":
+                            var tRadius = funcTRadius(feature);
+                            text = "半径" + tRadius;
+                            var lastCoord =  feature.getGeometry().getLastCoordinate();
+                            var returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
+                            var returnNodeGeom = null;//ノード用ジオメトリー
+                            break;
+                        default:
+                            var tArea = funcTArea(feature);
+                            text = "面積\n" + tArea;
+                            var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
+                            var coord = feature.getGeometry().getCoordinates()[0];
+                            var returnNodeGeom = new ol.geom.MultiPoint(coord);//ノード用ジオメトリー
+                    }
                     var styles = [
                         new ol.style.Style({
                             fill: new ol.style.Fill({
@@ -524,18 +633,27 @@ $(function() {
                                 color: 'red',
                                 width: 2
                             }),
+                            zIndex: 0
+                        }),
+                        new ol.style.Style({//テキスト用スタイル
                             text: new ol.style.Text({
                                 font: "14px sans-serif",
-                                //text: "選択中",
-                                text: "選択中\n" + tArea,
+                                text: text,
                                 fill: new ol.style.Fill({
-                                    color: "white"
+                                    color: "black"
+                                }),
+                                stroke: new ol.style.Stroke({
+                                    color: "white",
+                                    width: 3
                                 }),
                                 offsetY: 0
                             }),
+                            geometry: function (feature) {
+                                return returnGeom
+                            },
                             zIndex: 0
                         }),
-                        new ol.style.Style({
+                        new ol.style.Style({//ノード用
                             image: new ol.style.RegularShape({
                                 fill: new ol.style.Fill({
                                     color: "white"
@@ -550,8 +668,7 @@ $(function() {
                                 angle: 45
                             }),
                             geometry: function (feature) {
-                                var coord = feature.getGeometry().getCoordinates()[0];
-                                return new ol.geom.MultiPoint(coord)
+                                return returnNodeGeom;
                             }
                         })
                     ];
@@ -617,15 +734,25 @@ $(function() {
         $(".prop-input-text-name").val("");
         $(".prop-input-text-val").val("");
         $("#circle-radius-div").hide();
+        $("#circle-radius2-div").hide();
         if(features.length) {
             var extent = selectedFeature.getGeometry().getExtent();
             var extentCenter = ol.extent.getCenter(extent);
             var coordAr = selectedFeature.getGeometry().getCoordinates()[0];
             var origin = ol.proj.transform(extentCenter, "EPSG:3857", "EPSG:4326");
+            var geomType = selectedFeature.getGeometry().getType();
+            console.log(geomType);
             var prevDistance = 0;
             var circleFlg = false;
-            for (var i = 0; i < coordAr.length; i++) {
-                var to = ol.proj.transform(coordAr[i], "EPSG:3857", "EPSG:4326");
+            for (var i = 0; i < coordAr.length; i++) {//サークル（円）であるかどうかを判断するために
+                switch (geomType) {
+                    case "Polygon":
+                        var to = ol.proj.transform(coordAr[i], "EPSG:3857", "EPSG:4326");
+                        break;
+                    case "MultiPolygon":
+                        var to = ol.proj.transform(coordAr[i][0], "EPSG:3857", "EPSG:4326");
+                        break;
+                }
                 var tDistance = turf.distance(origin,to);
                 tDistance = Math.floor(tDistance*100000)/100000;
                 if(prevDistance===0 || prevDistance===tDistance) {
@@ -638,11 +765,25 @@ $(function() {
                 prevDistance = tDistance;
                 if(i===10) break;
             }
-            console.log(circleFlg);
-            if(circleFlg) {
+            if(circleFlg) {//円だったとき
+                switch (geomType) {
+                    case "Polygon":
+                        var tRadiusNum = Number(funcTRadius(selectedFeature).slice(0,-1));
+                        $("#circle-radius-input").val(tRadiusNum);
+                        break;
+                    case "MultiPolygon":
+                        var tRadiusAr = funcTRadius(selectedFeature);
+                        var tRadiusNum = Number(tRadiusAr[0].slice(0,-1));
+                        var tRadiusNum2 = Number(tRadiusAr[1].slice(0,-1));
+                        $("#circle-radius-input").val(tRadiusNum);
+                        $("#circle-radius2-input").val(tRadiusNum2);
+                        break;
+                }
                 $("#circle-radius-div").show();
+                if(geomType==="MultiPolygon") $("#circle-radius2-div").show();
             }else{
                 $("#circle-radius-div").hide();
+                $("#circle-radius2-div").hide();
             }
             drawMenuOverlay.setPosition(extentCenter);
         }else{
@@ -653,8 +794,6 @@ $(function() {
         console.log(prop);
         var i = 0;
         for(key in prop){
-            //console.log(prop[key]);
-            //console.log(key);
             if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="経度old" && key!=="緯度old" && key!=="移動"){
                 console.log(key);
                 $(".prop-input-text-name").eq(i).val(key);
@@ -668,7 +807,7 @@ $(function() {
     var modify = new ol.interaction.Modify({
         //source:drawSource,
         features:featureSelect.getFeatures(),
-        deleteCondition:ol.events.condition.singleClick//削除をシングルクリックのみでできるようにしたｓ
+        deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにしたｓ
     });
     //map1.addInteraction(modify);
     var modifyFlg = false;
@@ -679,6 +818,8 @@ $(function() {
     modify.on("modifyend", function(e) {
         modifyFlg = false;
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //ポイント
     var drawPoint = new ol.interaction.Draw({
         source:drawSource,
         type:"Point"
@@ -689,6 +830,8 @@ $(function() {
         prop["_fillColor"] = "rgba(51,122,255,0.7)";
         featureSelect.getFeatures().clear();
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //ポリゴン
     var drawPolygon = new ol.interaction.Draw({
         snapTolerance:1,
         source:drawSource,
@@ -709,6 +852,8 @@ $(function() {
     var drawhole  = new ol.interaction.DrawHole ({
         layers:[drawLayer]
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //線　ライン
     var drawLineString = new ol.interaction.Draw({
         source:drawSource,
         type:"LineString",
@@ -717,33 +862,89 @@ $(function() {
             else geometry = new ol.geom.LineString(coordinates);
             this.nbpts = geometry.getCoordinates().length;
             return geometry;
+        },
+        style: function(feature, resolution) {
+            console.log(feature);
+            var tDistance = funcTDistance(feature);
+            console.log(tDistance);
+            var styles =[
+                new ol.style.Style({
+                    stroke: new ol.style.Stroke({
+                        color: 'rgba(255, 0, 0, 0.7)',
+                        lineDash: [10, 10],
+                        width: 3
+                    })
+                }),
+                new ol.style.Style({
+                    image: new ol.style.Circle({
+                        radius: 5,
+                        stroke: new ol.style.Stroke({
+                            color: 'rgba(0, 0, 0, 0.7)'
+                        }),
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 255, 255, 0.2)'
+                        })
+
+                    }),
+                    text: new ol.style.Text({
+                        font: "14px sans-serif",
+                        text: tDistance,
+                        fill: new ol.style.Fill({
+                            color: "black"
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: "white",
+                            width: 3
+                        }),
+                        offsetY: 0
+                    }),
+                    geometry: function (feature) {
+                        var lastCoord =  feature.getGeometry().getLastCoordinate();
+                        return new ol.geom.Point(lastCoord)
+                    }
+                })
+            ];
+            return styles;
         }
     });
+    /*
+    var lineStringListener;
+    drawLineString.on("drawstart", function(e) {
+        var feature = e.feature;
+        lineStringListener = feature.getGeometry().on('change', function(e) {
+            var tDistance = funcTDistance(feature);
+            console.log(tDistance);
+        });
+    });
+    */
     drawLineString.on("drawend", function(e) {
         var prop = e["feature"]["D"];
         prop["_fillColor"] = "rgba(51,122,255,0.7)";
         featureSelect.getFeatures().clear();
         drawLineString.nbpts = 0;
+        //ol.Observable.unByKey(lineStringListener);
     });
-/*
-    var measureTooltipElement = null;
-    createMeasureTooltip();
-    function createMeasureTooltip() {
-        if (measureTooltipElement) {
-            measureTooltipElement.parentNode.removeChild(measureTooltipElement);
-        }
-        measureTooltipElement = document.createElement('div');
-        measureTooltipElement.className = 'tooltip tooltip-measure';
-        measureTooltipElement.innerHTML = "ssssssssssssss";
+    //------------------------------------------------------------------------------------------------------------------
 
-        measureTooltip = new ol.Overlay({
-            element: measureTooltipElement,
-            offset: [0, -15],
-            positioning: 'bottom-center'
-        });
-        map1.addOverlay(measureTooltip);
-    }
-*/
+    /*
+        var measureTooltipElement = null;
+        createMeasureTooltip();
+        function createMeasureTooltip() {
+            if (measureTooltipElement) {
+                measureTooltipElement.parentNode.removeChild(measureTooltipElement);
+            }
+            measureTooltipElement = document.createElement('div');
+            measureTooltipElement.className = 'tooltip tooltip-measure';
+            measureTooltipElement.innerHTML = "ssssssssssssss";
+
+            measureTooltip = new ol.Overlay({
+                element: measureTooltipElement,
+                offset: [0, -15],
+                positioning: 'bottom-center'
+            });
+            map1.addOverlay(measureTooltip);
+        }
+    */
     var drawCircle = new ol.interaction.Draw({
         source:drawSource,
         type:"Circle",
@@ -754,27 +955,67 @@ $(function() {
         prop["_fillColor"] = "rgba(51,122,255,0.7)";
         featureSelect.getFeatures().clear();
     });
-    var drawCircle2 = new ol.interaction.Draw({
+    //------------------------------------------------------------------------------------------------------------------
+    //円
+    var drawSingleCircle = new ol.interaction.Draw({
         source:drawSource,
         type:"Point",
         geometryFunction:function(coordinates, geometry){
-            console.log(coordinates);
-            this.coord = coordinates;
+            var options = {
+                units:"meters",
+                steps: 128
+            };
+            var radius = 100;
+            var point = turf.toWgs84(coordinates);
+            var tCircle = turf.circle(point,radius,options);
+            tCircle = turf.toMercator(tCircle);
+            geometry = new ol.geom.Polygon(tCircle["geometry"]["coordinates"]);
+            return geometry;
         }
     });
-    drawCircle2.on("drawend", function(e) {
-        console.log(drawCircle2.coord);
-        var coord = ol.proj.transform(drawCircle2.coord,"EPSG:3857","EPSG:4326");
-        console.log(coord);
-        var precisionCircle = ol.geom.Polygon.circular(
-            new ol.Sphere(6378137),// WGS84 Sphere //
-            coord,//[131.423860, 31.911069]
-            100, // Number of verticies //
-            32).transform('EPSG:4326', 'EPSG:3857');
-        var precisionCircleFeature = new ol.Feature(precisionCircle);
-        precisionCircleFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
-        drawSource.addFeature(precisionCircleFeature);
+    drawSingleCircle.on("drawend", function(e) {
+        e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+        e["feature"]["D"]["_type"] = "circle";
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //二重円
+    var drawDoubleCircle = new ol.interaction.Draw({
+        source:drawSource,
+        type:"Point",
+        geometryFunction:function(coordinates, geometry){
+            var options = {
+                units:"meters",
+                steps: 128
+            };
+            //外円--------------------------
+            var radius = 200;
+            var point = turf.toWgs84(coordinates);
+            var tCircle = turf.circle(point,radius,options);
+            tCircle = turf.toMercator(tCircle);
+            //内円--------------------------
+            var radius2 = 100;
+            var point2 = turf.toWgs84(coordinates);
+            var tCircle2 = turf.circle(point2,radius2,options);
+            tCircle2 = turf.toMercator(tCircle2);
+            //-----------------------------
+            geometry = new ol.geom.MultiPolygon([tCircle["geometry"]["coordinates"],tCircle2["geometry"]["coordinates"]]);
+            console.log(geometry);
+            return geometry;
+        }
+    });
+    drawDoubleCircle.on("drawend", function(e) {
+        e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
+        e["feature"]["D"]["_type"] = "circle";
+        map1.addInteraction(featureSelect);
+        featureSelect.getFeatures().clear();
+        //featureSelect.getFeatures().push(e["feature"]);
+        featureSelect.dispatchEvent({
+            type:"select",
+            selected:[e["feature"]],
+            deselected:[]
+        });
+    });
+    //------------------------------------------------------------------------------------------------------------------
     var drawDome = new ol.interaction.Draw({
         source:drawSource,
         type:"Point",
@@ -879,7 +1120,8 @@ $(function() {
         map1.removeInteraction(drawhole);
         map1.removeInteraction(drawLineString);
         map1.removeInteraction(drawCircle);
-        map1.removeInteraction(drawCircle2);
+        map1.removeInteraction(drawSingleCircle);
+        map1.removeInteraction(drawDoubleCircle);
         map1.removeInteraction(snap);
         map1.removeInteraction(transform);
         //map1.removeInteraction(transformTranslate);
@@ -917,8 +1159,11 @@ $(function() {
             case "Circle":
                 map1.addInteraction(drawCircle);
                 break;
-            case "Circle2":
-                map1.addInteraction(drawCircle2);
+            case "SingleCircle":
+                map1.addInteraction(drawSingleCircle);
+                break;
+            case "DoubleCircle":
+                map1.addInteraction(drawDoubleCircle);
                 break;
             case "Dome":
                 map1.addInteraction(drawDome);
@@ -1001,7 +1246,8 @@ $(function() {
             map1.removeInteraction(drawhole);
             map1.removeInteraction(drawLineString);
             map1.removeInteraction(drawCircle);
-            map1.removeInteraction(drawCircle2);
+            map1.removeInteraction(drawSingleCircle);
+            map1.removeInteraction(drawDoubleCircle);
             map1.removeInteraction(snap);
             map1.removeInteraction(transform);
             //map1.removeInteraction(translate);
@@ -1043,20 +1289,44 @@ $(function() {
             case "buffer":
                 funcBuffer(100);
                 break;
-            default:
+            case "heatmap":
+                funcHeatmap();
+                break;
         }
     });
-    //--------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
+    //レイヤーをリセット
+    function funcLayerReset() {
+        map1.removeLayer(drawLayerHeatmap);
+        map1.removeLayer(drawLayer);
+        map1.addLayer(drawLayer);
+        drawLayer.set("selectable",true);
+        drawLayer.set("altitudeMode","clampToGround");
+        drawLayer.setZIndex(9999);
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //エフェクトをリセット
     function funcReset() {
+        funcLayerReset();
         var features = drawSource.getFeatures();
         for(var i = 0; i <features.length; i++){
-            var effet = features[i].getProperties()["_effect"];
-            if(effet) drawSource.removeFeature(features[i])
+            var type = features[i].getProperties()["_type"];
+            if(type==="voronoi" || type==="buffer") drawSource.removeFeature(features[i])
         }
     }
-    //--------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
+    //ヒートマップ作成
+    function funcHeatmap() {
+        map1.removeLayer(drawLayer);
+        map1.addLayer(drawLayerHeatmap);
+        drawLayerHeatmap.set("selectable",true);
+        drawLayerHeatmap.set("altitudeMode","clampToGround");
+        drawLayerHeatmap.setZIndex(9999);
+    }
+    //------------------------------------------------------------------------------------------------------------------
     //ボロノイ図作成
     function funcVoronoi() {
+        funcLayerReset();
         var d3Color = d3.scale.category20();
         var mapExtent = map1.getView().calculateExtent(map1.getSize());
         mapExtent = ol.proj.transformExtent(mapExtent, 'EPSG:3857', 'EPSG:4326');
@@ -1065,7 +1335,7 @@ $(function() {
         };
         var features = drawSource.getFeatures();
         for(var i = 0; i <features.length; i++){
-            var effet = features[i].getProperties()["_effect"];
+            var effet = features[i].getProperties()["_type"];
             if(effet==="voronoi") drawSource.removeFeature(features[i])
         }
         features = drawSource.getFeatures();
@@ -1094,18 +1364,51 @@ $(function() {
                 geometry: geometry,
                 //"_fillColor": "rgba(51,122,255,0.7)",
                 "_fillColor": rgba,
-                "_effect": "voronoi"
+                "_type": "voronoi"
             });
             drawSource.addFeature(newFeature);
         }
     }
-    //--------------------------------------------------------------------------------------------------------------
-    //バッファー作成 turf.jsを使う場合。オプションが効かなかったのでol3で実装した。
-    /*
-    function funcBufferOld(radius) {
+    //------------------------------------------------------------------------------------------------------------------
+    //バッファー作成（サークル作成） turf.js　結局turf.jsのバッファーはオプションが動作しないので同じturf.jsのcircleを使った。
+    function funcBuffer(radius) {
+        funcLayerReset();
         var features = drawSource.getFeatures();
         for(var i = 0; i <features.length; i++){
-            var effet = features[i].getProperties()["_effect"];
+            var effet = features[i].getProperties()["_type"];
+            if(effet==="buffer") drawSource.removeFeature(features[i])
+        }
+        features = drawSource.getFeatures();
+        //radius = radius * 1.179832968;
+        console.log(radius);
+        for (var i = 0; i < features.length; i++) {
+            var geomType = features[i].getGeometry().getType();
+            if (geomType === "Point") {
+                var point4326 = turf.point(ol.proj.transform(features[i].getGeometry().getCoordinates(), "EPSG:3857", "EPSG:4326"));
+                var options = {
+                    units:"meters",
+                    steps: 128
+                };
+                var buffered = turf.circle(point4326,radius,options);
+                console.log(buffered["geometry"]["coordinates"]);
+                buffered = turf.toMercator(buffered);
+                console.log(buffered["geometry"]["coordinates"]);
+                var geometry = new ol.geom.Polygon(buffered["geometry"]["coordinates"]);
+                var newFeature = new ol.Feature({
+                    "_fillColor": "rgba(51,122,255,0.7)",
+                    "_type": "buffer",
+                    geometry: geometry
+                });
+                drawSource.addFeature(newFeature);
+            }
+        }
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //バッファー作成
+    function funcBufferOLD(radius) {
+        var features = drawSource.getFeatures();
+        for(var i = 0; i <features.length; i++){
+            var effet = features[i].getProperties()["_type"];
             if(effet==="buffer") drawSource.removeFeature(features[i])
         }
         features = drawSource.getFeatures();
@@ -1117,8 +1420,10 @@ $(function() {
                 var point4326 = turf.point(ol.proj.transform(features[i].getGeometry().getCoordinates(), "EPSG:3857", "EPSG:4326"));
                 //var buffered = turf.buffer(point4326,radius,{"units":"kilometers","steps":64});
                 var options = {
+                    units:"meters",
                     steps: 64
                 };
+                //var buffered = turf.buffer(point4326,radius,options);
                 var buffered = turf.buffer(point4326,radius,options);
                 console.log(buffered["geometry"]["coordinates"]);
                 buffered = turf.toMercator(buffered);
@@ -1126,20 +1431,19 @@ $(function() {
                 var geometry = new ol.geom.Polygon(buffered["geometry"]["coordinates"]);
                 var newFeature = new ol.Feature({
                     "_fillColor": "rgba(51,122,255,0.7)",
-                    "_effect": "buffer",
+                    "_type": "buffer",
                     geometry: geometry
                 });
                 drawSource.addFeature(newFeature);
             }
         }
     }
-    */
-    //--------------------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
     //バッファー作成
-    function funcBuffer(radius) {
+    function funcBufferOL3(radius) {
         var features = drawSource.getFeatures();
         for(var i = 0; i <features.length; i++){
-            var effet = features[i].getProperties()["_effect"];
+            var effet = features[i].getProperties()["_type"];
             if(effet==="buffer") drawSource.removeFeature(features[i])
         }
         features = drawSource.getFeatures();
@@ -1151,10 +1455,10 @@ $(function() {
                     new ol.Sphere(6378137),// WGS84 Sphere //
                     coord,//[131.423860, 31.911069]
                     radius, // Number of verticies //
-                    64).transform('EPSG:4326', 'EPSG:3857');
+                    128).transform('EPSG:4326', 'EPSG:3857');
                 var newFeature = new ol.Feature(precisionCircle);
                 newFeature["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
-                newFeature["D"]["_effect"] = "buffer";
+                newFeature["D"]["_type"] = "buffer";
                 drawSource.addFeature(newFeature);
             }
         }
@@ -1417,7 +1721,6 @@ $(function() {
     var csvRead = function(file){
         console.log(drawSourceChangeFlg);
         drawSourceChangeFlg = false;
-
         //drawSource = new ol.source.Vector();
         console.log(file);
         csvarr = [];
