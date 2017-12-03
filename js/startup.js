@@ -11,7 +11,6 @@ $(function(){
     //$("#map1 .cesium-btn-div").show();
     $(window).on('resize',function(){
         $("#map1,#map2").height($(window).height());
-
         funcResize();
     });
     funcResize();
@@ -25,7 +24,7 @@ $(function(){
             $(".osm-dropdown-div").hide();
             $(".draw-btn").hide();
             $(".btn").css({
-                "padding":"6px 10px"
+                //"padding":"6px 10px"
             })
         } else {
             $(".data-btn").text("data").show();
@@ -33,7 +32,7 @@ $(function(){
             $(".osm-dropdown-div").show();
             $(".draw-btn").show();
             $(".btn").css({
-                "padding":"6px 12px"
+                //"padding":"6px 12px"
             })
         }
     }
@@ -45,13 +44,11 @@ $(function(){
         var msg = "";
         //msg += "<i class='fa fa-exclamation fa-fw'></i>";
         msg += "<div style='text-align:center;margin-bottom:10px;'><span class='label label-default label-danger'>New</span></div>";
-
         //msg += "★iphoneのsafariで画面移動ができない現象があるようです。その場合はブラウザをクローム等に変えてみてください。<br>";
         msg += "★背景が多くなりすぎたのでカテゴリわけしています。<br>";
         msg += "★<a href='http://www.gsi.go.jp/bousaichiri/bousaichiri61013.html' target='_blank'>宮崎県立佐土原高校情報技術部 防災アプリ大賞受賞!！</a><br>";
         msg += "★背景のうち(MVT/VT)とついているものは3D化できません！<br>";
         msg += "★詳しい追加情報等は<a href='https://www.facebook.com/hinatagis' target='_blank'><i class='fa fa-facebook-square fa-fw' style='color:navy;'></i>FBへ</a><br>";
-
         //msg += "<canvas id='canvas1'></canvas>";
         msg += "1 ドロー機能実験中。「draw」ボタンから<br>";
         msg += "2 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
@@ -116,11 +113,9 @@ $(function(){
         });
     }
     //webストレージから中陣地座標、ズーム率を取得
-
+    /*
     var urlHash = location.hash;
     console.log(urlHash);
-
-    /*
     if(urlHash) {
         console.log(urlHash);
         var zoom = urlHash.split("/")[0];
@@ -149,25 +144,16 @@ $(function(){
     if(zoom==undefined){
         zoom = 14;
     }
-
     var view1 = new ol.View({
         center:center,
         zoom:zoom
     });
-
-    //inu.setZIndex(9999999);
-    //editLayer.set("altitudeMode","clampToGround");
-    //editLayer.setZIndex(9999999);//edit.js参照
-    //editLayer.set("selectable",true);
-
-
-
     var DragRotateAndZoom = new ol.interaction.DragRotateAndZoom();//shift+ドラッグで回転可能に
     //id map1に起動時に表示されるレイヤーをセット
     map1 = new ol.Map({
         target:"map1",
-        //layers:[mieruneNormal1,editLayer],
-        layers:[pale1],
+        layers:[mieruneNormal1],
+        //layers:[pale1],
         view:view1,
         interactions:ol.interaction.defaults({doubleClickZoom:false}).extend([
             DragRotateAndZoom
@@ -175,8 +161,8 @@ $(function(){
     });
     map2 = new ol.Map({
         target:"map2",
-        //layers:[mieruneNormal2],
-        layers:[pale2],
+        layers:[mieruneNormal2],
+        //layers:[pale2],
         view:view1,//最初はview1
         interactions:ol.interaction.defaults({doubleClickZoom:false}).extend([
             DragRotateAndZoom
@@ -294,7 +280,6 @@ $(function(){
 
             }
         }
-
     }
     //---------------------------------------------------------------------------
     function funcElevation(evt,mapName){
@@ -371,7 +356,6 @@ $(function(){
     ol.hash(map1);
     ol.hash(map2);
     //------------------------------------------------------------------------
-
     /*
     //現在地取得
     $(".here-btn").click(function(){

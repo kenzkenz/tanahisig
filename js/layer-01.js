@@ -285,8 +285,8 @@ var osm2 = new ol.layer.Tile({
 });
 //ミエルネ地図
 var mieruneNormal1 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
+    //folder:"child",
+    //category:"mierune",
     title:"MIERUNE地図Normal(デモ)",
     origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
     detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
@@ -301,8 +301,8 @@ var mieruneNormal1 = new ol.layer.Tile({
     })
 });
 var mieruneNormal2 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
+    //folder:"child",
+    //category:"mierune",
     title:"MIERUNE地図Normal(デモ)",
     origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
     detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
@@ -3655,6 +3655,7 @@ var tisitu1 = new ol.layer.Tile({
         maxZoom:13
     })
 });
+//sが判例　lfが断層
 var tisitu2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",

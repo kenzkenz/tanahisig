@@ -4,36 +4,47 @@ $(function() {
     var drawLayerHeatmap = null
     var drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
-    var geojsonSaveAr = []//取り消し用にgeojsonを保存する
+    var geojsonSaveAr = [];//取り消し用にgeojsonを保存する
     var selectedFeature = null;
     //------------------------------------------------------------------------------------------------------------------
     //ドロー用ダイアログ作成
     var selectHtml = "";
     selectHtml += "<div id='draw-div'>";
     selectHtml += "選択モード：";
-    selectHtml += "<input type='checkbox' data-toggle='toggle' class='select-toggle bs-toggle' data-size='small'>";
-    selectHtml += "色、形状変更、項目追加はOn";
-    selectHtml += "<h4>step1 形を作る（必須）</h4>";
+    selectHtml += "<input type='checkbox' data-toggle='toggle' class='select-toggle bs-toggle' data-size='mini'>";
+    selectHtml += " 色、形状変更、項目追加はOn";
+    selectHtml += "<hr class='my-hr'>";
+    //--------------------------------------------------------
+    selectHtml += "<h5>step1 形を作る</h5>";
     selectHtml += "<div class='draw-div2'>";
     selectHtml += "形状 ";
     selectHtml += "<select id='drawType'>";
-    selectHtml += "<option value='0' selected>なし</option>";
-    selectHtml += "<option value='Point'>点を描く</option>";
-    selectHtml += "<option value='LineString'>ラインを描く</option>";
+    selectHtml += "<option value='0' selected>リセット</option>";
+    selectHtml += "<optgroup label='<i class=\"fa fa-map-marker fa-lg\" ></i> 点-----------------------------------------'>";
+    selectHtml += "<option value='Point'>点を設置</option>";
+    selectHtml += "<optgroup label='<i class=\"fa fa-share-alt fa-lg\" ></i> 線----------------------------------------'>";
+    selectHtml += "<option value='LineString'>線を描く</option>";
+    selectHtml += "<option value='LineStringFree'>線を描く(フリーハンド)</option>";
+    selectHtml += "<optgroup label='<i class=\"fa fa-bookmark-o fa-rotate-270 fa-lg\" ></i> 面----------------------------------------'>";
     selectHtml += "<option value='Polygon'>面を描く</option>";
+    selectHtml += "<option value='PolygonFree'>面を描く(フリーハンド)</option>";
     selectHtml += "<option value='DrawHole'>面に穴を開ける</option>";
-    selectHtml += "<option value='Transform'>回転と変形と移動</option>";
-    //selectHtml += "<option value='Circle'>円を描く</option>";
+    selectHtml += "<option value='Transform'>面の回転と変形と移動</option>";
+    selectHtml += "</optgroup>";
+    selectHtml += "<optgroup label='<i class=\"fa fa fa-circle-o fa-lg\" ></i> 円----------------------------------------'>";
     selectHtml += "<option value='SingleCircle'>円を描く</option>";
     selectHtml += "<option value='DoubleCircle'>円を描く（二重）</option>";
+    selectHtml += "</optgroup>";
+    selectHtml += "<optgroup label='その他--------------------------------------'>";
     selectHtml += "<option value='Dome'>東京ドーム一個分(正確ではありません。)</option>";
     selectHtml += "<option value='Nintoku'>仁徳天皇陵(正確ではありません。)</option>";
     selectHtml += "<option value='Paste'>最後に選択したポリゴンをペースト</option>";
-
+    selectHtml += "</optgroup>";
     selectHtml += "</select>";
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
-    selectHtml += "<h4>step2 色を塗る</h4>";
+    //--------------------------------------------------------
+    selectHtml += "<h5>step2 色を塗る</h5>";
     selectHtml += "<div class='draw-div2'>";
     selectHtml += "　色選択 ";
     selectHtml += "<select id='drawColor'>";
@@ -53,49 +64,59 @@ $(function() {
     selectHtml += "<option value='lime'>ライム</option>";
     selectHtml += "<option value='aqua'>水色aqua</option>";
     selectHtml += "</select>";
-    selectHtml += "　　<button type='button' id='colorSave-btn' class='btn btn-xs btn-primary'>　反映　</button>";
+    selectHtml += " <button type='button' id='colorSave-btn' class='btn btn-xs btn-primary'> 反映 </button>";
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
-    selectHtml += "<h4>step3 項目</h4>";
+    //--------------------------------------------------------
+    selectHtml += "<h5>step3 項目<span style='font-size:x-small;'>(作成中)</span></h5>";
     selectHtml += "<div class='draw-div2'>";
-    selectHtml += "<table id='propTable' class='popup-tbl table table-bordered table-hover'>";
-    selectHtml += "<tr><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
-    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    //selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    //selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    //selectHtml += "<tr><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    selectHtml += "</table>";
-    selectHtml += "<button type='button' id='propSave-btn' class='btn btn-xs btn-primary btn-block'>反映</button>";
-    selectHtml += "</div>";
-    selectHtml += "<hr class='my-hr'>";
-    selectHtml += "<h4>step4 効果</h4>";
-    selectHtml += "<div class='draw-div2'>";
-    //selectHtml += "効果 ";
 
+    selectHtml += "<div id='draw-div3-koumoku'>";
+    selectHtml += "<table id='propTable' class='table table-bordered table-hover'>";
+    selectHtml += "<tr><th class='prop-th-num'></th><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>1</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>2</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>3</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>4</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>5</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>6</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>7</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>8</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>9</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "<tr><td class='prop-td-num'>10</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    selectHtml += "</table>";
+    selectHtml += "</div>";
+    selectHtml += "<button type='button' id='propSave-btn' class='btn btn-xs btn-primary center-block' style='margin-bottom:4px;'>項目を反映</button>";
+    selectHtml += "</div>";
+
+    selectHtml += "</div>";
+    selectHtml += "<hr class='my-hr'>";
+    //--------------------------------------------------------
+    selectHtml += "<h5>step4 効果</h5>";
+    selectHtml += "<div class='draw-div2''>";
     selectHtml += "<div id='draw-div3-select'>";
-    selectHtml += "効果<select id='effectType'>";
-    selectHtml += "<option value='0' selected>なし</option>";
+    selectHtml += "効果 <select id='effectType'>";
+    selectHtml += "<option value='0' selected>リセット</option>";
     selectHtml += "<option value='voronoi'>ボロノイ図</option>";
     selectHtml += "<option value='buffer'>バッファー</option>";
     selectHtml += "<option value='heatmap'>ヒートマップ</option>";
     selectHtml += "</select>";
     selectHtml += "</div>";
-
     selectHtml += "<div id='draw-div3-effect'>";
-    selectHtml += "<div class='draw-div4'>バッファ半径：<input id='buffer-radius-input' type='text' value='100' size='2'>m</div>";
+    selectHtml += "<div class='draw-div4' style='margin-bottom:3px;'>バッファー半径：<input id='buffer-radius-input' type='text' value='100' size='3'>m</div>";
     //selectHtml += "<div class='draw-div4'>test1</div>";
     //selectHtml += "<div class='draw-div4'>test2</div>";
     selectHtml += "</div>";
-
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
-    selectHtml += "<h4>step5 保存</h4>";
+    //--------------------------------------------------------
+    selectHtml += "<h5>step5 保存</h5>";
     selectHtml += "<div class='draw-div2'>";
+    selectHtml += "作成した図形を保存します";
     selectHtml += "<div class='btn-group btn-group-justified' style='width:300px;'>";
     selectHtml += "<div class='btn-group'><button type='button' id='drawGeojson-btn' class='btn btn-xs btn-primary'>GEOJSON</button></div>";
     selectHtml += "<div class='btn-group'><button type='button' id='drawCsv-btn' class='btn btn-xs btn-primary'>CSV</button></div>";
+    selectHtml += "<div class='btn-group'><button type='button' id='drawGist-btn' class='btn btn-xs btn-primary'>GIST</button></div>";
     selectHtml += "</div>";
     selectHtml += "</div>";
     selectHtml += "</div>";
@@ -105,7 +126,7 @@ $(function() {
             id:"draw-dialog",
             class:"draw-dialog",
             map:"map1",
-            title:"ドロー実験中",
+            title:"ドロー<span style='font-size:x-small;'>(作成中)</span>",
             content:content,
             top:"60px",
             left:"10px",
@@ -113,6 +134,7 @@ $(function() {
             //rmDialog:true
         });
         $(".bs-toggle").bootstrapToggle();
+        $("#drawType,#drawColor,#effectType").msDropDown({height:300});
         $("#buffer-radius-input").spinner({
             max:50000, min:0, step:10,
             spin:function(event,ui){
@@ -140,13 +162,21 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイ要素作成
     var Overlaycontent = "";
-        //Overlaycontent += "<button type='button' class='close' id='drawMenuOverlay-close'>&times;</button>";
+        Overlaycontent += "<button type='button' class='close' id='drawMenuOverlay-close'>&times;</button>";
         Overlaycontent += "<div>";
         Overlaycontent += "<button type='button' id='draw-remove-btn' class='btn btn-xs btn-primary'>削除</button>";
-        Overlaycontent += "<div id='circle-radius-div'>半径：<input id='circle-radius-input' type='text' value='100' size='2'>m</div>";
-        Overlaycontent += "<div id='circle-radius2-div'>半径：<input id='circle-radius2-input' type='text' value='50' size='2'>m</div>";
+        Overlaycontent += "<div id='circle-radius-div'>半径：<input id='circle-radius-input' type='text' value='100' size='3'>m</div>";
+        Overlaycontent += "<div id='circle-radius2-div'>半径：<input id='circle-radius2-input' type='text' value='50' size='3'>m</div>";
         Overlaycontent += "</div>";
     $("#map1").append('<div id="drawMenuOverlay-div" class="drawMenuOverlay-div">' + Overlaycontent + '</div>');
+    //------------------------------------------------------------------------------------------------------------------
+    //オーバーレイをマップに設定
+    var drawMenuOverlay = new ol.Overlay({
+        element:$("#drawMenuOverlay-div")[0],
+        autoPan:true,
+        offset:[20,-40]//横、縦
+    });
+    map1.addOverlay(drawMenuOverlay);
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイ上のスピンコントロール　半径の操作 外円と内円共用
     $("#circle-radius-input,#circle-radius2-input").spinner({
@@ -179,14 +209,6 @@ $(function() {
             selectedFeature.setGeometry(geometry);
         }
     });
-    //------------------------------------------------------------------------------------------------------------------
-    //オーバーレイをマップに設定
-    var drawMenuOverlay = new ol.Overlay({
-        element:$("#drawMenuOverlay-div")[0],
-        autoPan:true,
-        offset:[0,0]
-    });
-    map1.addOverlay(drawMenuOverlay);
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイをクローズ
     $("#drawMenuOverlay-close").click(function(){
@@ -244,8 +266,8 @@ $(function() {
             switch (geoType) {
                 //線（ライン）
                 case "LineString":
-                    var TDistance = funcTDistance(feature);
-                    console.log(TDistance);
+                    var tDistance = funcTDistance(feature);
+                    console.log(tDistance);
                     var style = [
                         new ol.style.Style({
                             stroke: new ol.style.Stroke({
@@ -269,7 +291,7 @@ $(function() {
                             }),
                             text: new ol.style.Text({
                                 font: "14px sans-serif",
-                                text: TDistance,
+                                text: tDistance,
                                 fill: new ol.style.Fill({
                                     color: "black"
                                 }),
@@ -326,7 +348,8 @@ $(function() {
                             break;
                         default:
                             var tArea = funcTArea(feature);
-                            text = "面積\n" + tArea;
+                            var tDistance = funcTDistance(feature);
+                            text = "面積\n" + tArea + "\n周長" + tDistance;
                             var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
                     }
                     var style = [
@@ -377,7 +400,6 @@ $(function() {
                             zIndex: 0
                         })
                     ];
-                    console.log(style[1]);
                     break;
                 default:
             }
@@ -395,15 +417,29 @@ $(function() {
         var fromCoord,toCoord;
         var coordAr = feature.getGeometry().getCoordinates();
         var geomType = feature.getGeometry().getType();
-        if(geomType==="Point") return;//描き初めは１点でありPoint。そのときは抜ける。
-        for(var i = 0; i <coordAr.length-1; i++){
-            fromCoord = ol.proj.transform(coordAr[i], "EPSG:3857", "EPSG:4326");
-            toCoord = ol.proj.transform(coordAr[i+1], "EPSG:3857", "EPSG:4326");
-            tDistance = tDistance + turf.distance(fromCoord,toCoord);
+        //if(geomType==="Point") return;//描き初めは１点でありPoint。そのときは抜ける。
+        switch (geomType) {
+            case "Point":
+                return;//描き初めは１点でありPoint。そのときは抜ける。
+                break;
+            case "LineString":
+                for(var i = 0; i <coordAr.length-1; i++){
+                    fromCoord = turf.toWgs84(coordAr[i]);
+                    toCoord = turf.toWgs84(coordAr[i+1]);
+                    tDistance = tDistance + turf.distance(fromCoord,toCoord);
+                }
+                break;
+            case "Polygon":
+                for(var i = 0; i <coordAr[0].length-1; i++){
+                    fromCoord = turf.toWgs84(coordAr[0][i]);
+                    toCoord = turf.toWgs84(coordAr[0][i+1]);
+                    tDistance = tDistance + turf.distance(fromCoord,toCoord);
+                }
+                break;
+            default:
         }
-        console.log(tDistance);
         if(tDistance<1) {
-            tDistance = String((Math.round(tDistance*100)/100*1000).toLocaleString()) + "m";//10m単位で四捨五入
+            tDistance = String((Math.round(tDistance*1000)/1000*1000).toLocaleString()) + "m";//1m単位で四捨五入
         }else{
             tDistance = String((Math.round(tDistance*100)/100).toLocaleString()) + "km";//10m単位で四捨五入
         }
@@ -413,12 +449,8 @@ $(function() {
     //地物の面積を計算
     function funcTArea(feature){
         var coordAr = feature.getGeometry().getCoordinates();
-        for(var i = 0; i <coordAr.length; i++) {
-            for (var j = 0; j < coordAr[i].length; j++) {
-                coordAr[i][j] = ol.proj.transform(coordAr[i][j], "EPSG:3857", "EPSG:4326");
-            }
-        }
         var tPolygon = turf.polygon(coordAr);
+        tPolygon = turf.toWgs84(tPolygon);
         var tArea = turf.area(tPolygon);//面積計算
         if(tArea<1000000) {
             tArea = String((Math.floor(tArea*100)/100).toLocaleString()) + "m2";
@@ -439,7 +471,6 @@ $(function() {
             case "Polygon":
                 var to = ol.proj.transform(coordAr[0][0], "EPSG:3857", "EPSG:4326");
                 TRadius = TRadius + turf.distance(center,to);
-                console.log(TRadius);
                 TRadius = funcMath(TRadius);
                 break;
             case "MultiPolygon":
@@ -447,11 +478,9 @@ $(function() {
                 for(var i = 0; i <2; i++){
                     var to = ol.proj.transform(coordAr[i][0][0], "EPSG:3857", "EPSG:4326");
                     TRadius = turf.distance(center,to);
-                    console.log(TRadius);
                     TRadius = funcMath(TRadius);
                     TRadiusAr.push(TRadius);
                 }
-                console.log(TRadiusAr);
                 TRadius = TRadiusAr;
                 break;
             default:
@@ -472,13 +501,19 @@ $(function() {
     //キーボード操作　キーダウン時　ctrl+zで戻す　同時押しはこちらに描く
     var gTargetNum = null;
     var geojsonDeleteAr =[];
-
+    var shiftKeyFlg = false;
     $(window).keydown(function(e){
+        //----------------------
+        if(event.shiftKey){
+            shiftKeyFlg = true;
+        }else{
+            shiftKeyFlg = false;
+        }
+        //----------------------
         if(event.ctrlKey){
             featureSelect.getFeatures().clear();
             console.log(geojsonSaveAr);
             if(e.keyCode === 90){//z
-                //alert("ctrl+z");
                 console.log(drawPolygon.nbpts);
                 console.log(drawLineString.nbpts);
                 if(drawPolygon.nbpts>1 || drawLineString.nbpts>1) {
@@ -486,17 +521,13 @@ $(function() {
                     drawLineString.removeLastPoint();
                 }else{
                     drawSource.clear();
-
                     geojsonDeleteAr.push(geojsonSaveAr[geojsonSaveAr.length - 2]);
-
                     geojsonSaveAr.splice(geojsonSaveAr.length - 2, 2);//配列の最後から２番目から２つ削除。つまり後ろ二つを削除
                     var geojsonObject = geojsonSaveAr[geojsonSaveAr.length - 1];
-
-                    console.log(geojsonObject);
-
+                    //console.log(geojsonObject);
                     if(geojsonObject){
                         var targetGeojson = new ol.format.GeoJSON().readFeatures(geojsonObject, {featureProjection: 'EPSG:3857'});
-                        console.log(targetGeojson["features"]);
+                        //console.log(targetGeojson["features"]);
                         drawSource.addFeatures(targetGeojson);
                     }
                 }
@@ -507,7 +538,7 @@ $(function() {
                 var geojsonObject = geojsonDeleteAr[geojsonDeleteAr.length - 1];
                 geojsonDeleteAr.splice(geojsonDeleteAr.length - 1, 1);
                 var targetGeojson = new ol.format.GeoJSON().readFeatures(geojsonObject, {featureProjection: 'EPSG:3857'});
-                console.log(targetGeojson["features"]);
+                //console.log(targetGeojson["features"]);
                 drawSource.addFeatures(targetGeojson);
             }
         }
@@ -515,9 +546,15 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //キーボード操作 キーアップ時
     $(window).keyup(function(e){
+        shiftKeyFlg = false;
         var keycode = e.keyCode;
         console.log(keycode);
-        if($(":focus").val()) return;//input等でvalがあるときは抜ける。
+        //if($(":focus").val()) return;//input等でvalがあるときは抜ける。
+        console.log($(":focus")["length"]);
+        if($(":focus")["length"]){
+            console.log($(":focus").get(0).tagName);
+            if($(":focus").get(0).tagName==="INPUT") return;//inputのときは抜ける。
+        }
         var features = featureSelect.getFeatures();
         switch (keycode) {
             case 8://mac
@@ -674,8 +711,8 @@ $(function() {
                     ];
                     break;
                 case "LineString":
-                    var TDistance = funcTDistance(feature);
-                    console.log(TDistance);
+                    var tDistance = funcTDistance(feature);
+                    console.log(tDistance);
                     var styles = [
                         new ol.style.Style({
                             fill: new ol.style.Fill({
@@ -687,7 +724,7 @@ $(function() {
                             }),
                             text: new ol.style.Text({
                                 font: "14px sans-serif",
-                                text: TDistance,
+                                text: tDistance,
                                 fill: new ol.style.Fill({
                                     color: "black"
                                 }),
@@ -738,54 +775,51 @@ $(function() {
         if(features.length) {
             var extent = selectedFeature.getGeometry().getExtent();
             var extentCenter = ol.extent.getCenter(extent);
-            var coordAr = selectedFeature.getGeometry().getCoordinates()[0];
-            var origin = ol.proj.transform(extentCenter, "EPSG:3857", "EPSG:4326");
+            var coordAr = selectedFeature.getGeometry().getCoordinates();
             var geomType = selectedFeature.getGeometry().getType();
             console.log(geomType);
-            var prevDistance = 0;
-            var circleFlg = false;
-            for (var i = 0; i < coordAr.length; i++) {//サークル（円）であるかどうかを判断するために
-                switch (geomType) {
-                    case "Polygon":
-                        var to = ol.proj.transform(coordAr[i], "EPSG:3857", "EPSG:4326");
-                        break;
-                    case "MultiPolygon":
-                        var to = ol.proj.transform(coordAr[i][0], "EPSG:3857", "EPSG:4326");
-                        break;
-                }
-                var tDistance = turf.distance(origin,to);
-                tDistance = Math.floor(tDistance*100000)/100000;
-                if(prevDistance===0 || prevDistance===tDistance) {
-                    circleFlg = true;
-                }else{
-                    console.log("円ではない");
-                    circleFlg = false;
+            switch (geomType) {
+                case "LineString":
+                    console.log(coordAr);
+                    drawMenuOverlay.setOffset([0,0]);//[20,-40]//横、縦
+                    drawMenuOverlay.setPosition(coordAr[0]);//オーバーレイ表示
                     break;
-                }
-                prevDistance = tDistance;
-                if(i===10) break;
+                default:
+                    if(selectedFeature.getProperties()["_type"]==="circle") {//円だったとき
+                        var tRadiusNum,tRadiusNum2;
+                        switch (geomType) {
+                            case "Polygon":
+                                tRadius = funcTRadius(selectedFeature);
+                                if(tRadius.indexOf("km")!==-1) {
+                                    tRadiusNum = Number(tRadius.replace("km",""))*1000;
+                                }else{
+                                    tRadiusNum = Number(tRadius.replace("m",""));
+                                }
+                                $("#circle-radius-input").val(tRadiusNum);
+                                break;
+                            case "MultiPolygon":
+                                var tRadiusAr = funcTRadius(selectedFeature);
+                                if(tRadiusAr[0].indexOf("km")!==-1) {
+                                    tRadiusNum = Number(tRadiusAr[0].replace("km",""))*1000;
+                                    tRadiusNum2 = Number(tRadiusAr[1].replace("km",""))*1000;
+                                }else{
+                                    tRadiusNum = Number(tRadiusAr[0].replace("m",""));
+                                    tRadiusNum2 = Number(tRadiusAr[1].replace("m",""));
+                                }
+                                $("#circle-radius-input").val(tRadiusNum);
+                                $("#circle-radius2-input").val(tRadiusNum2);
+                                break;
+                        }
+                        $("#circle-radius-div").show();
+                        if(geomType==="MultiPolygon") $("#circle-radius2-div").show();
+                    }else{
+                        $("#circle-radius-div").hide();
+                        $("#circle-radius2-div").hide();
+                    }
+                    drawMenuOverlay.setOffset([20,-40]);
+                    drawMenuOverlay.setPosition(extentCenter);//オーバーレイ表示
+                    break;
             }
-            if(circleFlg) {//円だったとき
-                switch (geomType) {
-                    case "Polygon":
-                        var tRadiusNum = Number(funcTRadius(selectedFeature).slice(0,-1));
-                        $("#circle-radius-input").val(tRadiusNum);
-                        break;
-                    case "MultiPolygon":
-                        var tRadiusAr = funcTRadius(selectedFeature);
-                        var tRadiusNum = Number(tRadiusAr[0].slice(0,-1));
-                        var tRadiusNum2 = Number(tRadiusAr[1].slice(0,-1));
-                        $("#circle-radius-input").val(tRadiusNum);
-                        $("#circle-radius2-input").val(tRadiusNum2);
-                        break;
-                }
-                $("#circle-radius-div").show();
-                if(geomType==="MultiPolygon") $("#circle-radius2-div").show();
-            }else{
-                $("#circle-radius-div").hide();
-                $("#circle-radius2-div").hide();
-            }
-            drawMenuOverlay.setPosition(extentCenter);
         }else{
             drawMenuOverlay.setPosition(null);
             return;
@@ -794,7 +828,7 @@ $(function() {
         console.log(prop);
         var i = 0;
         for(key in prop){
-            if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="経度old" && key!=="緯度old" && key!=="移動"){
+            if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="経度" && key!=="緯度" && key!=="経度old" && key!=="緯度old" && key!=="移動"){
                 console.log(key);
                 $(".prop-input-text-name").eq(i).val(key);
                 $(".prop-input-text-val").eq(i).val(prop[key]);
@@ -803,13 +837,17 @@ $(function() {
         }
     });
     //------------------------------------------------------------------------------------------------------------------
+    //スナップ
     var snap = new ol.interaction.Snap({source:drawSource});
+    //------------------------------------------------------------------------------------------------------------------
+    //モディファイ
     var modify = new ol.interaction.Modify({
         //source:drawSource,
         features:featureSelect.getFeatures(),
         deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにしたｓ
     });
     //map1.addInteraction(modify);
+    /*
     var modifyFlg = false;
     modify.on("modifystart", function(e) {
         console.log(e);
@@ -818,6 +856,7 @@ $(function() {
     modify.on("modifyend", function(e) {
         modifyFlg = false;
     });
+    */
     //------------------------------------------------------------------------------------------------------------------
     //ポイント
     var drawPoint = new ol.interaction.Draw({
@@ -831,42 +870,137 @@ $(function() {
         featureSelect.getFeatures().clear();
     });
     //------------------------------------------------------------------------------------------------------------------
+    //ポリゴン フリーハンド
+    var drawPolygonFree = new ol.interaction.Draw({
+        snapTolerance:1,
+        source:drawSource,
+        type:"Polygon",
+        geometryFunction:polygonGometryFunc(),
+        freehand:true
+    });
+    drawPolygonFree.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+        drawPolygon.nbpts = 0;
+        //-------------------------------------------------
+        var options = {tolerance: 0.0001, highQuality: false};
+        var coordAr = e["feature"].getGeometry().getCoordinates();
+        var tPolygon = turf.polygon(coordAr);
+        tPolygon = turf.toWgs84(tPolygon);
+        var simplefied = turf.simplify(tPolygon, options);
+        simplefied = turf.toMercator(simplefied);
+        var geometry = new ol.geom.Polygon(simplefied["geometry"]["coordinates"]);
+        e["feature"].setGeometry(geometry);
+        //-------------------------------------------------
+    });
+    //------------------------------------------------------------------------------------------------------------------
     //ポリゴン
     var drawPolygon = new ol.interaction.Draw({
         snapTolerance:1,
         source:drawSource,
         type:"Polygon",
-        geometryFunction:function(coordinates, geometry) {
+        geometryFunction:polygonGometryFunc()
+    });
+    function polygonGometryFunc() {
+        return function(coordinates, geometry) {
             this.nbpts = coordinates[0].length;
             if (geometry) geometry.setCoordinates([coordinates[0].concat([coordinates[0][0]])]);
             else geometry = new ol.geom.Polygon(coordinates);
             return geometry;
-        }
+        };
+    }
+    var drawPolygonListener;
+    drawPolygon.on("drawstart", function(e) {
+        var feature = e.feature;
+        drawPolygonListener = feature.getGeometry().on('change', function(evt) {
+            var coordAr = feature.getGeometry().getCoordinates()[0];
+            var coord = coordAr[coordAr.length-2];
+            helpTooltipElement.innerHTML = "<span style='color:black;'>方向を変更する時にはシングルクリック<br>確定する時にはダブルクリック<br>ctrl+zで元に戻す</span>";
+            helpTooltip.setPosition(coord);
+        });
     });
     drawPolygon.on("drawend", function(e) {
         var prop = e["feature"]["D"];
         prop["_fillColor"] = "rgba(51,122,255,0.7)";
         featureSelect.getFeatures().clear();
         drawPolygon.nbpts = 0;
+        ol.Observable.unByKey(drawPolygonListener);
+        helpTooltipElement.innerHTML = "シングルクリックで描画スタート<br>やめるときはstep1でリセット";
+        //-------------------------------------------------
+        if(shiftKeyFlg) {
+            var options = {tolerance: 0.0001, highQuality: false};
+            var coordAr = e["feature"].getGeometry().getCoordinates();
+            var tPolygon = turf.polygon(coordAr);
+            tPolygon = turf.toWgs84(tPolygon);
+            var simplefied = turf.simplify(tPolygon, options);
+            simplefied = turf.toMercator(simplefied);
+            var geometry = new ol.geom.Polygon(simplefied["geometry"]["coordinates"]);
+            e["feature"].setGeometry(geometry);
+        }
+        //-------------------------------------------------
     });
     var drawhole  = new ol.interaction.DrawHole ({
         layers:[drawLayer]
+    });
+    var drawholeListener;
+    drawhole.on("drawstart", function(e) {
+        var feature = e.feature;
+        drawholeListener = feature.getGeometry().on('change', function(evt) {
+            var coordAr = feature.getGeometry().getCoordinates()[0];
+            var coord = coordAr[coordAr.length-2];
+            helpTooltipElement.innerHTML = "<span style='color:black;'>方向を変更する時にはシングルクリック<br>確定する時にはダブルクリック<br>ctrl+zは使ったらダメ！<br>やめるときはstep1でリセット</span>";
+            helpTooltip.setPosition(coord);
+        });
+    });
+    drawhole.on("drawend", function(e) {
+        ol.Observable.unByKey(drawholeListener);
+        helpTooltipElement.innerHTML = "面の上でシングルクリック<br>やめるときはstep1でリセット";
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //線　ライン フリーハンド
+    var drawLineStringFree = new ol.interaction.Draw({
+        source:drawSource,
+        type:"LineString",
+        geometryFunction:linStringeGometryFunc(),
+        style:linStringeStyleFunc(),
+        freehand:true
+    });
+    drawLineStringFree.on("drawend", function(e) {
+        var prop = e["feature"]["D"];
+        prop["_fillColor"] = "rgba(51,122,255,0.7)";
+        featureSelect.getFeatures().clear();
+        drawLineString.nbpts = 0;
+        //-------------------------------------------------
+        var options = {tolerance: 0.0001, highQuality: false};
+        var coordAr = e["feature"].getGeometry().getCoordinates();
+        var tLineString = turf.lineString(coordAr);
+        tLineString = turf.toWgs84(tLineString);
+        var simplefied = turf.simplify(tLineString, options);
+        simplefied = turf.toMercator(simplefied);
+        var geometry = new ol.geom.LineString(simplefied["geometry"]["coordinates"]);
+        e["feature"].setGeometry(geometry);
+        //-------------------------------------------------
     });
     //------------------------------------------------------------------------------------------------------------------
     //線　ライン
     var drawLineString = new ol.interaction.Draw({
         source:drawSource,
         type:"LineString",
-        geometryFunction:function(coordinates, geometry) {
+        geometryFunction:linStringeGometryFunc(),
+        style:linStringeStyleFunc()
+    });
+    function linStringeGometryFunc() {
+        return function(coordinates, geometry) {
             if (geometry) geometry.setCoordinates(coordinates);
             else geometry = new ol.geom.LineString(coordinates);
             this.nbpts = geometry.getCoordinates().length;
             return geometry;
-        },
-        style: function(feature, resolution) {
-            console.log(feature);
+        };
+    }
+    function linStringeStyleFunc() {
+        return function(feature, resolution) {
             var tDistance = funcTDistance(feature);
-            console.log(tDistance);
             var styles =[
                 new ol.style.Style({
                     stroke: new ol.style.Stroke({
@@ -884,7 +1018,6 @@ $(function() {
                         fill: new ol.style.Fill({
                             color: 'rgba(255, 255, 255, 0.2)'
                         })
-
                     }),
                     text: new ol.style.Text({
                         font: "14px sans-serif",
@@ -905,46 +1038,61 @@ $(function() {
                 })
             ];
             return styles;
-        }
-    });
-    /*
+        };
+    }
     var lineStringListener;
     drawLineString.on("drawstart", function(e) {
         var feature = e.feature;
-        lineStringListener = feature.getGeometry().on('change', function(e) {
-            var tDistance = funcTDistance(feature);
-            console.log(tDistance);
+        lineStringListener = feature.getGeometry().on('change', function(evt) {
+            var geom = evt.target;
+            helpTooltipElement.innerHTML = "<span style='color:black;'>方向を変更する時にはシングルクリック<br>確定する時にはダブルクリック<br>ctrl+zで元に戻す</span>";
+            helpTooltip.setPosition(geom.getLastCoordinate());
         });
     });
-    */
     drawLineString.on("drawend", function(e) {
         var prop = e["feature"]["D"];
         prop["_fillColor"] = "rgba(51,122,255,0.7)";
         featureSelect.getFeatures().clear();
         drawLineString.nbpts = 0;
-        //ol.Observable.unByKey(lineStringListener);
+        ol.Observable.unByKey(lineStringListener);
+        helpTooltipElement.innerHTML = "シングルクリックで描画スタート<br>やめるときはstep1でリセット";
     });
     //------------------------------------------------------------------------------------------------------------------
-
-    /*
-        var measureTooltipElement = null;
-        createMeasureTooltip();
-        function createMeasureTooltip() {
-            if (measureTooltipElement) {
-                measureTooltipElement.parentNode.removeChild(measureTooltipElement);
-            }
-            measureTooltipElement = document.createElement('div');
-            measureTooltipElement.className = 'tooltip tooltip-measure';
-            measureTooltipElement.innerHTML = "ssssssssssssss";
-
-            measureTooltip = new ol.Overlay({
-                element: measureTooltipElement,
-                offset: [0, -15],
-                positioning: 'bottom-center'
-            });
-            map1.addOverlay(measureTooltip);
+    //ドローのヘルプ
+    var helpTooltipElement = null;
+    createHelpTooltip();
+    function createHelpTooltip() {
+        if (helpTooltipElement) {
+            helpTooltipElement.parentNode.removeChild(helpTooltipElement);
         }
-    */
+        helpTooltipElement = document.createElement('div');
+        helpTooltipElement.className = 'tooltip hidden';
+        helpTooltip = new ol.Overlay({
+            element: helpTooltipElement,
+            offset: [15, 0],
+            positioning: 'center-left'
+        });
+        map1.addOverlay(helpTooltip);
+    }
+    var drawHelpFlg = false;
+    var pointerMoveHandler = function(evt) {
+        if (evt.dragging) {
+            return;
+        }
+        if(drawHelpFlg) {
+            helpTooltip.setPosition(evt.coordinate);
+            helpTooltipElement.classList.remove('hidden');
+        }else{
+            helpTooltip.setPosition(null);
+            helpTooltipElement.classList.add('hidden');
+        }
+    };
+    map1.on('pointermove', pointerMoveHandler);
+    map1.getViewport().addEventListener('mouseout', function() {
+        helpTooltipElement.classList.add('hidden');
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //現在使っていない円
     var drawCircle = new ol.interaction.Draw({
         source:drawSource,
         type:"Circle",
@@ -961,11 +1109,21 @@ $(function() {
         source:drawSource,
         type:"Point",
         geometryFunction:function(coordinates, geometry){
+            var mapZoom = map1.getView().getZoom();
+            var radius = 0;
+            if(mapZoom>=15) {
+                radius = 300;
+            }else if(mapZoom>=13) {
+                radius = 600;
+            }else if(mapZoom>=11) {
+                radius = 3000;
+            }else{
+                radius = 10000;
+            }
             var options = {
                 units:"meters",
                 steps: 128
             };
-            var radius = 100;
             var point = turf.toWgs84(coordinates);
             var tCircle = turf.circle(point,radius,options);
             tCircle = turf.toMercator(tCircle);
@@ -976,6 +1134,15 @@ $(function() {
     drawSingleCircle.on("drawend", function(e) {
         e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
         e["feature"]["D"]["_type"] = "circle";
+        map1.removeInteraction(featureSelect);
+        map1.addInteraction(featureSelect);
+        featureSelect.getFeatures().clear();
+        featureSelect.dispatchEvent({
+            type:"select",
+            selected:[e["feature"]],
+            deselected:[]
+        });
+        $(".select-toggle").bootstrapToggle("on");
     });
     //------------------------------------------------------------------------------------------------------------------
     //二重円
@@ -983,39 +1150,56 @@ $(function() {
         source:drawSource,
         type:"Point",
         geometryFunction:function(coordinates, geometry){
+            var mapZoom = map1.getView().getZoom();
+            var radius = 0;
+            var radius2 = 0;
+            if(mapZoom>=15) {
+                radius = 300;
+                radius2 = 200;
+            }else if(mapZoom>=13) {
+                radius = 600;
+                radius2 = 200;
+            }else if(mapZoom>=11) {
+                radius = 3000;
+                radius2 = 2000;
+            }else{
+                radius = 10000;
+                radius2 = 7000;
+            }
             var options = {
                 units:"meters",
                 steps: 128
             };
             //外円--------------------------
-            var radius = 200;
+            //var radius = 200;
             var point = turf.toWgs84(coordinates);
             var tCircle = turf.circle(point,radius,options);
             tCircle = turf.toMercator(tCircle);
             //内円--------------------------
-            var radius2 = 100;
+            //var radius2 = 100;
             var point2 = turf.toWgs84(coordinates);
             var tCircle2 = turf.circle(point2,radius2,options);
             tCircle2 = turf.toMercator(tCircle2);
             //-----------------------------
             geometry = new ol.geom.MultiPolygon([tCircle["geometry"]["coordinates"],tCircle2["geometry"]["coordinates"]]);
-            console.log(geometry);
             return geometry;
         }
     });
     drawDoubleCircle.on("drawend", function(e) {
         e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
         e["feature"]["D"]["_type"] = "circle";
+        map1.removeInteraction(featureSelect);
         map1.addInteraction(featureSelect);
         featureSelect.getFeatures().clear();
-        //featureSelect.getFeatures().push(e["feature"]);
         featureSelect.dispatchEvent({
             type:"select",
             selected:[e["feature"]],
             deselected:[]
         });
+        $(".select-toggle").bootstrapToggle("on");
     });
     //------------------------------------------------------------------------------------------------------------------
+    //ドーム
     var drawDome = new ol.interaction.Draw({
         source:drawSource,
         type:"Point",
@@ -1028,7 +1212,6 @@ $(function() {
                     115,
                     32
                 );
-            console.log(circle);
             circle.transform('EPSG:4326', 'EPSG:3857');
             geometry = circle;
             return geometry;
@@ -1037,6 +1220,8 @@ $(function() {
     drawDome.on("drawend", function(e) {
         e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //仁徳天皇陵
     var drawNintoku = new ol.interaction.Draw({
         source:drawSource,
         type:"Point",
@@ -1064,6 +1249,7 @@ $(function() {
         e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
     });
     //------------------------------------------------------------------------------------------------------------------
+    //ペースト
     var drawPaste = new ol.interaction.Draw({
         source:drawSource,
         type:"Point",
@@ -1089,6 +1275,8 @@ $(function() {
     drawPaste.on("drawend", function(e) {
         e["feature"]["D"]["_fillColor"] = "rgba(51,122,255,0.7)";
     });
+    //------------------------------------------------------------------------------------------------------------------
+    //トランスフォーム
     var transform = new ol.interaction.Transform ({
         translateFeature:false,
         scale:true,
@@ -1097,28 +1285,31 @@ $(function() {
         translate:true,
         stretch:true
     });
-    /*
-    var transformTranslate = new ol.interaction.Transform ({
-        translateFeature:false,
-        scale:false,
-        rotate:false,
-        keepAspectRatio:ol.events.condition.always,
-        translate:true,
-        stretch:false
-    });
-    */
+    //------------------------------------------------------------------------------------------------------------------
+    //移動
     var translate = new ol.interaction.Translate ({
         features:featureSelect.getFeatures()
     });
-
+    translate.on("translating", function(e) {
+        var extent = e["target"]["f"].getGeometry().getExtent();
+        var extentCenter = ol.extent.getCenter(extent);
+        drawMenuOverlay.setPosition(extentCenter);
+    });
     //------------------------------------------------------------------------------------------------------------------
+    //インタラクション追加
     function addInteractions() {
+
+        drawHelpFlg = false;
+
         var typeVal = $("#drawType").val();
         console.log(typeVal);
+        map1.removeInteraction(featureSelect);
         map1.removeInteraction(drawPoint);
         map1.removeInteraction(drawPolygon);
+        map1.removeInteraction(drawPolygonFree);
         map1.removeInteraction(drawhole);
         map1.removeInteraction(drawLineString);
+        map1.removeInteraction(drawLineStringFree);
         map1.removeInteraction(drawCircle);
         map1.removeInteraction(drawSingleCircle);
         map1.removeInteraction(drawDoubleCircle);
@@ -1129,25 +1320,51 @@ $(function() {
         map1.removeInteraction(drawDome);
         map1.removeInteraction(drawNintoku);
         map1.removeInteraction(drawPaste);
+        map1.removeInteraction(modify);
         switch (typeVal) {
+            case "0":
+                drawHelpFlg = false;
+                break;
             case "Point":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリックでポイント設置";
                 map1.addInteraction(drawPoint);
                 map1.addInteraction(snap);//ドロー系の後でないとうまくどうさしない
                 break;
             case "Polygon":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリックで描画スタート";
                 map1.addInteraction(drawPolygon);
                 map1.addInteraction(snap);
                 break;
+            case "PolygonFree":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリック後にそのままドラッグ";
+                map1.addInteraction(drawPolygonFree);
+                map1.addInteraction(snap);
+                break;
             case "DrawHole":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "面の上でシングルクリック";
                 console.log("DrawHole");
                 map1.addInteraction(drawhole);
-                drawhole.setActive(active);
+                //drawhole.setActive(active);
                 break;
             case "LineString":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリックで描画スタート";
                 map1.addInteraction(drawLineString);
                 map1.addInteraction(snap);
                 break;
+            case "LineStringFree":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリック後にそのままドラッグ";
+                map1.addInteraction(drawLineStringFree);
+                map1.addInteraction(snap);
+                break;
             case "Transform":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "面の上でシングルクリック<br>その後、□で操作";
                 map1.addInteraction(transform);
                 map1.addInteraction(snap);
                 setHandleStyle();
@@ -1160,9 +1377,13 @@ $(function() {
                 map1.addInteraction(drawCircle);
                 break;
             case "SingleCircle":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリックで円の中心を設定";
                 map1.addInteraction(drawSingleCircle);
                 break;
             case "DoubleCircle":
+                drawHelpFlg = true;
+                helpTooltipElement.innerHTML = "シングルクリックで二重円の中心を設定";
                 map1.addInteraction(drawDoubleCircle);
                 break;
             case "Dome":
@@ -1240,21 +1461,22 @@ $(function() {
             return interaction instanceof ol.interaction.DragRotateAndZoom;
         })[0];
         if($(this).prop("checked")) {
+            drawHelpFlg = false;
             console.log("checked");
             map1.removeInteraction(drawPoint);
             map1.removeInteraction(drawPolygon);
+            map1.removeInteraction(drawPolygonFree);
             map1.removeInteraction(drawhole);
             map1.removeInteraction(drawLineString);
+            map1.removeInteraction(drawLineStringFree);
             map1.removeInteraction(drawCircle);
             map1.removeInteraction(drawSingleCircle);
             map1.removeInteraction(drawDoubleCircle);
             map1.removeInteraction(snap);
             map1.removeInteraction(transform);
-            //map1.removeInteraction(translate);
             map1.removeInteraction(drawDome);
             map1.removeInteraction(drawNintoku);
             map1.removeInteraction(drawPaste);
-
             map1.addInteraction(translate);
             map1.addInteraction(featureSelect);
             map1.removeInteraction(modify);
@@ -1266,6 +1488,7 @@ $(function() {
             console.log("off");
             map1.removeInteraction(featureSelect);
             map1.removeInteraction(translate);
+            map1.removeInteraction(modify);
             DragRotateAndZoomInteraction.setActive(true);
         }
     });
@@ -1390,9 +1613,7 @@ $(function() {
                     steps: 128
                 };
                 var buffered = turf.circle(point4326,radius,options);
-                console.log(buffered["geometry"]["coordinates"]);
                 buffered = turf.toMercator(buffered);
-                console.log(buffered["geometry"]["coordinates"]);
                 var geometry = new ol.geom.Polygon(buffered["geometry"]["coordinates"]);
                 var newFeature = new ol.Feature({
                     "_fillColor": "rgba(51,122,255,0.7)",
@@ -1476,7 +1697,6 @@ $(function() {
         console.log(featureSelect.getFeatures().getProperties()["length"]);
         var features = featureSelect.getFeatures()["a"];
         console.log(features);
-
         if(!features.length){
             alert("選択されていません。選択モードをオンにして地物をクリックしてください。");
             return;
@@ -1538,7 +1758,6 @@ $(function() {
     //geojsonで保存
     $("body").on("click","#drawGeojson-btn",function(){
         var features = drawSource.getFeatures();
-        console.log(features);
         if(!features.length) {
             alert("データがありません。");
             return;
@@ -1560,6 +1779,52 @@ $(function() {
             "download":"edit.geojson"
         });
         $(".geojson-save-a")[0].click();//[0]が肝
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //gistで保存
+    $("body").on("click","#drawGist-btn",function(){
+        var features = drawSource.getFeatures();
+        if(!features.length) {
+            alert("データがありません。");
+            return;
+        }
+        $("#loading-fa").show(500);
+        var geojsonChar = new ol.format.GeoJSON().writeFeatures(features, {
+            featureProjection: "EPSG:3857"
+        });
+        geojsonChar = JSON.stringify(JSON.parse(geojsonChar),null,1);
+        var data = {
+            "description": "anonymous gist",
+            "public": false,
+            "files": {
+                "h.geojson": {
+                    "content": geojsonChar
+                }
+            }
+        };
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", "https://api.github.com/gists", true);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.onload = function(e) {
+            var gistUrl = JSON.parse(e.target.response).html_url;
+            console.log(gistUrl);
+            $("#geojson-gist-div").remove();
+            $("#mydialog-draw-dialog .dialog-content").append("<div id='geojson-gist-div'><a id='geojson-gist-a'>---gistを開く---</a></div>");
+            $("#geojson-gist-a").attr({
+                "href": gistUrl,
+                "target":"_blank"
+            });
+            //$(".geojson-save-a")[0].click();//[0]が肝
+            $("#loading-fa").hide(1500);
+            console.log(location);
+            console.log(location["href"]);
+            var gistHsdhVal = gistUrl.split("/")[gistUrl.split("/").length-1];
+            console.log(gistHsdhVal);
+            var newUrl = location["href"] + "&g=" + gistHsdhVal;
+            console.log(newUrl);
+            history.replaceState(null, null, newUrl);
+        };
+        xhr.send(JSON.stringify(data));
     });
     //------------------------------------------------------------------------------------------------------------------
     //csvで保存
@@ -1712,6 +1977,7 @@ $(function() {
     //geojson読み込み
     var geojsonRead = function(event) {
         var features = event.features;
+        console.log(features);
         for(var i = 0; i <features.length; i++){
             drawSource.addFeature(features[i])
         }
@@ -1856,6 +2122,34 @@ $(function() {
             }
         };
         drawSourceChangeFlg = true;
+    };
+    //------------------------------------------------------------------------------------------------------------------
+    //gist読み込み
+    var urlHash = location.hash;
+    console.log(urlHash);
+    var hashAr = urlHash.split("&");
+    var hashObj= {};
+    for(var i = 1; i <hashAr.length; i++){
+        var kvAr = hashAr[i].split("=");
+        hashObj[kvAr[0]]=kvAr[1]
+    }
+    var gist = hashObj["g"];
+    console.log(gist);
+    if(gist) {
+        $.ajax({
+            type: "get",
+            url: "https://api.github.com/gists/" + gist,
+            dataType: "json"
+        }).done(function (json) {
+            var gistGeojson =JSON.parse(json["files"]["h.geojson"]["content"]);
+            console.log(gistGeojson);
+            if(gistGeojson){
+                var targetGeojson = new ol.format.GeoJSON().readFeatures(gistGeojson, {featureProjection: 'EPSG:3857'});
+                drawSource.addFeatures(targetGeojson);
+            }
+        }).fail(function () {
+            console.log("失敗!");
+        });
     }
 });
 

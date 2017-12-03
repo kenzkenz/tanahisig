@@ -567,11 +567,6 @@ label:hover{
 }
 /*ドロー関係-------------------------------------------------------------------*/
 #drow-div{
-    /*
-    position:absolute;
-    top:100px;
-    left:20px;
-    */
 }
 .draw-div2{
     margin:0 0 0 10px;
@@ -582,25 +577,35 @@ label:hover{
 }
 #draw-div3-effect{
     float: right;
-    /*
-    position: absolute;
-    right:10px;
-    top:0;
-    */
+}
+#draw-div3-koumoku{
+    max-height: 100px;
+    overflow-y: scroll;
+    margin-bottom: 5px;
+    border-bottom: 1px solid gainsboro;
+}
+#propTable{
+    width:300px;
 }
 .prop-input-text-name,.prop-input-text-val{
-    width:100%
+    width:100%;
+}
+.prop-td-num{
+    padding:2px!important;
+    width:5px!important;
+    text-align: center;
 }
 .prop-td{
     padding:2px!important;
 }
-.prop-th0,.prop-th1{
+.prop-th-num,.prop-th0,.prop-th1{
     color:white;
     background:rgba(51,122,183,1.0);
     font-weight:normal;
     text-align:center;
     padding:2px!important;
 }
+
 .prop-th0{
     width:100px;
 }
@@ -622,11 +627,11 @@ label:hover{
 /*ツールチップ-----------------------------------------------------------------*/
 .tooltip {
     position: relative;
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(51,122,255,0.8);
     border-radius: 4px;
     color: white;
     padding: 4px 8px;
-    opacity: 0.7;
+    opacity: 1.0;
     white-space: nowrap;
 }
 .tooltip-measure {
@@ -651,4 +656,9 @@ label:hover{
 }
 .tooltip-static:before {
     border-top-color: #ffcc33;
+}
+
+#geojson-gist-div{
+    text-align: center;
+    margin-top: 10px;
 }

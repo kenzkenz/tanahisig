@@ -41,7 +41,7 @@ $(function(){
             }else{
                 console.log("MVT")
                 alert("MVTは3D化できません！MVTの背景のチェックを外してください。");
-                return;s
+                return;
             }
         }
 

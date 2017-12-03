@@ -5,13 +5,14 @@ var plusLayer2 = [];
 var plI = 0;
 $(function(){
     //使用するレイヤーを設定
-    useLayersArr1 = [pale1,
+    useLayersArr1 = [mieruneNormal1,
+                    pale1,
                     blank1,relief1,lcmfc2_1,tikeiVectorTileSizen1,
                     osm1,
                     eventSuiro1,
         //mieruneさん
         mierune,
-                    mieruneNormal1,mierune1,mieruneMono1,
+                    mierune1,mieruneMono1,
         //現在の航空写真
         sikiriGenzaiSyasin,
                     ort1,seamlessphoto1,
@@ -65,7 +66,8 @@ $(function(){
                     sengomiya1,sengonobe1,sengomiyako1,murous1,sengokago1,
         //地質地形
         sikiriTisititikei,
-                    kawadake1,ryuuiki1,ecoris1,sekiz1,tisitu1,nihonCs1,csArr1,sizuokaCs1,
+                    kawadake1,ryuuiki1,ecoris1,sekiz1,seamlessArr1,
+                    nihonCs1,csArr1,sizuokaCs1,
                     syokusei1,dozyouzu1,
         //ハザード
         sikiriHazard,
@@ -81,17 +83,16 @@ $(function(){
                     fukuiRindou1,
                     tunamimiyazakimvt1,
                     tunamiWakkanaimvt1
-
     ];
-
     //------------------------------------------------------------------------------------------------------------------
-    useLayersArr2 = [pale2,
+    useLayersArr2 = [mieruneNormal2,
+                    pale2,
                     blank2,relief2,lcmfc2_2,tikeiVectorTileSizen2,
                     osm2,
                     eventSuiro2,
         //mieruneさん
         mierune,
-                    mieruneNormal2,mierune2,mieruneMono2,
+                    mierune2,mieruneMono2,
         //現在の航空写真
         sikiriGenzaiSyasin,
                     ort2,seamlessphoto2,
@@ -145,7 +146,8 @@ $(function(){
                     sengomiya2,sengonobe2,sengomiyako2,murous2,sengokago2,
         //地質地形
         sikiriTisititikei,
-                    kawadake2,ryuuiki2,ecoris2,sekiz2,tisitu2,nihonCs2,csArr2,sizuokaCs2,
+                    kawadake2,ryuuiki2,ecoris2,sekiz2,seamlessArr2,
+                    nihonCs2,csArr2,sizuokaCs2,
                     syokusei2,dozyouzu2,
         //ハザード
         sikiriHazard,
@@ -161,82 +163,7 @@ $(function(){
                     fukuiRindou1,
                     tunamimiyazakimvt1,
                     tunamiWakkanaimvt1
-
     ];
-    /*
-    useLayersArr2 = [mieruneNormal2,
-        eventSuiro2,
-                    pale2,blank2,relief2,lcmfc2_2,tikeiVectorTileSizen2,
-
-        //田代先生提供資料
-        //sikiriDrTashiro,
-                    //drTashiroH07syasin2,drTashiroS62syasin2,drTashiroS22syasin2,
-
-        //現在の航空写真
-        sikiriGenzaiSyasin,
-                    ort2,seamlessphoto2,
-                    muro2,tondabayasik2,kago2,
-        //過去の航空写真
-        sikiriKakoSyasin,
-                    usasiawase012,
-                    gazo12,old10_2,
-                    jpn23ku012,
-                    usamiyazaki012,usamiyakonozyou012,usanobeoka012,usakobayasi012,usakumamoto012,usamuroran012,usanatori012,
-                    usasendai012,
-                    jpnfukuoka012,jpnnoboribetu012,
-
-                    syokusei2,dozyouzu2,syoutiikiH17_2,syoutiikiH22_2,syoutiiki2,tositiiki2,youtotiiki2,suiro2,douro2,syougakkouku2,tyuugakkouku2,iryouken2,
-                    mesh500_2,keizaiCensus_2,fukushi_2,cityGeneki_2,cityZaisei_2,syougyou500m_2,syougyou1000m_s_2,syougyou1000m_g_2,syougyou1000m_k_2,
-                    suikei1000m_2,
-                    osm2,toner2,
-                    tondabayasit2,
-                    //mrtiba2,mransei2,
-                    //mesh1000z2,kousoku9syu2,
-                    //namie2,
-                    did2,
-        //mieruneさん
-        mierune,
-                    mierune2,mieruneMono2,
-        //九州北部豪雨
-        sikiriKyuusyuuHokubuGouu,
-                    ooameasahi02,
-                    ooameasia07202,ooameasia07182,
-                    t0802dol2,t0713dol22,t0713dol12,t0707dol2,t0707dol32,t0708dol12,t0710dol2,
-        //熊本地震
-        sikiriKumamotoJisin,
-                    kumamoto0724_2,kumamoto_0705_2,kumamoto_0531_2,kumamoto_0530_2,kumamoto_0429A_2,kumamoto_0429B_2,kumamoto_04201_2,kumamoto_04202_2,
-                    kumamoto_04203_2,kumamoto_04204_2,kumamoto_04205_2,kumamoto_04206_2,kumamoto_04207_2,kumamoto_04208_2,kumamoto_04209_2,
-                    kumamoto_042010_2,kumamoto_042011_2,kumamoto_0419dol2_2,kumamoto_0419dol6_2,kumamoto_0416dol1_2,kumamoto_0416dol2_2,
-                    kumamoto_0416dol3_2,kumamoto_0416dol4_2,kumamoto_0416dol5_2,kumamoto_0416dol6_2,kumamoto_0416dol7_2,kumamoto_0415dol1_2,
-                    kumamoto_0415dol2_2,kumamoto_0415dol3_2,
-        //迅速測図等
-        sikiriJinsokutou,
-                    rekisitekikantou2,zinsokugazou2,rekisitekitoukyou2,rekisitekihukuyama2,
-        //遺跡文化財
-        sikiriIsekibunkazai,
-                    bunkatyoudb2,zenkokuHakubutukan2,bunkazai2,zenkokuIseki2,yayoi2,kumamotoIseki2,
-        //ユネスコ
-        sikiriUnesco,
-                    aya2,sobo2,soboZ2,
-        //古地図
-        sikiriKotizu,
-                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,simanekotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,nagasakikotizu2,kumamotokotizu2,ooitakotizu2,kotizu2,kagosimakotizu2,obikoyizu2,//obi2,
-        //戦前戦後
-        sikiriSenzensengo,
-                    amArr2,
-                    murosenzen2,hukuokasisenzen2,
-                    sengomiya2,sengonobe2,sengomiyako2,murous2,sengokago2,
-        //地質地形
-        sikiriTisititikei,
-                    kawadake2,ryuuiki2,ecoris2,sekiz2,tisitu2,nihonCs2,csArr2,sizuokaCs2,
-        //ハザード
-        sikiriHazard,
-                    tunami2,tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
-        sikiriTest,
-                    bingroad2,
-                    kikenkeiryuuAll2,kyuukeisyakikenkasyoAll2
-                    ];
-    */
     $("body").on("click",".secret",function() {
         alert("");
         $(".secret-tr").toggle();
@@ -566,7 +493,12 @@ $(function(){
         var layerVal = $(this).parents("tr").find("input").val();
         console.log(layerVal);
         var layer = mapObj["layers"][layerVal];
-        var layerName = layer.getProperties()["name"];
+        if(!Array.isArray(layer)){
+            var layerName = layer.getProperties()["name"];
+        }else {//配列のとき
+            var layerName = layer[0].getProperties()["name"];
+        }
+
         console.log(layerName);
         var targetDialog = $("#mydialog-" + mapName + "-info-dialog-" + layerName);
         console.log(targetDialog.length);

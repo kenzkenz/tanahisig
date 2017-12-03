@@ -2,9 +2,7 @@
 // ver 0.1.2, 2016-01-27 西岡 芳晴 ( NISHIOA Yoshiharu )
 // PNG標高タイルを使うためのCesium.js用TerrainProvider
 // Webメルカトル，正距円筒図法に対応
-
 ( function() {
-
 	'use strict';
 	var
 		defaultUrl =
@@ -20,7 +18,6 @@
 	if ( typeof Cesium === 'undefined' ) {	// Cesiumが利用できない環境では何も返さず終了
 		return;
 	}
-console.log("cesium")
 	defaultValue = Cesium.defaultValue,
     defined = Cesium.defined,
     PngElevationTileTerrainProvider = function( description ) {

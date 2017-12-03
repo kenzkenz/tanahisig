@@ -23,24 +23,87 @@ $(function(){
         funcPointerMove(evt,"map2");
     });
     //-----------------------------------------------
+    //シームレシ地質図専用
+    map1.on("singleclick", function(evt) {
+        funcSansoukenPopupShow(evt,"map1");
+    });
+    map2.on("singleclick", function(evt) {
+        funcSansoukenPopupShow(evt,"map2");
+    });
+
+    //-----------------------------------------------
+    //シームレス地質図ポップアップ
+    function funcSansoukenPopupShow(evt,map) {
+        //--------------------------
+        var pixel = eval(map).getPixelFromCoordinate(evt.coordinate);
+        var features = [];
+        var layers = [];
+        eval(map).forEachFeatureAtPixel(pixel,function(feature,layer){
+            features.push(feature);
+            layers.push(layer);
+        });
+        if(features.length) return;
+        //--------------------------
+        var layers = eval(map).getLayers().getArray();
+        for (i = 0; i < layers.length; i++) {
+            console.log(String(layers[i].getProperties()["title"]));
+            if(String(layers[i].getProperties()["title"])==="シームレス地質図V2") {
+                console.log("シームレス地質図");
+                var coord = evt.coordinate;
+                var coord4326 = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+                console.log(coord4326);
+                var point = coord4326[1] + "," + coord4326[0];
+                console.log(point);
+                //https://gsj-seamless.jp/labs/jisedai/api/1.0/legend.json/?point=39.700038,141.149898
+                $.ajax({
+                    type:"get",
+                    url:"https://gsj-seamless.jp/labs/jisedai/api/1.0/legend.json/",
+                    dataType:"json",
+                    data:{
+                        point:point
+                    }
+                }).done(function(json){
+                    console.log(json);
+                    if(Object.keys(json).length===0) return;
+                    var rgba = "rgba(" + json["r"] + "," + json["g"] + "," + json["b"] + ",1.0)";
+                    var content = "";
+                    var table = "<table class='popup-tbl table table-bordered table-hover' style=''>";
+                    table += "<tr><th class='popup-th' style='width:70px;'></th><td class='popup-td' style='background:" + rgba + "'>" + json["symbol"]+ "</td></tr>";
+                    table += "<tr><th class='popup-th'>形成時代</th><td class='popup-td'>" + json["formationAge_ja"]+ "</td></tr>";
+                    //table += "<tr><th class='popup-th'>formationAge_en</th><td class='popup-td'>" + json["formationAge_en"]+ "</td></tr>";
+                    table += "<tr><th class='popup-th'>グループ</th><td class='popup-td'>" + json["group_ja"]+ "</td></tr>";
+                    //table += "<tr><th class='popup-th'>group_en</th><td class='popup-td'>" + json["group_en"]+ "</td></tr>";
+                    table += "<tr><th class='popup-th'>岩層</th><td class='popup-td'>" + json["lithology_ja"]+ "</td></tr>";
+                    //table += "<tr><th class='popup-th'>lithology_en</th><td class='popup-td'>" + json["lithology_en"]+ "</td></tr>";
+                    content += table;
+                    content = content.replace(/undefined/gi,"");
+                    if(map==="map1") {
+                        popup1.show(coord,content);
+                    }else{
+                        popup2.show(coord,content);
+                    }
+                }).fail(function(){
+                    console.log("失敗!");
+                });
+                //return;
+            }
+        }
+    }
+    //-----------------------------------------------
     //ポップアップ
     function funcPopupShow(evt,map){
         var pixel = eval(map).getPixelFromCoordinate(evt.coordinate);
         var features = [];
         var layers = [];
         eval(map).forEachFeatureAtPixel(pixel,function(feature,layer){
-            console.log(22222);
             features.push(feature);
             layers.push(layer);
         });
-        console.log(features);
         if(!features.length) return;
-
         var layer = layers[layers.length-1];
         var feature = features[features.length-1];//最後のfeatureを取得している。レイヤーが重なったとき問題があるかも。
         if(!layer) return;
         var layerName = layer.getProperties()["name"];
-
         console.log(layerName);
         switch (layerName){//ここで処理を分岐
             case "wikiCommonsLayer":
@@ -229,7 +292,6 @@ $(function(){
                 funcKeikanchikuPopup(feature,map,evt);
                 break;
 
-            
             default:
         }
     }
@@ -264,8 +326,6 @@ $(function(){
     function funcDrawPopup(feature,map,evt){
         var prop = feature.getProperties();
         var coord = evt.coordinate;
-        console.log(prop);
-        console.log(coord);
         var flg = false;
         var content = "";
         var table = "<table class='popup-tbl table table-bordered table-hover' style=''>";
@@ -291,7 +351,6 @@ $(function(){
     function funcSuikei1000mPopup(feature,map,evt){
         var prop = feature.getProperties();
         var coord = evt.coordinate;
-        console.log(prop);
         var content = "";
         var table = "<table class='popup-tbl table table-bordered table-hover' style='250px'>";
             table += "<tr><th class='popup-th' style='width:170px;'>メッシュコード</th><td class='popup-td' style='width:80px;'>" + prop["MESH_ID"] + "</td></tr>";
