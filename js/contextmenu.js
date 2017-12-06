@@ -475,24 +475,28 @@ $(function(){
             map2.removeLayer(mesh500Layer2);
         }
     });
-    //-------------------------------------------------------------------------------------
-    //★★★★★★★
-    //map1
+    //------------------------------------------------------------------------------------------------------------------
+    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    //map1--------------------------------------------------------------------------------------------------------------
     $("#map1")[0].addEventListener('contextmenu',myContextmenu1,false);
     $("body").on("mouseenter",".ol-popup,.dialog-base",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
         $("#map1")[0].removeEventListener('contextmenu',myContextmenu1,false);
     }).on("mouseleave",".ol-popup,.dialog-base",function(){//contentからマウスが抜けたら通常の右クリックメニューを無効化。
         $("#map1")[0].addEventListener('contextmenu',myContextmenu1,false);
     });
-    //map2------
+
+    //map2--------------------------------------------------------------------------------------------------------------
     $("#map2")[0].addEventListener('contextmenu',myContextmenu2,false);
     $("body").on("mouseenter",".ol-popup,.dialog-base",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
         $("#map2")[0].removeEventListener('contextmenu',myContextmenu2,false);
     }).on("mouseleave",".ol-popup,.dialog-base",function(){//contentからマウスが抜けたら通常の右クリックメニューを無効化。
         $("#map2")[0].addEventListener('contextmenu',myContextmenu2,false);
     });
-    //---------------------------------------------------------
+    //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    //------------------------------------------------------------------------------------------------------------------
     function myContextmenu1(evt){
+        console.log($("#mydialog-draw-dialog").css("display"));
+        if($("#mydialog-draw-dialog").css("display")==="block") return;
         var myContextmenuTop = evt.clientY;
         var myContextmenuLeft = evt.clientX;
         coord1 = map1.getCoordinateFromPixel([myContextmenuLeft,myContextmenuTop]);

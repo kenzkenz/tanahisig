@@ -30,7 +30,6 @@ $(function(){
     map2.on("singleclick", function(evt) {
         funcSansoukenPopupShow(evt,"map2");
     });
-
     //-----------------------------------------------
     //シームレス地質図ポップアップ
     function funcSansoukenPopupShow(evt,map) {
@@ -48,7 +47,7 @@ $(function(){
         for (i = 0; i < layers.length; i++) {
             console.log(String(layers[i].getProperties()["title"]));
             if(String(layers[i].getProperties()["title"])==="シームレス地質図V2") {
-                console.log("シームレス地質図");
+                console.log("シームレス地質図V2");
                 var coord = evt.coordinate;
                 var coord4326 = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
                 console.log(coord4326);
@@ -66,15 +65,13 @@ $(function(){
                     console.log(json);
                     if(Object.keys(json).length===0) return;
                     var rgba = "rgba(" + json["r"] + "," + json["g"] + "," + json["b"] + ",1.0)";
+                    var textColor = funcTextColor(json["r"],json["g"],json["b"]);
                     var content = "";
                     var table = "<table class='popup-tbl table table-bordered table-hover' style=''>";
-                    table += "<tr><th class='popup-th' style='width:70px;'></th><td class='popup-td' style='background:" + rgba + "'>" + json["symbol"]+ "</td></tr>";
+                    table += "<tr><th class='popup-th' style='width:70px;'></th><td class='popup-td' style='background:" + rgba + ";color:" + textColor + ";'>" + json["symbol"]+ "</td></tr>";
                     table += "<tr><th class='popup-th'>形成時代</th><td class='popup-td'>" + json["formationAge_ja"]+ "</td></tr>";
-                    //table += "<tr><th class='popup-th'>formationAge_en</th><td class='popup-td'>" + json["formationAge_en"]+ "</td></tr>";
                     table += "<tr><th class='popup-th'>グループ</th><td class='popup-td'>" + json["group_ja"]+ "</td></tr>";
-                    //table += "<tr><th class='popup-th'>group_en</th><td class='popup-td'>" + json["group_en"]+ "</td></tr>";
-                    table += "<tr><th class='popup-th'>岩層</th><td class='popup-td'>" + json["lithology_ja"]+ "</td></tr>";
-                    //table += "<tr><th class='popup-th'>lithology_en</th><td class='popup-td'>" + json["lithology_en"]+ "</td></tr>";
+                    table += "<tr><th class='popup-th'>岩相</th><td class='popup-td'>" + json["lithology_ja"]+ "</td></tr>";
                     content += table;
                     content = content.replace(/undefined/gi,"");
                     if(map==="map1") {
@@ -324,6 +321,9 @@ $(function(){
     }
     //-----------------------------------------------
     function funcDrawPopup(feature,map,evt){
+
+        if($(".select-toggle").prop("checked")) return;
+
         var prop = feature.getProperties();
         var coord = evt.coordinate;
         var flg = false;

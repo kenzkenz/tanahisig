@@ -50,11 +50,12 @@ $(function(){
         msg += "★背景のうち(MVT/VT)とついているものは3D化できません！<br>";
         msg += "★詳しい追加情報等は<a href='https://www.facebook.com/hinatagis' target='_blank'><i class='fa fa-facebook-square fa-fw' style='color:navy;'></i>FBへ</a><br>";
         //msg += "<canvas id='canvas1'></canvas>";
-        msg += "1 ドロー機能実験中。「draw」ボタンから<br>";
-        msg += "2 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
-        msg += "3 背景にH26商業統計(MVT)を追加しました。<br>";
-        msg += "4 背景に市町村現役世代率(MVT)を追加しました。<br>";
-        msg += "5 背景にH26経済センサス(MVT)を追加しました。<br>";
+        msg += "1 ドロー機能大幅強化中。「draw」ボタンから<br>";
+        msg += "2 シームレス地質図V2でクリックすると凡例を表示します。<br>";
+        msg += "3 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
+        msg += "4 背景にH26商業統計(MVT)を追加しました。<br>";
+        msg += "5 背景に市町村現役世代率(MVT)を追加しました。<br>";
+        //msg += "5 背景にH26経済センサス(MVT)を追加しました。<br>";
         //msg += "5 背景に500Mメッシュ人口(MVT)を追加しました。<br>";
         //msg += "4 背景に二次医療圏(MVT)を追加しました。<br>";
         //msg += "4 背景に地理院_地形分類(自然地形)(VT)を追加しました。<br>";
@@ -94,7 +95,7 @@ $(function(){
         //msg += "10 宮崎県(九州)赤色立体地図を追加しました。<br>";
         //msg += "10 画面左下に標高表示機能を追加しました。<br>";
         msg += "<div style='text-align:center;'>";
-        msg += "宮崎県情報政策課<br>最終更新:2017/11/07</div>";
+        msg += "宮崎県情報政策課<br>最終更新:2017/12/04</div>";
         msg += "<div style='position:absolute;bottom:0px;right:0px;'><a href='https://www.osgeo.jp/' target='_blank'><img src='icon/osgeo.png' style='width:80px;background:'></a></div>";
         $.notify({//options
             message: msg
@@ -283,7 +284,6 @@ $(function(){
     }
     //---------------------------------------------------------------------------
     function funcElevation(evt,mapName){
-        //console.log($(":hover"));
         getElev(evt.coordinate,mapName,function(h){
             if(h=="e"){
                 $("#" + mapName + " .zoom-div .elevation-span").text("");

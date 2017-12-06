@@ -4,7 +4,7 @@ body{
     font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', '游ゴシック  Medium', meiryo, sans-serif;
     overflow:hidden;
 }
-#loading-fa{
+#loading-fa,#loading-fa2{
     position:absolute;
     top:40%;
     left:50%;
@@ -624,6 +624,31 @@ label:hover{
     display:none;
     font-size: x-small;
 }
+#geojson-gist-div{
+    text-align: center;
+    margin-top: 10px;
+}
+.alert-gist{
+    padding:0!important;
+}
+#drawContextmenuOverlay-div{
+    padding:10px;
+    background:white;
+    border-radius:4px;
+    box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
+    /*border:1px solid rgba(51,122,183,1.0);*/
+    z-index:3;
+    width:200px;
+    font-size: 12px;
+}
+#drawContextmenuOverlay-content-div button{
+    margin:2px 0 2px 0;
+    width:160px;
+
+}
+#drawType .fa{
+    color:rgba(51,122,183,1.0);
+}
 /*ツールチップ-----------------------------------------------------------------*/
 .tooltip {
     position: relative;
@@ -658,7 +683,4 @@ label:hover{
     border-top-color: #ffcc33;
 }
 
-#geojson-gist-div{
-    text-align: center;
-    margin-top: 10px;
-}
+

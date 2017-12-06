@@ -78,7 +78,12 @@ img.fnone{float:none !important}
     height:auto !important;
     max-height:1000px !important;
 }
-.dd .ddChild li.optgroup .optgroupTitle{padding:0 5px; font-weight:normal; font-style:italic}
+.dd .ddChild li.optgroup .optgroupTitle{
+    padding:0 5px;
+    font-weight:normal;
+    display:block;
+    background: whitesmoke;
+}
 .dd .ddChild li.optgroup ul li{
     padding:1px 1px 1px 15px !important;
 }

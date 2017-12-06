@@ -7,7 +7,6 @@
     var x = c[0].toFixed(6);
     var y = c[1].toFixed(6);
     var urlHash = location.hash;
-    console.log(urlHash);
     var hashAr = urlHash.split("&");
     var hashObj= {};
     for(var i = 1; i <hashAr.length; i++){
@@ -15,7 +14,7 @@
         hashObj[kvAr[0]]=kvAr[1]
     }
     var gist = hashObj["g"];
-    console.log(gist);
+    //console.log(gist);
     if(gist) {
         return "#" + [z, y, x].join("/")+ "&g=" + gist;
     }else{

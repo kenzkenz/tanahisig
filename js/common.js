@@ -1,10 +1,14 @@
 //---------------------------------------------------------------------------------
 var ajaxStartFlg = true;
 $(document).ajaxStart(function (){
-    if(ajaxStartFlg) $("#loading-fa").show(500);
+    if(ajaxStartFlg) {//フラグでの制御はうまくいかないようだ。念の為残しておく。
+        $("#loading-fa").show(500);
+    }
 });
 $(document).ajaxStop(function (){
-    $("#loading-fa").hide(500);
+    if(ajaxStartFlg) {
+        $("#loading-fa").hide(500);
+    }
 });
 //---------------------------------------------------------------------------------
 //↓産業技術総合研究所の西岡さんから頂きました。自分流に体裁をちょっと変えました。
@@ -57,8 +61,6 @@ function getElev(coordinate,mapName,then){
     prevImgSrc = elevImgSrc;
 }
 //-----------------------------------------------------------------------------
-
-
 function getPixelVale(coordinate,mapName,then){
     var pngServer = 'https://mtile.pref.miyazaki.lg.jp/tile/mvt/totiriyoul/';
     var z = Math.floor(eval(mapName).getView().getZoom());
