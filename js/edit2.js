@@ -1,9 +1,26 @@
 $(function() {
+
+    //var url = "https://msearch.gsi.go.jp/address-search/AddressSearch?q=%E5%AE%AE%E5%B4%8E%E5%B8%82%E7%94%9F%E7%9B%AE%E5%8F%B0%E8%A5%BF%EF%BC%93%E4%B8%81%E7%9B%AE%EF%BC%95%E2%88%92%EF%BC%95%EF%BC%97";
+    var url = "https://msearch.gsi.go.jp/address-search/AddressSearch";
+    var syozaiti = "宮崎県宮崎市生目台西３丁目５−５７";
+    $.ajax({
+        type: "get",
+        url: url ,
+        dataType: "json",
+        data:{
+            "q":syozaiti
+        }
+    }).done(function (json) {
+        console.log(json)
+    }).fail(function () {
+        console.log("失敗!");
+    });
+
+
     var drawSource = null;
     var drawLayer = null;
     var haniSource = null;
     var haniLayer = null;
-
     var drawLayerHeatmap = null;
     var drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
@@ -13,10 +30,19 @@ $(function() {
     //ドロー用ダイアログ作成
     var selectHtml = "";
     selectHtml += "<div id='draw-div'>";
-    selectHtml += "<div id='select-toggle-div'>";
+    selectHtml += "<div id='mode-div'>";
+    selectHtml += "<div class='select-toggle-div'>";
     selectHtml += "選択モード：";
-    selectHtml += "<input type='checkbox' data-toggle='toggle' class='select-toggle bs-toggle' data-size='mini'>";
-    selectHtml += " 色、形状変更、項目追加はOn";
+    selectHtml += "<input type='checkbox' data-toggle='toggle' id='select-toggle' class='bs-toggle' data-size='mini'>";
+    //selectHtml += " 色、形状変更、項目追加はOn";
+    selectHtml += "</div>";
+
+    selectHtml += "<div class='select-toggle-div' style='margin-left: 10px;'>";
+    selectHtml += "計測モード：";
+    selectHtml += "<input type='checkbox' data-toggle='toggle' checked id='measure-toggle' class='bs-toggle' data-size='mini'>";
+    //selectHtml += " 色、形状変更、項目追加はOn";
+    selectHtml += "</div>";
+
     selectHtml += "</div>";
     selectHtml += "<hr class='my-hr'>";
     //--------------------------------------------------------
@@ -47,7 +73,7 @@ $(function() {
     selectHtml += "<option value='Dome'>東京ドーム一個分(正確ではありません。)</option>";
     selectHtml += "<option value='Nintoku'>仁徳天皇陵(正確ではありません。)</option>";
     selectHtml += "<option value='Paste'>最後に選択したポリゴンをペースト</option>";
-    selectHtml += "<option value='hanisitei'>フリーハンドで範囲指定テスト</option>";
+    selectHtml += "<option value='hanisitei'>フリーハンドで範囲指定</option>";
     selectHtml += "</optgroup>";
     selectHtml += "</select>";
     selectHtml += "</div>";
@@ -114,7 +140,7 @@ $(function() {
     selectHtml += "</div>";
     selectHtml += "<div id='draw-div3-effect'>";
     selectHtml += "<div class='draw-div4-buffer' style='margin-bottom:3px;'>バッファー半径：<input id='buffer-radius-input' type='text' value='100' size='3'>m</div>";
-    selectHtml += "<div class='draw-div4-simplify'>test1</div>";
+    //selectHtml += "<div class='draw-div4-simplify'>test1</div>";
     //selectHtml += "<div class='draw-div4'>test2</div>";
     selectHtml += "</div>";
     selectHtml += "</div>";
@@ -162,7 +188,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //geojsonのテキストを見せるダイアログを表示
     $("body").on("click","#mydialog-draw-dialog .dialog-info",function(){
-        var content = "<div id='geojson-text' style='width:440px'></div>";
+        var content = "<div style='width:440px'><textarea id='geojson-text'></textarea></div>";
         mydialog({
             id:"draw-dialog-info",
             class:"draw-dialog-info",
@@ -174,6 +200,11 @@ $(function() {
             //rmDialog:true
         });
         geojsonText();
+        $("#geojson-text").bcralnit({
+            width:"30px",
+            background:"#75BAFF",
+            color:"white"
+        });
     });
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイ要素作成
@@ -387,7 +418,11 @@ $(function() {
                             if(tDistance) {
                                 text = "面積\n" + tArea + "\n周長" + tDistance;
                             }else{
-                                text = "面積\n" + tArea;
+                                if(tArea) {
+                                    text = "面積\n" + tArea;
+                                }else{
+                                    text = "";
+                                }
                             }
                             var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
                     }
@@ -448,6 +483,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //線の長さを計算
     function funcTDistance(feature){
+        if($("#measure-toggle").prop("checked")===false) return "";
         var tDistance = 0;
         var fromCoord,toCoord;
         var coordAr = feature.getGeometry().getCoordinates();
@@ -497,6 +533,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //地物の面積を計算
     function funcTArea(feature){
+        if($("#measure-toggle").prop("checked")===false) return "";
         var coordAr = feature.getGeometry().getCoordinates();
         var geomType = feature.getGeometry().getType();
         var tPolygon;
@@ -521,6 +558,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //円の半径を計算
     function funcTRadius(feature){
+        if($("#measure-toggle").prop("checked")===false) return "";
         var extent = feature.getGeometry().getExtent();
         var center = ol.proj.transform(ol.extent.getCenter(extent), "EPSG:3857", "EPSG:4326");
         var TRadius = 0;
@@ -560,7 +598,23 @@ $(function() {
     document.onclick = function(e){
         console.log(e.button);
     };
-
+    //------------------------------------------------------------------------------------------------------------------
+    //テキストエリアからドローソース変更
+    $(window).keyup(function(e){
+        //console.log(e.keyCode)
+        var focusId = $(":focus").attr("id");
+        if(focusId==="geojson-text"){
+            featureSelect.getFeatures().clear();
+            drawSourceChangeFlg = false;
+            var geojsonObject = JSON.parse($("#geojson-text").val());
+            if(geojsonObject){
+                var targetGeojson = new ol.format.GeoJSON().readFeatures(geojsonObject, {featureProjection: 'EPSG:3857'});
+                drawSource.clear();
+                drawSource.addFeatures(targetGeojson);
+            }
+            drawSourceChangeFlg = true;
+        }
+    });
     //------------------------------------------------------------------------------------------------------------------
     //キーボード操作　キーダウン時　ctrl+zで戻す　同時押しはこちらに描く
     var geojsonDeleteAr =[];
@@ -610,7 +664,7 @@ $(function() {
         console.log($(":focus")["length"]);
         if($(":focus")["length"]){
             console.log($(":focus").get(0).tagName);
-            if($(":focus").get(0).tagName==="INPUT") return;//inputのときは抜ける。
+            if($(":focus").get(0).tagName==="INPUT" ||$(":focus").get(0).tagName==="TEXTAREA") return;//inputのときは抜ける。
         }
         var features = featureSelect.getFeatures();
         switch (keycode) {
@@ -635,10 +689,9 @@ $(function() {
     });
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
-    var drawSourceChangeFlg = false;
     drawSource.on("change", function(e) {
         if(drawSourceChangeFlg) geojsonText();
-        drawSourceChangeFlg = true;
+        //drawSourceChangeFlg = true;
     });
     //------------------------------------------------------------------------------------------------------------------
     //geojsonの文字を書き出し 同時に元に戻す用に保存する。
@@ -648,8 +701,9 @@ $(function() {
             featureProjection: "EPSG:3857"
         });
         var geojsonT = JSON.stringify(JSON.parse(drawSourceGeojson),null,1);
-        var height = $(window).height() - 200;
-        $("#geojson-text").html("<pre style='max-height:" + height + "px'>" + geojsonT + "</pre>");
+        var height = $(window).height() - 100;
+        //$("#geojson-text").html("<pre style='max-height:" + height + "px'>" + geojsonT + "</pre>");
+        $("#geojson-text").val(geojsonT).change();//チェンジイベント強制発火
         PushArray(geojsonSaveAr,drawSourceGeojson);
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -718,7 +772,17 @@ $(function() {
                             break;
                         default:
                             var tArea = funcTArea(feature);
+                            var tDistance = funcTDistance(feature);
                             text = "面積\n" + tArea;
+                            if(tDistance) {
+                                text = "面積\n" + tArea + "\n周長" + tDistance;
+                            }else{
+                                if(tArea) {
+                                    text = "面積\n" + tArea;
+                                }else{
+                                    text = "";
+                                }
+                            }
                             var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
                             var coord = feature.getGeometry().getCoordinates()[0];
                             var returnNodeGeom = new ol.geom.MultiPoint(coord);//ノード用ジオメトリー
@@ -946,6 +1010,7 @@ $(function() {
         snapTolerance:1,
         source:haniSource,
         type:"Polygon",
+        style:polygonStringeStyleFunc(),
         freehand:true
     });
     drawPolygonHanisuteiFree.on("drawend", function(e) {
@@ -1015,6 +1080,7 @@ $(function() {
         snapTolerance:1,
         source:drawSource,
         type:"Polygon",
+        style:polygonStringeStyleFunc(),
         geometryFunction:polygonGometryFunc(),
         freehand:true
     });
@@ -1354,7 +1420,7 @@ $(function() {
             selected:[e["feature"]],
             deselected:[]
         });
-        $(".select-toggle").bootstrapToggle("on");
+        $("#select-toggle").bootstrapToggle("on");
     });
     //------------------------------------------------------------------------------------------------------------------
     //二重円
@@ -1409,7 +1475,7 @@ $(function() {
             selected:[e["feature"]],
             deselected:[]
         });
-        $(".select-toggle").bootstrapToggle("on");
+        $("#select-toggle").bootstrapToggle("on");
         console.log(featureSelect.getFeatures().getArray());
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -1666,11 +1732,16 @@ $(function() {
     $("body").on("change","#drawType",function(){
         featureSelect.getFeatures().clear();
         addInteractions();
-        $(".select-toggle").bootstrapToggle("off");
+        $("#select-toggle").bootstrapToggle("off");
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //計測モードトグルを押したとき
+    $("body").on("change","#measure-toggle",function(){
+        drawSource.changed();
     });
     //------------------------------------------------------------------------------------------------------------------
     //選択モードトグルを押したとき
-    $("body").on("change",".select-toggle",function(){
+    $("body").on("change","#select-toggle",function(){
         $("#select-toggle-div").animate({
             "background-color":"white"
          },1000);
@@ -1911,11 +1982,6 @@ $(function() {
         var colorVal = $("#drawColor").val();
         var rgb = d3.rgb(colorVal);
         var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.7)";
-        console.log(colorVal);
-        console.log(rgba);
-        console.log(featureSelect.getFeatures());
-        console.log(featureSelect.getFeatures().getProperties());
-        console.log(featureSelect.getFeatures().getProperties()["length"]);
         var features = featureSelect.getFeatures().getArray();
         console.log(features);
         if(!features.length){
@@ -1944,9 +2010,24 @@ $(function() {
         console.log(features[0].getProperties());
 
         for(var i = 0; i <features.length; i++){
-            features[i].setProperties({
-                "_fillColor":rgba
-            });
+            var feature = features[i];
+            var geomType =feature.getGeometry().getType();
+            console.log(geomType);
+            switch (geomType) {
+                case "Point":
+                case "MultiPolygon":
+                case "Polygon":
+                    feature.setProperties({
+                        "_fillColor":rgba
+                    });
+                    break;
+                case "LineString":
+                    feature.setProperties({
+                        "_color":rgba
+                    });
+                    break;
+                default:
+            }
         }
         featureSelect.getFeatures().clear();
         drawMenuOverlay.setPosition(null);
@@ -2091,7 +2172,8 @@ $(function() {
             var gistUrl = JSON.parse(e.target.response).html_url;
             console.log(gistUrl);
             $("#geojson-gist-div").remove();
-            $("#mydialog-draw-dialog .dialog-content").append("<div id='geojson-gist-div' class='alert alert-danger alert-gist'><a id='geojson-gist-a' class='alert-link'><i class='fa fa-github-alt fa-fw' style='color:rgba(0,0,0,1.0);'></i> gistを開く</a></div>");
+            var html = "<a href='' id='geojson-gist-a' class='btn btn-xs btn-warning btn-block'><i class='fa fa-github-alt fa-fw' style='color:rgba(255,255,255,1.0);'></i>GISTを開く<i class='fa fa-github fa-fw' style='color:rgba(255,255,255,1.0);'></a>";
+            $("#mydialog-draw-dialog .dialog-content").append(html);
             $("#geojson-gist-a").attr({
                 "href": gistUrl,
                 "target":"_blank"
@@ -2489,9 +2571,8 @@ $(function() {
     var drawContextmenuContent = "";
     drawContextmenuContent += "<button type='button' class='close' id='drawContextmenuOverlay-close'>&times;</button>";
     drawContextmenuContent += "<div id='drawContextmenuOverlay-content-div'>";
-    drawContextmenuContent += "<div><button type='button' id='drawContextmenu-delete-btn' class='btn btn-xs btn-primary' disabled='disabled'>削除</button></div>";
 
-    drawContextmenuContent += "<div>";
+    drawContextmenuContent += "<div id='drawContextmenu-drawColor-div'>";
     drawContextmenuContent += "<span>色 </span>";
     drawContextmenuContent += "<select id='drawContextmenu-drawColor'>";
     drawContextmenuContent += "<option value='red'>赤</option>";
@@ -2513,7 +2594,7 @@ $(function() {
     drawContextmenuContent += "</div>";
     //drawContextmenuContent += " <button type='button' id='drawContextmenu-colorSave-btn' class='btn btn-xs btn-primary'>反映</button>";
 
-    drawContextmenuContent += "<div>";
+    drawContextmenuContent += "<div id='drawContextmenu-drawColor-waku-div'>";
     drawContextmenuContent += "<span>線 </span>";
     drawContextmenuContent += "<select id='drawContextmenu-drawColor-waku'>";
     drawContextmenuContent += "<option value='red'>赤</option>";
@@ -2532,7 +2613,7 @@ $(function() {
     drawContextmenuContent += "<option value='lime'>ライム</option>";
     drawContextmenuContent += "<option value='aqua'>水色aqua</option>";
     drawContextmenuContent += "</select>";
-    drawContextmenuContent += "<span>幅 </span>";
+    drawContextmenuContent += "<span> 幅 </span>";
     drawContextmenuContent += "<select id='drawContextmenu-drawColor-haba'>";
     drawContextmenuContent += "<option value='1'>1px</option>";
     drawContextmenuContent += "<option value='3'>3px</option>";
@@ -2541,12 +2622,12 @@ $(function() {
     drawContextmenuContent += "<option value='15'>15px</option>";
     drawContextmenuContent += "<option value='25'>25px</option>";
     drawContextmenuContent += "<option value='40'>40px</option>";
-    drawContextmenuContent += "<option value='60'>60px</option>";
+    drawContextmenuContent += "<option value='60'>60px　</option>";
     drawContextmenuContent += "</select>";
     drawContextmenuContent += "</div>";
 
+    drawContextmenuContent += "<div><button type='button' id='drawContextmenu-delete-btn' class='btn btn-xs btn-primary' disabled='disabled'>削除</button></div>";
 
-    
     drawContextmenuContent += "</div>";
 
     //drawContextmenuContent += "<div>テスト中</div>";
@@ -2575,19 +2656,15 @@ $(function() {
             drawLineString.removeLastPoint();
             return;
         }
-
         if($("#mydialog-draw-dialog").css("display")!=="block") return;
         var top = evt.clientY;
         var left = evt.clientX;
         coord1 = map1.getCoordinateFromPixel([left,top]);
-        //evt.preventDefault();
         drawContextmenuOverlay.setPosition(coord1);
         var pixel = [left,top];
         var features = [];
         var layers = [];
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
-            //features.push(feature);
-            //layers.push(layer);
             if(layer){
                 var layerName = layer.getProperties()["name"];
                 if(layerName==="drawLayer"){
@@ -2597,17 +2674,31 @@ $(function() {
             }
         });
         var feature = features[features.length-1];
-        console.log(feature);
         if(feature) {
+            var geomType = feature.getGeometry().getType();
+            console.log(geomType);
+            switch (geomType) {
+                case "Point":
+                    $("#drawContextmenu-drawColor-div").show();
+                    $("#drawContextmenu-drawColor-waku-div").hide();
+                    break;
+                case "Polygon":
+                    $("#drawContextmenu-drawColor-div").show();
+                    $("#drawContextmenu-drawColor-waku-div").show();
+                    break;
+                case "LineString":
+                    $("#drawContextmenu-drawColor-div").hide();
+                    $("#drawContextmenu-drawColor-waku-div").show();
+                    break;
+                default:
+            }
             console.log("drawLayerの上");
             map1.addInteraction(featureSelect);
             drawTypeMsDropDown.set("selectedIndex", 0);
             addInteractions();
-            $(".select-toggle").bootstrapToggle("on");
+            $("#select-toggle").bootstrapToggle("on");
             featureSelect.getFeatures().push(feature);
             rightClickedFatyure = feature;
-            //featureSelect.dispatchEvent("select");
-            console.log($("#drawContextmenu-delete-btn").attr("class"));
             $("#drawContextmenu-delete-btn").prop("disabled", false);
             drawContextmenuDrawColorDD.set("disabled",false);
             drawContextmenuDrawColorWakuDD.set("disabled",false);
@@ -2631,7 +2722,7 @@ $(function() {
         //$("#drawType").val("0");
         drawTypeMsDropDown.set("selectedIndex",0);
         addInteractions();
-        $(".select-toggle").bootstrapToggle("on");
+        $("#select-toggle").bootstrapToggle("on");
         drawContextmenuOverlay.setPosition(null);
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -2672,6 +2763,33 @@ $(function() {
         console.log(val);
         rightClickedFatyure.setProperties({
             "_weight":val
+        });
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //ジオコーディング
+    $("body").on("change",".addres-input",function(){
+        var val = $(this).val();
+        var url = "https://msearch.gsi.go.jp/address-search/AddressSearch";
+        var syozaiti = val;
+        $.ajax({
+            type: "get",
+            url: url ,
+            dataType: "json",
+            data:{
+                "q":syozaiti
+            }
+        }).done(function (json) {
+            var coord = json[0]["geometry"]["coordinates"];
+            coord = ol.proj.transform(coord, "EPSG:4326", "EPSG:3857");
+            var geometry = new ol.geom.Point(coord);
+            var newFeature = new ol.Feature({
+                geometry: geometry,
+                "_fillColor":"red"
+            });
+            drawSource.addFeature(newFeature);
+            map1.getView().setCenter(coord);
+        }).fail(function () {
+            console.log("失敗!");
         });
     });
 });

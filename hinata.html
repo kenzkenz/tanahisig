@@ -120,9 +120,9 @@
         <script src="js/spectrum/spectrum.js"></script>
         <script src="js/ol-hash.js"></script>
 
-
         <script src="js/msdropdown/jquery.dd.min.js" type="text/javascript"></script>
         <link rel="stylesheet" type="text/css" href="js/msdropdown/css/dd.css" />
+        <script src="js/bcralnit.js" type="text/javascript"></script>
 
     </head>
     <body>
@@ -206,6 +206,7 @@
                 <div class="flood-slider"></div>
                 <div class="level-text-div">海抜<span class="level-text">0</span>M</div>
             </div>
+            <input type="text" class="addres-input form-control" placeholder="住所検索">
         </div>
         <div id="map2" class="maps"></div>
         <!--<canvas id='canvas-tiff'></canvas>-->
@@ -243,6 +244,7 @@
             $("#map2>*").css("display","none");
             $("#map2 .pano-btn").remove();
             $("#map2 .draw-btn").remove();
+            $("#map2 #address-div").remove();
 
         </script><!--map1の中身をmap2にコピー-->
         <button type="button" id="sync-btn" class="btn btn-primary">非同期</button>
