@@ -5,7 +5,13 @@
         <!--<meta name="robots" content="noindex,nofollow">-->
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui">
         <title>ひなたGIS</title>
-        <script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>
+        <!--<script src='https://npmcdn.com/@turf/turf/turf.min.js'></script>-->
+        <script src='js/turf.min.js'></script>
+
+        <!--<script src='https://npmcdn.com/@turf/turf/turf.js'></script>-->
+
+       <!-- <script src="https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js"></script>-->
+
         <link rel="shortcut icon" href="favicon.ico">
         <script src="js/jquery/jquery-3.2.1.min.js"></script>
         <link rel="stylesheet" href="js/jqueryui/1.11.4/jquery-ui.min.css" />
@@ -22,6 +28,8 @@
         <link rel="stylesheet" href="js/ol3/ol-cesium-v1.32/ol.css" type="text/css">
         <script src="js/ol3/ol-cesium-v1.27/Cesium/Cesium.js"></script>
         <script src="js/ol3/ol-cesium-v1.32/olcesium.js"></script>
+
+        <script src="js/ol3/olms.js"></script>
         <!--
         <link rel="stylesheet" href="js/ol3/ol-cesium-v1.27/ol.css" type="text/css">
         <script src="js/ol3/ol-cesium-v1.27/Cesium/Cesium.js"></script>
@@ -80,6 +88,7 @@
         <script src="js/ol3ext/control/buttoncontrol.js"></script>
         <script src="js/ol3ext/control/togglecontrol.js"></script>
         <script src="js/ol3ext/interactiondrawhole.js"></script>
+        <script src="js/ol3ext/hoverinteraction.js"></script>
         <!--<script src="js/edit.js"></script>-->
         <script src="js/edit2.js"></script>
         <script src="js/popup.js"></script>
@@ -94,7 +103,7 @@
         <script src="js/pano.js"></script>
         <script src="js/jcpmaps.js"></script>
         <!--<script src="js/fontsymbol.js"></script>-->
-        <script src="js/shadowstyle.js"></script>
+        <!--<script src="js/shadowstyle.js"></script>-->
         <script src="js/draganddrop.js"></script>
         <link rel="stylesheet" href="js/ol3ext/profilcontrol/profilcontrol.css">
         <script src="js/ol3ext/profilcontrol/profilcontrol.js"></script>
@@ -106,7 +115,7 @@
         <script src="js/cropfilter.js"></script>
         <script src="js/cropfilter-kotizu.js"></script>
         <script src="js/log.js"></script>
-        <script src="js/higasi9syuu-douro.js"></script>
+       <!-- <script src="js/higasi9syuu-douro.js"></script>-->
         <script src="js/osmtogeojson.js"></script>
 <!--
         <link rel="stylesheet" href="js/bootstrap-colorpickersliders/bootstrap.colorpickersliders.css" />
@@ -123,6 +132,14 @@
         <script src="js/msdropdown/jquery.dd.min.js" type="text/javascript"></script>
         <link rel="stylesheet" type="text/css" href="js/msdropdown/css/dd.css" />
         <script src="js/bcralnit.js" type="text/javascript"></script>
+
+        <link rel="stylesheet" href="js/ol3ext/fontsymbol/fontmaki.css" />
+
+        <script type="text/javascript" src="js/ol3ext/fontsymbol/fontsymbol.js"></script>
+        <script type="text/javascript" src="js/ol3ext/fontsymbol/fontmaki.def.js"></script>
+        <script type="text/javascript" src="js/ol3ext/fontsymbol/fontawesome.def.js"></script>
+        <script type="text/javascript" src="js/ol3ext/fontsymbol/shadowstyle.js"></script>
+
 
     </head>
     <body>
@@ -164,7 +181,7 @@
                     </ul>
                 </div>
                 <button type="button" class="pano-btn btn btn-primary"><i class='fa fa-camera-retro fa-lg'></i></button>
-                <button type="button" class="draw-btn btn btn-primary">draw</button>
+                <button type="button" class="draw-btn btn btn-primary">図形</button>
 
             </div>
             <div class="top-div">

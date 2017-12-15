@@ -321,11 +321,15 @@ $(function(){
     }
     //-----------------------------------------------
     function funcDrawPopup(feature,map,evt){
-
         if($(".select-toggle").prop("checked")) return;
-
+        var geoType = feature.getGeometry().getType();
+        var coord;
+        if(geoType==="Point"){
+            coord = feature.getGeometry().getCoordinates();
+        }else{
+            coord = evt.coordinate;
+        }
         var prop = feature.getProperties();
-        var coord = evt.coordinate;
         var flg = false;
         var content = "";
         var table = "<table class='popup-tbl table table-bordered table-hover' style=''>";

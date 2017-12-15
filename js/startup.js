@@ -334,7 +334,6 @@ $(function(){
     //--------------------------------------------------------------------------
     //現在地取得
     function getHere(mapName) {
-        //var mapName = mapObj["name"];
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
                 function (position) {
@@ -352,12 +351,6 @@ $(function(){
             alert("お使いのブラウザには座標取得機能がありません。")
         }
     }
-
-    //$(".addres-input").change{
-    //    console.log(999999)
-   // }
-
-
     //------------------------------------------------------------------------
     ol.hash(map1);
     ol.hash(map2);

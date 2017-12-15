@@ -58,6 +58,7 @@ function mydialog(options){
 	var left = opts.left;
 	var right = opts.right;
     var width = opts.width;
+    var height = opts.height;
 	var rmDialog = opts.rmDialog;
 	var hide = opts.hide;
 	var minMax = opts.minMax;
@@ -141,9 +142,9 @@ function mydialog(options){
 			right:right
 		});
 	}
-	if(width){
-		dialog.css("width",width);
-	}
+	if(width) dialog.css("width",width);
+    if(height) dialog.css("height",height);
+
 	dialog.draggable({
 		handle:".drag-handle",
 		stop:function(){
@@ -154,6 +155,7 @@ function mydialog(options){
 		}
 	});
     if(hide) dialog.css("visibility","hidden");//生成はするが隠す場合
+
 	dialog.show(function(){
 		//ドラッグのハンドルの幅を調整するために。スマホ、タブレットのため。PCだけだったら必要ない。
 		var winiconAr = dialog.find(".winicon");

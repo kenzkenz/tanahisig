@@ -3338,6 +3338,49 @@ var miyagikotizu2 = new ol.layer.Tile({
         maxZoom:13
     })
 });
+//岡山県古地図
+var okayamakotizu1 = new ol.layer.Tile({
+    folder:"child",
+    category:"kotizu",
+    name:"kotizu",
+    title:"33岡山県古地図(大正14年)",
+    origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
+    detail:"<a href='oldmap/okayamaken.jpg' target='_blank'>jpg</a>",
+    icon:"<i class='fa fa-map fa-fw' style='color:brown;'></i>",
+    //message:"1925年",
+    //coord:[131.5110089111254, 32.83581733593961],
+    //zoom:10,
+    //icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    //extent:transformE([130.940796,32.48553,132.110,33.16926]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/okayamakenkotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
+var okayamakotizu2 = new ol.layer.Tile({
+    folder:"child",
+    category:"kotizu",
+    name:"kotizu",
+    title:"33岡山県古地図(大正14年)",
+    origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
+    detail:"<a href='oldmap/okayamaken.jpg' target='_blank'>jpg</a>",
+    icon:"<i class='fa fa-map fa-fw' style='color:brown;'></i>",
+    //message:"1925年",
+    //coord:[131.5110089111254, 32.83581733593961],
+    //zoom:10,
+    //icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    //extent:transformE([130.940796,32.48553,132.110,33.16926]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/okayamakenkotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
+
+
 
 //山口県古地図
 var yamagutikotizu1 = new ol.layer.Tile({
@@ -4116,6 +4159,39 @@ var usasendai012 = new ol.layer.Tile({
         maxZoom:17
     })
 });
+
+
+var usaokayama011 = new ol.layer.Tile({
+    folder:"child",
+    category:"kakosyasin",
+    title:"岡山市米軍航空写真(昭和22年)",
+    origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
+    detail:"国土地理院のサービスです。" ,
+    //coord:[135.11447,34.70677],
+    icon:"<i class='fa fa-picture-o fa-fw' style='color:black;'></i>",
+    //extent:transformE([130.66371,31.34280,131.88045,32.87815]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/usa/okayama01/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        maxZoom:17
+    })
+});
+var usaokayama012 = new ol.layer.Tile({
+    folder:"child",
+    category:"kakosyasin",
+    title:"岡山市米軍航空写真(昭和22年)",
+    origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
+    detail:"国土地理院のサービスです。" ,
+    //coord:[135.11447,34.70677],
+    icon:"<i class='fa fa-picture-o fa-fw' style='color:black;'></i>",
+    //extent:transformE([130.66371,31.34280,131.88045,32.87815]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/usa/okayama01/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        maxZoom:17
+    })
+});
+
 
 
 var usasiawase011 = new ol.layer.Tile({

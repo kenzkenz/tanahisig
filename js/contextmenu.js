@@ -479,12 +479,11 @@ $(function(){
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //map1--------------------------------------------------------------------------------------------------------------
     $("#map1")[0].addEventListener('contextmenu',myContextmenu1,false);
-    $("body").on("mouseenter",".ol-popup,.dialog-base",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
+    $("body").on("mouseenter",".ol-popup,.dialog-base,input",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
         $("#map1")[0].removeEventListener('contextmenu',myContextmenu1,false);
-    }).on("mouseleave",".ol-popup,.dialog-base",function(){//contentからマウスが抜けたら通常の右クリックメニューを無効化。
+    }).on("mouseleave",".ol-popup,.dialog-base,input",function(){//contentからマウスが抜けたら通常の右クリックメニューを無効化。
         $("#map1")[0].addEventListener('contextmenu',myContextmenu1,false);
     });
-
     //map2--------------------------------------------------------------------------------------------------------------
     $("#map2")[0].addEventListener('contextmenu',myContextmenu2,false);
     $("body").on("mouseenter",".ol-popup,.dialog-base",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
@@ -504,7 +503,6 @@ $(function(){
         myContextOverlay1.setPosition(coord1);
         var val = $("#map1 .kmtext").spinner().spinner("value");
         //bbb(val,"map1");
-
         getElev(coord1,"map1",function(h){
             console.log(h);
             coord1Hyoukou = h;
@@ -518,7 +516,6 @@ $(function(){
         myContextOverlay2.setPosition(coord2);
         var val = $("#map2 .kmtext").spinner().spinner("value");
         //bbb(val,"map2");
-
         getElev(coord1,"map2",function(h){
             console.log(h);
             coord1Hyoukou = h;

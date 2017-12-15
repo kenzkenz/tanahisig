@@ -1,13 +1,15 @@
 .ol-popup {
     display: none;
     position: absolute;
-    background-color: white;
-    padding: 15px 25px 15px 15px;
+    background-color: rgba(255,255,255,0.7);/*修正*/
+    /*padding: 15px 25px 15px 15px;*/
+    padding: 15px 5px 10px 5px;/*修正*/
     border: 1px solid #cccccc;
     bottom: 12px;
     left: -50px;
     font-size: 12px;/*追加*/
-    border-radius: 6px;/*追加*/
+    border-radius: 4px;/*追加*/
+    box-shadow: 10px 10px 10px rgba(0,0,0,0.4);/*追加*/
 }
 
 .ol-popup:after, .ol-popup:before {

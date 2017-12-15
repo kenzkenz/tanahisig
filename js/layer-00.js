@@ -19,6 +19,7 @@ $(function(){
                     muro1,tondabayasik1,kago1,
         //過去の航空写真
         sikiriKakoSyasin,
+                    usaokayama011,
                     usasiawase011,
                     gazo11,old10_1,
                     jpn23ku011,
@@ -58,7 +59,8 @@ $(function(){
                     aya1,sobo1,soboZ1,
         //古地図
         sikiriKotizu,
-                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,simanekotizu1,yamagutikotizu1,koutikotizu1,hukuokakotizu1,sagakotizu1,nagasakikotizu1,kumamotokotizu1,ooitakotizu1,kotizu1,kagosimakotizu1,obikoyizu1,//obi1,
+                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,simanekotizu1,okayamakotizu1,yamagutikotizu1,koutikotizu1,hukuokakotizu1,sagakotizu1,
+                    nagasakikotizu1,kumamotokotizu1,ooitakotizu1,kotizu1,kagosimakotizu1,obikoyizu1,//obi1,
         //戦前戦後
         sikiriSenzensengo,
                     amArr1,
@@ -82,7 +84,8 @@ $(function(){
                     kikenkeiryuuAll1,kyuukeisyakikenkasyoAll1,
                     fukuiRindou1,
                     tunamimiyazakimvt1,
-                    tunamiWakkanaimvt1
+                    tunamiWakkanaimvt1,
+                    osmmvt1
     ];
     //------------------------------------------------------------------------------------------------------------------
     useLayersArr2 = [mieruneNormal2,
@@ -99,6 +102,7 @@ $(function(){
                     muro2,tondabayasik2,kago2,
         //過去の航空写真
         sikiriKakoSyasin,
+                    usaokayama012,
                     usasiawase012,
                     gazo12,old10_2,
                     jpn23ku012,
@@ -138,7 +142,8 @@ $(function(){
                     aya2,sobo2,soboZ2,
         //古地図
         sikiriKotizu,
-                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,simanekotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,nagasakikotizu2,kumamotokotizu2,ooitakotizu2,kotizu2,kagosimakotizu2,obikoyizu2,//obi1,
+                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,simanekotizu2,okayamakotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,
+                    nagasakikotizu2,kumamotokotizu2,ooitakotizu2,kotizu2,kagosimakotizu2,obikoyizu2,//obi1,
         //戦前戦後
         sikiriSenzensengo,
                     amArr2,
@@ -333,8 +338,27 @@ function funcHaikeiTableCreate(mapElement,mapName){
                 layer.set("altitudeMode","clampToGround");
                 layer.set("selectable",true);
 
+                var title = layer.getProperties()["title"];
+                console.log(title);
 
-                eval(mapName).addLayer(layer);
+                if(title==="osmmvt") {
+                    fetch('stylejson/style.json').then(function(response) {
+                        response.json().then(function(glStyle) {
+                            olms.applyStyle(layer, glStyle, 'openmaptiles').then(function () {
+                                eval(mapName).addLayer(layer);
+                            });
+                        });
+                    });
+                    $("#" + mapName).css({
+                        "background":"hsl(47, 26%, 88%)"
+                    })
+                }else{
+                    eval(mapName).addLayer(layer);
+                }
+
+
+
+
                 //座標を移動する。
                 if(layer.getProperties()["coord"]){
                     var lonlat = layer.getProperties()["coord"];
@@ -588,8 +612,16 @@ $(function(){
             layer.getSource().changed();
         }
         */
-
-
+        //--------------------------------------------------------------------------------------------------------------
+        //osmmvt
+        $("#" + mapName).on("change",".osmmvt-select",function(){
+            var val = $(this).val();
+            console.log(val);
+            $("#" + mapName).css({
+                //"background":"hsl(47, 26%, 88%)"
+                "background":val
+            })
+        });
         //--------------------------------------------------------------------------------------------------------------
         //小地域
         $("#" + mapName + " .syoutiikitext").spinner({

@@ -1,3 +1,47 @@
+//OSMベクトルタイル-------------------------------------------------------------------------------------------------------
+
+var osmmvtDetail2 =
+    "<div class='detail2-div'>" +
+    "　バックグラウンドカラー："+
+    "<select class='osmmvt-select'>" +
+
+    "<option value='red'>赤</option>" +
+    "<option value='green'>緑</option>" +
+    "<option value='blue'>青</option>" +
+    "<option value='yellow'>黄</option>" +
+    "<option value='gray'>灰</option>" +
+    "<option value='silver'>銀</option>" +
+    "<option value='black'>黒</option>" +
+    "<option value='maroon'>栗色</option>" +
+    "<option value='purple'>紫</option>" +
+    "<option value='olive'>オリーブ</option>" +
+    "<option value='navy'>濃紺</option>" +
+    "<option value='teal'>青緑</option>" +
+    "<option value='fuchsia'>赤紫</option>" +
+    "<option value='lime'>ライム</option>" +
+    "<option value='aqua'>水色aqua</option>" +
+
+    "</select>" +
+    "</div>";
+var osmmvt1 = new ol.layer.VectorTile({
+    folder:"child",
+    category:"test",
+    icon:"<i class='fa fa-th fa-fw' style='color:red;'></i>",
+    title:"osmmvt",
+    name:"suiro",
+    //origin:"<a href='https://github.com/hfu/rvrcl-vt' target='_blank'>rvrcl-vt</a>",
+    detail:"",
+    detail2:osmmvtDetail2,
+    source: new ol.source.VectorTile({
+        cacheSize:10000,
+        format: new ol.format.MVT(),
+        maxZoom:14,
+        url:"https://hfu.github.io/jp1710_{z}/{x}/{y}.mvt "
+    }),
+    //maxResolution:1222.99,
+    //style: suiroStyleFunction
+});
+
 //全国河川中心線----------------------------------------------------------------------------------------------------------
 var suiro1 = new ol.layer.VectorTile({
     folder:"child",
