@@ -104,6 +104,13 @@ ol.interaction.Transform.prototype.setMap = function(map)
 };
 
 /**
+追加！！！！！！
+ */
+ol.interaction.Transform.prototype.setVisible = function(b) {
+    this.overlayLayer_.setVisible(b);
+};
+
+/**
  * Activate/deactivate interaction
  * @param {bool}
  * @api stable
@@ -148,7 +155,8 @@ ol.interaction.Transform.prototype.setDefaultStyle = function()
     }
     /** Style for handles */
     this.style =
-        {	'default': createStyle (bigpt, strokedash, fill0),
+        {
+            //'default': createStyle (bigpt, strokedash, fill0),
             'translate': createStyle (bigpt, stroke, fill),
             'rotate': createStyle (circle, stroke, fill),
             'rotate0': createStyle (bigpt, stroke, fill),

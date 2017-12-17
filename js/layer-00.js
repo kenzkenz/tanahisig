@@ -59,7 +59,7 @@ $(function(){
                     aya1,sobo1,soboZ1,
         //古地図
         sikiriKotizu,
-                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,simanekotizu1,okayamakotizu1,yamagutikotizu1,koutikotizu1,hukuokakotizu1,sagakotizu1,
+                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,simanekotizu1,okayamakotizu1,hiroshimakotizu1,yamagutikotizu1,koutikotizu1,hukuokakotizu1,sagakotizu1,
                     nagasakikotizu1,kumamotokotizu1,ooitakotizu1,kotizu1,kagosimakotizu1,obikoyizu1,//obi1,
         //戦前戦後
         sikiriSenzensengo,
@@ -142,7 +142,7 @@ $(function(){
                     aya2,sobo2,soboZ2,
         //古地図
         sikiriKotizu,
-                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,simanekotizu2,okayamakotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,
+                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,simanekotizu2,okayamakotizu2,hiroshimakotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,
                     nagasakikotizu2,kumamotokotizu2,ooitakotizu2,kotizu2,kagosimakotizu2,obikoyizu2,//obi1,
         //戦前戦後
         sikiriSenzensengo,

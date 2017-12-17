@@ -3380,6 +3380,47 @@ var okayamakotizu2 = new ol.layer.Tile({
     })
 });
 
+//広島県古地図
+var hiroshimakotizu1 = new ol.layer.Tile({
+    folder:"child",
+    category:"kotizu",
+    name:"kotizu",
+    title:"34広島県古地図(大正14年)",
+    origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
+    detail:"<a href='oldmap/hiroshimaken.jpg' target='_blank'>jpg</a>",
+    icon:"<i class='fa fa-map fa-fw' style='color:brown;'></i>",
+    //message:"1925年",
+    //coord:[131.5110089111254, 32.83581733593961],
+    //zoom:10,
+    //icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    //extent:transformE([130.940796,32.48553,132.110,33.16926]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/hiroshimakenkotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
+var hiroshimakotizu2 = new ol.layer.Tile({
+    folder:"child",
+    category:"kotizu",
+    name:"kotizu",
+    title:"34広島県古地図(大正14年)",
+    origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
+    detail:"<a href='oldmap/hiroshimaken.jpg' target='_blank'>jpg</a>",
+    icon:"<i class='fa fa-map fa-fw' style='color:brown;'></i>",
+    //message:"1925年",
+    //coord:[131.5110089111254, 32.83581733593961],
+    //zoom:10,
+    //icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    //extent:transformE([130.940796,32.48553,132.110,33.16926]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/hiroshimakenkotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
 
 
 //山口県古地図

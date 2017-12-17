@@ -4,6 +4,8 @@ $(function() {
     var drawLayer = null;
     var haniSource = null;
     var haniLayer = null;
+    var hoverSource = null;
+    var hoverLayer = null;
     var drawLayerHeatmap = null;
     var drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
@@ -22,7 +24,7 @@ $(function() {
 
     selectHtml += "<div class='select-toggle-div' style='margin-left: 10px;'>";
     selectHtml += "計測モード：";
-    selectHtml += "<input type='checkbox' data-toggle='toggle' checked id='measure-toggle' class='bs-toggle' data-size='mini'>";
+    selectHtml += "<input type='checkbox' data-toggle='toggle' id='measure-toggle' class='bs-toggle' data-size='mini'>";
     //selectHtml += " 色、形状変更、項目追加はOn";
     selectHtml += "</div>";
 
@@ -41,7 +43,7 @@ $(function() {
     selectHtml += "<div class='draw-div2'>";
     selectHtml += "形状 ";
     selectHtml += "<select id='drawType'>";
-    selectHtml += "<option value='0' selected>リセット</option>";
+    selectHtml += "<option value='0' selected>描画終了</option>";
     //selectHtml += "<optgroup label='<i class=\"fa fa-map-marker fa-fw fa-lg\" style=\"color:rgba(51,122,183,1.0);\"></i>点'>";
     selectHtml += "<optgroup label='<i class=\"fa fa-map-marker fa-lg\"></i>点'>";
     selectHtml += "<option value='Point'>点を設置</option>";
@@ -296,6 +298,23 @@ $(function() {
         style:drawStyleFunction()
     });
     //------------------------------------------------------------------------------------------------------------------
+    //ホバー用のソース、レイヤーを設置
+    hoverSource = new ol.source.Vector();
+    hoverLayer = new ol.layer.Vector({
+        source:hoverSource,
+        name:"hoverLayer",
+        /*
+        style:function(){
+
+        }
+        */
+    });
+    map1.addLayer(hoverLayer);
+    hoverLayer.setZIndex(9999);
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
     //スタイルファンクション-----------------------------------------------------------------------------------------------
     //ポイント用のスタイル
     function pointStyle(feature, resolution,selected) {
@@ -373,7 +392,8 @@ $(function() {
                         }),
                         fill: new ol.style.Fill({
                             color: [255, 136, 0, 0.6]
-                        })
+                        }),
+                        zIndex:2
                     })
                 );
             }else{//選択しているとき
@@ -404,7 +424,8 @@ $(function() {
                         }),
                         fill: new ol.style.Fill({
                             color: [255, 136, 0, 0.6]
-                        })
+                        }),
+                        zIndex:2
                     })
                 );
             }
@@ -424,7 +445,10 @@ $(function() {
                         fill: new ol.style.Fill({
                             color: fillColor ? fillColor : "orange"
                         }),
-                        stroke: new ol.style.Stroke({color: color, width: width})
+                        stroke: new ol.style.Stroke({
+                            color: color, width: width
+                        }),
+                        zIndex:2
                     })
                 })
             )
@@ -442,7 +466,6 @@ $(function() {
             var strokeWidth = prop["_weight"];
             var type = prop["_type"];
             var icon = prop["_icon"];
-            console.log(feature);
             if (resolution > 2445) {//ズーム６
                 var pointRadius = 2;
             } else if (resolution > 1222) {//ズーム７
@@ -471,7 +494,8 @@ $(function() {
                             stroke: new ol.style.Stroke({
                                 color: strokeColor ? strokeColor : "black",
                                 width: strokeWidth ? strokeWidth : 6
-                            })
+                            }),
+                            zIndex:1
                         }),
                         new ol.style.Style({//頂点の六角形
                             image: new ol.style.RegularShape({
@@ -731,11 +755,11 @@ $(function() {
                                     color: "white"
                                 }),
                                 stroke: new ol.style.Stroke({
-                                    color: "red",
+                                    color: "navy",
                                     width: 1
                                 }),
                                 points: 6,
-                                radius: 8,
+                                radius: 6,
                                 //radius2: 8,
                                 angle: 45
                             }),
@@ -915,9 +939,9 @@ $(function() {
         //-----------------------------
         return TRadius;
     }
-
+    //------------------------------------------------------------------------------------------------------------------
     document.onclick = function(e){
-        console.log(e.button);
+        //console.log(e.button);
     };
     //------------------------------------------------------------------------------------------------------------------
     //テキストエリアからドローソース変更
@@ -1119,59 +1143,76 @@ $(function() {
                 i++
             }
         }
+        //最後に移動を可視化
+        transform2.setVisible(true);
     });
     //------------------------------------------------------------------------------------------------------------------
     //ホバー
-    var drawHoverFlg = false;
+    map1.on("pointermove",function(e){
+        var pixel = e.pixel;
+        var features = [];
+        var layers = [];
+        map1.forEachFeatureAtPixel(pixel,function(feature,layer){
+            if(layer){
+                var layerName = layer.getProperties()["name"];
+                if(layerName==="drawLayer"){
+                    features.push(feature);
+                    layers.push(layer);
+                }
+            }
+        });
+        var feature,pointFeature,lineStringFeature,otherFeature;
+        for(var i = 0; i <features.length; i++){
+            var geomType = features[i].getGeometry().getType();
+            switch (geomType) {
+                case "Point":
+                    pointFeature = features[i];
+                    break;
+                case "LineString":
+                    lineStringFeature = features[i];
+                    break;
+                default:
+                    otherFeature = features[i]
+            }
+        }
+        if(pointFeature) {
+            feature = pointFeature;
+        }else if(lineStringFeature) {
+            feature = lineStringFeature;
+        }else{
+            feature = otherFeature;
+        }
+        hoverSource.clear();
+        if(feature) hoverSource.addFeature(feature);
+    });
+    /*
     var drawhover = new ol.interaction.Hover({ cursor: "pointer" });
     map1.addInteraction(drawhover);
     drawhover.on("enter", function(e) {
-        /*
-        switch (e.feature.getGeometry().getType()) {
+        var feature = e.feature;
+        var geomType = feature.getGeometry().getType();
+        switch (geomType) {
             case "LineString":
-                drawhover.setCursor("copy");
+                console.log(1);
+                $(".ol-viewport").css({cursor:"pointer"});
                 break;
         case "Polygon":
-                drawhover.setCursor("help");
+                console.log(2);
+                $(".ol-viewport").css({cursor:"help"});
                 break;
         default:
-                drawhover.setCursor("pointer");
+                console.log(3);
+                $(".ol-viewport").css({cursor:"pointer"});
                 break;
         }
-        */
-        var feature = e.feature;
-        //console.log(feature);
-        //console.log(feature.getProperties()["_fillColor"]);
-        //console.log(feature.getGeometry().getType());
-
-        if(feature.getProperties()["_fillColor"]) {
-            console.log(feature);
-            drawHoverFlg = true;
-            /*
-             map1.addInteraction(featureSelect);
-             drawTypeMsDropDown.set("selectedIndex", 0);
-             addInteractions();
-             $("#select-toggle").bootstrapToggle("on");
-             console.log(feature);
-             featureSelect.getFeatures().push(feature);
-             */
-            //featureSelect.setActive(true);
-            //drawPolygon.setActive(false);
-            //featureSelect.getFeatures().push(feature);
-        }else{
-            //drawHoverFlg = false;
-        }
-
-
-        //$("#info").html("Feature is: "+e.feature.getGeometry().getType());
+        hoverSource.clear();
+        hoverSource.addFeature(feature)
     });
     drawhover.on("leave", function(e) {
-        console.log("leave");
-        drawHoverFlg = false;
-        //featureSelect.setActive(false);
-
-        //$("#info").html("");
+        $(".ol-viewport").css({cursor:""});
+        hoverSource.clear();
     });
+    */
     //------------------------------------------------------------------------------------------------------------------
     //スナップ
     var snap = new ol.interaction.Snap({source:drawSource});
@@ -1199,12 +1240,7 @@ $(function() {
             return;
         });
         return function (feature, resolution) {
-            //console.log(feature)
-
             var focusId = $(":focus").attr("id");
-            console.log(focusId)
-
-
             var prop = feature.getProperties();
             var fillColor = prop["_fillColor"];
             if(!fillColor) fillColor = "rgba(0,122,255,0.7)";
@@ -1256,13 +1292,45 @@ $(function() {
         }
     }
     drawPoint.on("drawend", function(e) {
-        var prop = e["feature"]["D"];
+        var feature = e["feature"];
+        var coord = feature.getGeometry().getCoordinates();
+        var pixel = map1.getPixelFromCoordinate(coord);
+        var features = [];
+        var layers = [];
+        map1.forEachFeatureAtPixel(pixel,function(feature,layer){
+            if(layer){
+                var layerName = layer.getProperties()["name"];
+                if(layerName==="drawLayer"){
+                    features.push(feature);
+                    layers.push(layer);
+                }
+            }
+        });
+        for(var i = 0; i <features.length; i++){
+            var geomType = features[i].getGeometry().getType();
+            if(geomType==="Point"){
+                drawCancelFlg = true;
+                alert("同じ座標に点を設置することはできません。");
+                return;
+            }
+        }
+        //var prop = feature.getProperties();
+        var prop = feature["D"];
         prop["_fillColor"] = "rgba(51,122,183,1.0)";
-        console.log(theGlyph);
         prop["_icon"] = theGlyph;
         featureSelect.getFeatures().clear();
         helpTooltipElement.classList.add('hidden');
         helpTooltipElement.innerHTML = "";
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //★★★★ソースに地物が追加されたときの処理
+    var drawCancelFlg = false;
+    drawSource.on("addfeature", function(e) {
+        var feature = e["feature"];
+        if(drawCancelFlg){
+            drawSource.removeFeature(feature);
+        }
+        drawCancelFlg = false;
     });
     //------------------------------------------------------------------------------------------------------------------
     //ポリゴンで範囲指定 フリーハンド
@@ -1277,9 +1345,7 @@ $(function() {
     drawPolygonHanisuteiFree.on("drawend", function(e) {
         var feature = e["feature"];
         var coordAr = feature.getGeometry().getCoordinates();
-        //console.log(coordAr);
         var haniPolygon = turf.toWgs84(turf.polygon(coordAr));
-        //console.log(haniPolygon);
         featureSelect.getFeatures().clear();
         features = drawSource.getFeatures();
         map1.removeInteraction(featureSelect);
@@ -1333,11 +1399,8 @@ $(function() {
             bool = false;
         }//forここまで
         var extent = feature.getGeometry().getExtent();
-        console.log(extent);
-
         drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
-        drawContextmenuCreate();
-
+        drawContextmenuCreate(featureSelect.getFeatures().getArray());
     });
     //------------------------------------------------------------------------------------------------------------------
     //ポリゴン フリーハンド
@@ -1592,7 +1655,8 @@ $(function() {
     });
     drawLineString.on("drawend", function(e) {
         var prop = e["feature"]["D"];
-        prop["_color"] = "rgba(51,122,255,0.7)";
+        //prop["_color"] = "rgba(51,122,255,0.7)";
+        prop["_color"] = "rgba(0,0,0,0.7)";
         prop["_weight"] = 6;
         featureSelect.getFeatures().clear();
         drawLineString.nbpts = 0;
@@ -1832,6 +1896,17 @@ $(function() {
         stretch:true
     });
     //------------------------------------------------------------------------------------------------------------------
+    //トランスフォーム（移動のみ）
+    var transform2 = new ol.interaction.Transform ({
+        //features:featureSelect.getFeatures(),
+        translateFeature:false,
+        scale:false,
+        rotate:false,
+        keepAspectRatio:ol.events.condition.always,
+        translate:true,
+        stretch:false
+    });
+    //------------------------------------------------------------------------------------------------------------------
     //移動
     var translate = new ol.interaction.Translate ({
         features:featureSelect.getFeatures()
@@ -1867,6 +1942,7 @@ $(function() {
         map1.removeInteraction(drawDoubleCircle);
         map1.removeInteraction(snap);
         map1.removeInteraction(transform);
+        map1.removeInteraction(transform2);
         //map1.removeInteraction(translate);
         map1.removeInteraction(drawDome);
         map1.removeInteraction(drawNintoku);
@@ -1920,6 +1996,13 @@ $(function() {
                 map1.addInteraction(snap);
                 setHandleStyle();
                 break;
+            case "Transform2":
+                //drawHelpFlg = true;
+                //helpTooltipElement.innerHTML = "面の上でシングルクリック。その後、□で操作";
+                map1.addInteraction(transform2);
+                map1.addInteraction(snap);
+                setHandleStyle();
+                break;
             case "Translate":
                 map1.addInteraction(translate);
                 map1.addInteraction(snap);
@@ -1959,7 +2042,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ハンドルスタイルセット
     function setHandleStyle() {
-        if (!transform instanceof ol.interaction.Transform) return;
+        //if (!transform instanceof ol.interaction.Transform) return;
         var circle = new ol.style.RegularShape({
             fill: new ol.style.Fill({color:[255,255,255,0.01]}),
             stroke: new ol.style.Stroke({width:1, color:[0,0,0,0.01]}),
@@ -1996,7 +2079,17 @@ $(function() {
                         stroke: new ol.style.Stroke({ width:2, color:'red' })
                     })
                 }));
+        transform2.setStyle('translate',
+            new ol.style.Style(
+                {	text: new ol.style.Text (
+                    {	text:'\uf047',
+                        font:"20px Fontawesome",
+                        fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
+                        stroke: new ol.style.Stroke({ width:2, color:'red' })
+                    })
+                }));
         transform.set('translate', transform.get('translate'));
+        transform2.set('translate', transform2.get('translate'));
     }
     //------------------------------------------------------------------------------------------------------------------
     //ドロータイプ選択
@@ -2030,7 +2123,6 @@ $(function() {
         })[0];
         if($(this).prop("checked")) {
             drawHelpFlg = false;
-            console.log("checked");
             map1.removeInteraction(drawPoint);
             map1.removeInteraction(drawPolygon);
             map1.removeInteraction(drawPolygonFree);
@@ -2046,18 +2138,25 @@ $(function() {
             map1.removeInteraction(drawNintoku);
             map1.removeInteraction(drawPaste);
             //map1.addInteraction(translate);
+
+
             map1.addInteraction(featureSelect);
-            map1.removeInteraction(modify);
+
+
+            map1.addInteraction(transform2);
+            setHandleStyle();
+            transform2.setVisible(false);
+
+
             map1.addInteraction(modify);
             map1.addInteraction(snap);
-            //$("#drawType").val("0");
             drawTypeMsDropDown.set("selectedIndex",0);
             DragRotateAndZoomInteraction.setActive(false);
         }else{
-            console.log("off");
             map1.removeInteraction(featureSelect);
             //map1.removeInteraction(translate);
             map1.removeInteraction(modify);
+            map1.removeInteraction(transform2);
             DragRotateAndZoomInteraction.setActive(true);
         }
     });
@@ -3045,8 +3144,6 @@ $(function() {
                     drawSource.addFeature(newFeature);
                 }
             }
-
-
         };
         drawSourceChangeFlg = true;
     };
@@ -3108,84 +3205,89 @@ $(function() {
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイ要素作成
-    var drawContextmenuContent = "";
-    drawContextmenuContent += "<button type='button' class='close' id='drawContextmenuOverlay-close'>&times;</button>";
+    var contextContent = "";
+    contextContent += "<button type='button' class='close' id='drawContextmenuOverlay-close'>&times;</button>";
 
-    drawContextmenuContent += "<div id='drawContextmenuOverlay-content-div'>";
+    contextContent += "<div id='drawContextmenuOverlay-content-div'>";
 
-    drawContextmenuContent += "<div id='drawContextmenu-step1-div'>";
-    drawContextmenuContent += "<select id='drawType2'>";
-    drawContextmenuContent += "<option value='0' selected>リセット</option>";
-    drawContextmenuContent += "<option value='Point'>点</option>";
-    drawContextmenuContent += "<option value='LineString'>線</option>";
-    drawContextmenuContent += "<option value='Polygon'>面</option>";
-    drawContextmenuContent += "<option value='hanisitei'>範囲指定　</option>";
-    drawContextmenuContent += "</select>";
-    drawContextmenuContent += "</div>";
+    contextContent += "<div id='drawContextmenu-step1-div'>";
+    contextContent += "step1 ";
+    contextContent += "<select id='drawType2'>";
+    contextContent += "<option value='0' selected>描画終了</option>";
+    contextContent += "<option value='Point'>点</option>";
+    contextContent += "<option value='LineString'>線</option>";
+    contextContent += "<option value='Polygon'>面</option>";
+    contextContent += "<option value='hanisitei'>範囲指定　</option>";
+    contextContent += "</select>";
+    contextContent += "<hr class='my-hr'>";
+    contextContent += "</div>";
 
-    drawContextmenuContent += "<div id='drawContextmenu-drawColor-div'>";
-    drawContextmenuContent += "<span>色 </span>";
-    drawContextmenuContent += "<select id='drawContextmenu-drawColor'>";
-    drawContextmenuContent += "<option value='red'>赤</option>";
-    drawContextmenuContent += "<option value='green'>緑</option>";
-    drawContextmenuContent += "<option value='blue'>青</option>";
-    drawContextmenuContent += "<option value='yellow'>黄</option>";
-    drawContextmenuContent += "<option value='gray'>灰</option>";
-    drawContextmenuContent += "<option value='silver'>銀</option>";
-    drawContextmenuContent += "<option value='black'>黒</option>";
-    drawContextmenuContent += "<option value='maroon'>栗色</option>";
-    drawContextmenuContent += "<option value='purple'>紫</option>";
-    drawContextmenuContent += "<option value='olive'>オリーブ</option>";
-    drawContextmenuContent += "<option value='navy'>濃紺</option>";
-    drawContextmenuContent += "<option value='teal'>青緑</option>";
-    drawContextmenuContent += "<option value='fuchsia'>赤紫</option>";
-    drawContextmenuContent += "<option value='lime'>ライム</option>";
-    drawContextmenuContent += "<option value='aqua'>水色aqua</option>";
-    drawContextmenuContent += "</select>";
+    contextContent += "<div id='drawContextmenu-drawColor-div'>";
+    contextContent += "step2<br>";
+    contextContent += "<span>　色 </span>";
+    contextContent += "<select id='drawContextmenu-drawColor'>";
+    contextContent += "<option value=''></option>";
+    contextContent += "<option value='red'>赤</option>";
+    contextContent += "<option value='green'>緑</option>";
+    contextContent += "<option value='blue'>青</option>";
+    contextContent += "<option value='yellow'>黄</option>";
+    contextContent += "<option value='gray'>灰</option>";
+    contextContent += "<option value='silver'>銀</option>";
+    contextContent += "<option value='black'>黒</option>";
+    contextContent += "<option value='maroon'>栗色</option>";
+    contextContent += "<option value='purple'>紫</option>";
+    contextContent += "<option value='olive'>オリーブ</option>";
+    contextContent += "<option value='navy'>濃紺</option>";
+    contextContent += "<option value='teal'>青緑</option>";
+    contextContent += "<option value='fuchsia'>赤紫</option>";
+    contextContent += "<option value='lime'>ライム</option>";
+    contextContent += "<option value='aqua'>水色aqua</option>";
+    contextContent += "</select>";
 
-    drawContextmenuContent += " <button type='button' id='drawContextmenu-icon-btn' class='btn btn-xs btn-primary'>アイコン</button>";
+    contextContent += " <button type='button' id='drawContextmenu-icon-btn' class='btn btn-xs btn-primary'>アイコン</button>";
+    //contextContent += "<hr class='my-hr'>";
+    contextContent += "</div>";
+    //contextContent += " <button type='button' id='drawContextmenu-colorSave-btn' class='btn btn-xs btn-primary'>反映</button>";
 
-    drawContextmenuContent += "</div>";
-    //drawContextmenuContent += " <button type='button' id='drawContextmenu-colorSave-btn' class='btn btn-xs btn-primary'>反映</button>";
+    contextContent += "<div id='drawContextmenu-drawColor-waku-div'>";
+    contextContent += "<span>　線 </span>";
+    contextContent += "<select id='drawContextmenu-drawColor-waku'>";
+    contextContent += "<option value='red'>赤</option>";
+    contextContent += "<option value='green'>緑</option>";
+    contextContent += "<option value='blue'>青</option>";
+    contextContent += "<option value='yellow'>黄</option>";
+    contextContent += "<option value='gray'>灰</option>";
+    contextContent += "<option value='silver'>銀</option>";
+    contextContent += "<option value='black'>黒</option>";
+    contextContent += "<option value='maroon'>栗色</option>";
+    contextContent += "<option value='purple'>紫</option>";
+    contextContent += "<option value='olive'>オリーブ</option>";
+    contextContent += "<option value='navy'>濃紺</option>";
+    contextContent += "<option value='teal'>青緑</option>";
+    contextContent += "<option value='fuchsia'>赤紫</option>";
+    contextContent += "<option value='lime'>ライム</option>";
+    contextContent += "<option value='aqua'>水色aqua</option>";
+    contextContent += "</select>";
+    contextContent += "<span> 幅 </span>";
+    contextContent += "<select id='drawContextmenu-drawColor-haba'>";
+    contextContent += "<option value='1'>1px</option>";
+    contextContent += "<option value='3'>3px</option>";
+    contextContent += "<option value='5'>5px</option>";
+    contextContent += "<option value='10'>10px</option>";
+    contextContent += "<option value='15'>15px</option>";
+    contextContent += "<option value='25'>25px</option>";
+    contextContent += "<option value='40'>40px</option>";
+    contextContent += "<option value='60'>60px　</option>";
+    contextContent += "</select>";
+    contextContent += "<hr class='my-hr'>";
+    contextContent += "</div>";
+    contextContent += "<button type='button' id='drawContextmenu-delete-btn' class='btn btn-xs btn-primary' disabled='disabled'>削除</button>";
+    contextContent += "<button type='button' id='drawContextmenu-deleteall-btn' class='btn btn-xs btn-primary'>全削除</button>";
 
-    drawContextmenuContent += "<div id='drawContextmenu-drawColor-waku-div'>";
-    drawContextmenuContent += "<span>線 </span>";
-    drawContextmenuContent += "<select id='drawContextmenu-drawColor-waku'>";
-    drawContextmenuContent += "<option value='red'>赤</option>";
-    drawContextmenuContent += "<option value='green'>緑</option>";
-    drawContextmenuContent += "<option value='blue'>青</option>";
-    drawContextmenuContent += "<option value='yellow'>黄</option>";
-    drawContextmenuContent += "<option value='gray'>灰</option>";
-    drawContextmenuContent += "<option value='silver'>銀</option>";
-    drawContextmenuContent += "<option value='black'>黒</option>";
-    drawContextmenuContent += "<option value='maroon'>栗色</option>";
-    drawContextmenuContent += "<option value='purple'>紫</option>";
-    drawContextmenuContent += "<option value='olive'>オリーブ</option>";
-    drawContextmenuContent += "<option value='navy'>濃紺</option>";
-    drawContextmenuContent += "<option value='teal'>青緑</option>";
-    drawContextmenuContent += "<option value='fuchsia'>赤紫</option>";
-    drawContextmenuContent += "<option value='lime'>ライム</option>";
-    drawContextmenuContent += "<option value='aqua'>水色aqua</option>";
-    drawContextmenuContent += "</select>";
-    drawContextmenuContent += "<span> 幅 </span>";
-    drawContextmenuContent += "<select id='drawContextmenu-drawColor-haba'>";
-    drawContextmenuContent += "<option value='1'>1px</option>";
-    drawContextmenuContent += "<option value='3'>3px</option>";
-    drawContextmenuContent += "<option value='5'>5px</option>";
-    drawContextmenuContent += "<option value='10'>10px</option>";
-    drawContextmenuContent += "<option value='15'>15px</option>";
-    drawContextmenuContent += "<option value='25'>25px</option>";
-    drawContextmenuContent += "<option value='40'>40px</option>";
-    drawContextmenuContent += "<option value='60'>60px　</option>";
-    drawContextmenuContent += "</select>";
-    drawContextmenuContent += "</div>";
-    drawContextmenuContent += "<hr class='my-hr'>";
-    drawContextmenuContent += "<div><button type='button' id='drawContextmenu-delete-btn' class='btn btn-xs btn-primary' disabled='disabled'>削除</button></div>";
+    contextContent += "</div>";
 
-    drawContextmenuContent += "</div>";
-
-    //drawContextmenuContent += "<div>テスト中</div>";
-    $("#map1").append('<div id="drawContextmenuOverlay-div" class="drawContextmenuOverlay-div">' + drawContextmenuContent + '</div>');
+    //contextContent += "<div>テスト中</div>";
+    $("#map1").append('<div id="drawContextmenuOverlay-div" class="drawContextmenuOverlay-div">' + contextContent + '</div>');
     var drawContextmenuDrawColorDD = $("#drawContextmenu-drawColor").msDropDown().data("dd");
     var drawContextmenuDrawColorWakuDD = $("#drawContextmenu-drawColor-waku").msDropDown().data("dd");
     var drawContextmenuDrawColorHabaDD = $("#drawContextmenu-drawColor-haba").msDropDown().data("dd");
@@ -3216,9 +3318,127 @@ $(function() {
         var top = evt.clientY;
         var left = evt.clientX;
         var coord = map1.getCoordinateFromPixel([left, top]);
-        //drawContextmenuOverlay.setPosition(coord);
         var pixel = [left, top];
+        var features = [];
+        var layers = [];
+        map1.forEachFeatureAtPixel(pixel,function(feature,layer){
+            if(layer){
+                var layerName = layer.getProperties()["name"];
+                if(layerName==="drawLayer"){
+                    features.push(feature);
+                    layers.push(layer);
+                }
+            }
+        });
+        var feature,pointFeature,lineStringFeature,otherFeature;
+        for(var i = 0; i <features.length; i++){
+            var geomType = features[i].getGeometry().getType();
+            switch (geomType) {
+                case "Point":
+                    pointFeature = features[i];
+                    break;
+                case "LineString":
+                    lineStringFeature = features[i];
+                    break;
+                default:
+                    otherFeature = features[i]
+            }
+        }
+        if(pointFeature) {
+            feature = pointFeature;
+        }else if(lineStringFeature) {
+            feature = lineStringFeature;
+        }else{
+            feature = otherFeature;
+        }
+        drawContextmenuOverlay.setPosition(coord);
+        drawContextmenuCreate(feature);
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //メニュー項目　調整
+    var prevMsddIndex;
+    function drawContextmenuCreate(feature){
+        console.log(feature);
+        if(feature) {
+            if(!Array.isArray(feature)) {//配列でないとき
+                var prop = feature.getProperties();
+                var fillColor = prop["_fillColor"];
+                var rgb = fillColor.substr(0,fillColor.lastIndexOf(",")).replace("rgba","rgb") + ")";//rgbaをrgbに変換
+                console.log(rgb);
 
+
+                var geomType = feature.getGeometry().getType();
+                switch (geomType) {
+                    case "Point":
+                        var pointCoord = feature.getGeometry().getCoordinates();
+                        drawContextmenuOverlay.setPosition(pointCoord);
+                        drawContextmenuOverlay.setOffset([10, 10]);
+                        $("#drawContextmenu-drawColor-div").show();
+                        $("#drawContextmenu-drawColor-waku-div").hide();
+                        $("#drawContextmenu-icon-btn").show();
+                        $("#drawContextmenu-step1-div").hide();
+                        break;
+                    case "Polygon":
+                        $("#drawContextmenu-drawColor-div").show();
+                        $("#drawContextmenu-drawColor-waku-div").show();
+                        $("#drawContextmenu-icon-btn").hide();
+                        $("#drawContextmenu-step1-div").hide();
+                        break;
+                    case "LineString":
+                        $("#drawContextmenu-drawColor-div").hide();
+                        $("#drawContextmenu-drawColor-waku-div").show();
+                        $("#drawContextmenu-icon-btn").hide();
+                        $("#drawContextmenu-step1-div").hide();
+                        break;
+                    default:
+                }
+                console.log("drawLayerの上");
+                map1.addInteraction(featureSelect);
+                prevMsddIndex = drawTypeMsDropDown.get("selectedIndex");
+                console.log(prevMsddIndex);
+                drawTypeMsDropDown.set("selectedIndex", 0);
+                addInteractions();
+                $("#select-toggle").bootstrapToggle("on");
+                console.log(feature);
+                featureSelect.getFeatures().push(feature);
+                rightClickedFatyure = feature;
+                //--------------------------------------------------------
+                $("#drawContextmenu-delete-btn").prop("disabled", false);
+                drawContextmenuDrawColorDD.set("disabled", false);
+                drawContextmenuDrawColorWakuDD.set("disabled", false);
+                drawContextmenuDrawColorHabaDD.set("disabled", false);
+                //最後に移動を可視化
+                transform2.select(feature);
+                transform2.setVisible(true);
+            }else{//配列のとき
+                console.log("配列");
+                $("#drawContextmenu-drawColor-div").show();
+                $("#drawContextmenu-drawColor-waku-div").show();
+                $("#drawContextmenu-icon-btn").show();
+                $("#drawContextmenu-step1-div").hide();
+                $("#drawContextmenu-delete-btn").prop("disabled",false);
+                drawContextmenuDrawColorDD.set("disabled",false);
+                drawContextmenuDrawColorWakuDD.set("disabled",false);
+                drawContextmenuDrawColorHabaDD.set("disabled",false);
+            }
+        }else{
+            console.log(7777);
+            $("#drawContextmenu-drawColor-div").show();
+            $("#drawContextmenu-drawColor-waku-div").show();
+            $("#drawContextmenu-icon-btn").show();
+            $("#drawContextmenu-step1-div").show();
+            $("#drawContextmenu-delete-btn").prop("disabled",true);
+            drawContextmenuDrawColorDD.set("disabled",true);
+            drawContextmenuDrawColorWakuDD.set("disabled",true);
+            drawContextmenuDrawColorHabaDD.set("disabled",true);
+        }
+
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //右クリックオーバーレイをクローズ
+    $("#drawContextmenuOverlay-close").click(function(){
+        var coord = drawContextmenuOverlay.getPosition();
+        var pixel = map1.getPixelFromCoordinate(coord);
         var features = [];
         var layers = [];
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
@@ -3231,106 +3451,52 @@ $(function() {
             }
         });
         var feature = features[features.length-1];
-        if(feature) {
-            drawContextmenuOverlay.setPosition(coord);
-            drawContextmenuCreate(feature);
-        }else{
-            $("#drawContextmenu-step1-div").show();
-            $("#drawContextmenu-drawColor-div").hide();
-            $("#drawContextmenu-drawColor-waku-div").hide();
-            $("#drawContextmenu-icon-btn").hide();
-            $("#drawContextmenu-delete-btn").prop("disabled",true);
-            drawContextmenuOverlay.setPosition(coord);
-        }
-    }
-    //------------------------------------------------------------------------------------------------------------------
-    var prevMsddIndex;
-    function drawContextmenuCreate(feature){
+        var flg = false;
         if(feature) {
             var geomType = feature.getGeometry().getType();
-            switch (geomType) {
-                case "Point":
-                    var pointCoord = feature.getGeometry().getCoordinates();
-                    drawContextmenuOverlay.setPosition(pointCoord);
-                    drawContextmenuOverlay.setOffset([10,10]);
-                    $("#drawContextmenu-drawColor-div").show();
-                    $("#drawContextmenu-drawColor-waku-div").hide();
-                    $("#drawContextmenu-icon-btn").show();
-                    $("#drawContextmenu-step1-div").hide();
-                    break;
-                case "Polygon":
-                    $("#drawContextmenu-drawColor-div").show();
-                    $("#drawContextmenu-drawColor-waku-div").show();
-                    $("#drawContextmenu-icon-btn").hide();
-                    $("#drawContextmenu-step1-div").hide();
-                    break;
-                case "LineString":
-                    $("#drawContextmenu-drawColor-div").hide();
-                    $("#drawContextmenu-drawColor-waku-div").show();
-                    $("#drawContextmenu-icon-btn").hide();
-                    $("#drawContextmenu-step1-div").hide();
-                    break;
-                default:
+            if (geomType === "Point") {
+                flg = true;
             }
-            console.log("drawLayerの上");
-            map1.addInteraction(featureSelect);
-            prevMsddIndex = drawTypeMsDropDown.get("selectedIndex");
-            console.log(prevMsddIndex);
-            drawTypeMsDropDown.set("selectedIndex", 0);
-            addInteractions();
-            $("#select-toggle").bootstrapToggle("on");
-            console.log(feature);
-            featureSelect.getFeatures().push(feature);
-            rightClickedFatyure = feature;
-            //--------------------------------------------------------
-            $("#drawContextmenu-delete-btn").prop("disabled", false);
-            drawContextmenuDrawColorDD.set("disabled",false);
-            drawContextmenuDrawColorWakuDD.set("disabled",false);
-            drawContextmenuDrawColorHabaDD.set("disabled",false);
         }else{
-            //--------------------------------------------------------
-            var features = featureSelect.getFeatures();
-            console.log(features.getArray());
-            console.log(features.getArray().length);
-            if(features.getArray().length) {
-                $("#drawContextmenu-delete-btn").prop("disabled",false);
-                drawContextmenuDrawColorDD.set("disabled",false);
-                drawContextmenuDrawColorWakuDD.set("disabled",false);
-                drawContextmenuDrawColorHabaDD.set("disabled",false);
-            }else{
-                $("#drawContextmenu-delete-btn").prop("disabled",true);
-                drawContextmenuDrawColorDD.set("disabled",true);
-                drawContextmenuDrawColorWakuDD.set("disabled",true);
-                drawContextmenuDrawColorHabaDD.set("disabled",true);
-            }
+            flg = true;
         }
-    }
-    //------------------------------------------------------------------------------------------------------------------
-    //右クリックオーバーレイをクローズ
-    $("#drawContextmenuOverlay-close").click(function(){
-        featureSelect.getFeatures().clear();
-        rightClickedFatyure = null;
+        if(flg){
+            drawTypeMsDropDown.set("selectedIndex", prevMsddIndex);
+            featureSelect.getFeatures().clear();
+            $("#select-toggle").bootstrapToggle("off");
+            addInteractions();
+        }
         drawContextmenuOverlay.setPosition(null);
-        //prevMsddIndex = drawTypeMsDropDown.get("selectedIndex");
-        drawTypeMsDropDown.set("selectedIndex", prevMsddIndex);
-        addInteractions();
-        $("#select-toggle").bootstrapToggle("off");
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　ドロー　リセット
     $("#draw-reset-btn").click(function(){
-        //$("#drawType").val("0");
         drawTypeMsDropDown.set("selectedIndex",0);
         addInteractions();
         $("#select-toggle").bootstrapToggle("on");
         drawContextmenuOverlay.setPosition(null);
     });
     //------------------------------------------------------------------------------------------------------------------
-    //右クリック　ドロー　削除
+    //右クリック　全削除
+    $("#drawContextmenu-deleteall-btn").click(function(){
+        if (confirm("全削除しますか？")) {
+            drawSource.clear();
+            transform2.select(null);
+            rightClickedFatyure = null;
+            featureSelect.getFeatures().clear();
+            drawContextmenuOverlay.setPosition(null);
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //右クリック　削除
     $("#drawContextmenu-delete-btn").click(function(){
         if(rightClickedFatyure) {
             if (confirm("削除しますか？")) {
                 drawSource.removeFeature(rightClickedFatyure);
+                transform2.select(null);
+                rightClickedFatyure = null;
+                featureSelect.getFeatures().clear();
+                drawContextmenuOverlay.setPosition(null);
             }
         }else{
             var features = featureSelect.getFeatures().getArray();
@@ -3338,27 +3504,84 @@ $(function() {
                 for(var i = 0; i <features.length; i++){
                     drawSource.removeFeature(features[i]);
                 }
+                rightClickedFatyure = null;
+                featureSelect.getFeatures().clear();
+                drawContextmenuOverlay.setPosition(null);
             }
         }
-        rightClickedFatyure = null;
-        featureSelect.getFeatures().clear();
-        drawContextmenuOverlay.setPosition(null);
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　step1
+    /*
     $("body").on("change","#drawType2",function(){
         var val = $(this).val();
         console.log(val);
     });
+    */
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　色　変更
     $("body").on("change","#drawContextmenu-drawColor",function(){
         var colorVal = $(this).val();
         var rgb = d3.rgb(colorVal);
         var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.7)";
-        rightClickedFatyure.setProperties({
-            "_fillColor":rgba
-        });
+        if(rightClickedFatyure) {
+            rightClickedFatyure.setProperties({
+                "_fillColor": rgba
+            });
+        }else{
+            var features = featureSelect.getFeatures().getArray();
+            for(var i = 0; i <features.length; i++){
+                var silentBool = true;
+                if(i===features.length-1) silentBool = false;
+                features[i].setProperties({
+                    "_fillColor": rgba
+                },silentBool);
+            }
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //右クリック　枠色　変更
+    $("body").on("change","#drawContextmenu-drawColor-waku",function(){
+        var colorVal = $(this).val();
+        var rgb = d3.rgb(colorVal);
+        var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.8)";
+        if(rightClickedFatyure) {
+            rightClickedFatyure.setProperties({
+                "_color": rgba
+            });
+        }else{
+            var features = featureSelect.getFeatures().getArray();
+            for(var i = 0; i <features.length; i++){
+                if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
+                    var silentBool = true;
+                    if (i === features.length - 1) silentBool = false;
+                    features[i].setProperties({
+                        "_color": rgba
+                    }, silentBool);
+                }
+            }
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //右クリック　幅　変更
+    $("body").on("change","#drawContextmenu-drawColor-haba",function(){
+        var val = $(this).val();
+        if(rightClickedFatyure) {
+            rightClickedFatyure.setProperties({
+                "_weight":val
+            });
+        }else{
+            var features = featureSelect.getFeatures().getArray();
+            for(var i = 0; i <features.length; i++){
+                if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
+                    var silentBool = true;
+                    if (i === features.length - 1) silentBool = false;
+                    features[i].setProperties({
+                        "_weight":val
+                    }, silentBool);
+                }
+            }
+        }
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　アイコン
@@ -3483,6 +3706,25 @@ $(function() {
         content += "自由入力 １文字のみ ";
         content += "<input type='text' id='icon-input-text'>";
         content += "<hr class='my-hr'>";
+        content += "<i class='standard'>&#x278a;</i>";//1
+        content += "<i class='standard'>&#x278b;</i>";//2
+        content += "<i class='standard'>&#x278c;</i>";//3
+        content += "<i class='standard'>&#x278d;</i>";//4
+        content += "<i class='standard'>&#x278e;</i>";//5
+        content += "<i class='standard'>&#x278f;</i>";//6
+        content += "<i class='standard'>&#x2790;</i>";//7
+        content += "<i class='standard'>&#x2791;</i>";//8
+        content += "<i class='standard'>&#x2792;</i>";//9
+        content += "<i class='standard'>&#x2793;</i>";//10
+
+        content += "<i class='standard'>&#x2605;</i>";//黒星
+        content += "<i class='standard'>&#x272A;</i>";//丸星
+        content += "<i class='standard'>&#x2731;</i>";//ヘビーアスタリスク
+        content += "<i class='standard'></i>";//
+        content += "<i class='standard'></i>";//
+        content += "<i class='standard'></i>";//
+
+        /*
         content += "<i class='standard'>1</i>";
         content += "<i class='standard'>2</i>";
         content += "<i class='standard'>3</i>";
@@ -3523,12 +3765,15 @@ $(function() {
         content += "<i class='standard'>€</i>";
         content += "<i class='standard'>@</i>";
         content += "<i class='standard'>&</i>";
+        */
         content += "<i class='standard'>&#x2600;</i>";
         content += "<i class='standard'>&#x2601;</i>";
         content += "<i class='standard'>&#x2603;</i>";
         content += "<i class='standard'>&#x2604;</i>";
         content += "<i class='standard'>&#x263A;</i>";
         content += "<i class='standard'>&#x2639;</i>";
+        content += "<i class='standard'>&#x2620;</i>";
+
         content += "<hr class='my-hr'>";
         content += "</div>";
 
@@ -3567,22 +3812,32 @@ $(function() {
     //var theGlyph = "maki-building";
     var theGlyph;
 
-    //------------------------
+    //------------------------------------------------------------------------------------------------------------------
+    //アイコンを選択したとき
     function setFont(g) {
-        if (typeof(g)=='string') {
+        if (typeof(g) == 'string') {
             theGlyph = g;
-            console.log(111);
-        }else{
+        } else {
             theGlyph = $(this).data("glyph");
-            console.log(999);
         }
-        rightClickedFatyure.setProperties({
-            "_icon":theGlyph
-        });
-        //drawSource.changed();
-        console.log(theGlyph)
+        if(rightClickedFatyure) {
+            rightClickedFatyure.setProperties({
+                "_icon": theGlyph
+            });
+        }else{
+            var features = featureSelect.getFeatures().getArray();
+            for(var i = 0; i <features.length; i++){
+                var silentBool = true;
+                if(i===features.length-1) silentBool = false;
+                features[i].setProperties({
+                    "_icon": theGlyph
+                },silentBool);
+            }
+        }
+        rightClickedFatyure = null;
+        console.log(theGlyph);
     }
-
+    //------------------------------------------------------------------------------------------------------------------
     function setOptions(glyph, form, color, scolor, fcolor, border, radius, fsize, offset, gradient, shadow) {
         theGlyph = glyph;
         console.log(theGlyph);
@@ -3622,25 +3877,6 @@ $(function() {
     $("body").on("click",".standard",function(){
         var val = $(this).text();
         setFont(val);
-    });
-    //------------------------------------------------------------------------------------------------------------------
-    //右クリック　枠色　変更
-    $("body").on("change","#drawContextmenu-drawColor-waku",function(){
-        var colorVal = $(this).val();
-        var rgb = d3.rgb(colorVal);
-        var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.8)";
-        rightClickedFatyure.setProperties({
-            "_color":rgba
-        });
-    });
-    //------------------------------------------------------------------------------------------------------------------
-    //右クリック　幅　変更
-    $("body").on("change","#drawContextmenu-drawColor-haba",function(){
-        var val = $(this).val();
-        console.log(val);
-        rightClickedFatyure.setProperties({
-            "_weight":val
-        });
     });
     //------------------------------------------------------------------------------------------------------------------
     //ジオコーディング

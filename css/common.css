@@ -646,7 +646,7 @@ label:hover{
     margin:2px 0;
 }
 #drawContextmenuOverlay-content-div button{
-    margin:2px 0 2px 0;
+    margin:2px 2px 2px 0;
     /*width:175px;*/
 }
 #mode-div{
@@ -680,7 +680,6 @@ label:hover{
 #bcralnit_geojson-text0{
     width:440px!important;
 }
-
 .addres-input{
     position:absolute;
     bottom:10px;
@@ -706,14 +705,11 @@ label:hover{
         padding:0;
     }
 }
-
 #icon-div{
     width:300px;
     height:500px;
     overflow-y: scroll;
 }
-
-
 .options i.standard {
     color: #337ab7;
     font-style: normal;

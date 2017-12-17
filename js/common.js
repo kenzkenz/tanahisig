@@ -267,17 +267,12 @@ var prefAr =
 		{"id":"47000","name":"沖縄県","zinkou":1433566}
 	];
 
-
-//スタイルファンクション---------------------
+//----------------------------------------------------------------------------------------------------------------------
+//スタイルファンクション
 var commonstyleFunction = function(feature, resolution) {
-    //console.log(feature);
     var prop = feature.getProperties();
     var geoType = feature.getGeometry().getType();
     var fillColor = prop["_fillColor"];
-
-    //console.log(prop)
-    //console.log(fillColor)
-
     var zindex = prop["_zindex"];
     if(resolution>2445) {//ズーム６
         var pointRadius = 2;

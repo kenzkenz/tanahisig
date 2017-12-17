@@ -101,7 +101,7 @@ $(function(){
         var feature = features[features.length-1];//最後のfeatureを取得している。レイヤーが重なったとき問題があるかも。
         if(!layer) return;
         var layerName = layer.getProperties()["name"];
-        console.log(layerName);
+        //console.log(layerName);
         switch (layerName){//ここで処理を分岐
             case "wikiCommonsLayer":
                 funcWikiPopup(feature,map);
@@ -281,7 +281,6 @@ $(function(){
                 funcZaiseiryokuPopup(layer,feature,map,evt);
                 break;
             case "drawLayer":
-                console.log(feature.getProperties());
                 funcDrawPopup(feature,map,evt);
                 break;
             case "keikanchiku":
