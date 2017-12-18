@@ -199,6 +199,15 @@ $(function(){
                 czmlCreate(features,$(this));
             }
 
+
+            if(drawLayer){
+                var features = drawLayer.getSource().getFeatures();
+                console.log(features);
+                drawContextmenuOverlay.setPosition(null);
+                czmlCreate(features,$(this));
+            }
+
+
             if(dataLayer["map1-senkyoku"]){
                 var features = dataLayer["map1-senkyoku"].getSource().getFeatures();
                 console.log(features);
@@ -414,7 +423,7 @@ function czmlCreate(features,element){
                         }
                     }
                 }
-            ]
+            ];
             //czml =d3Polygon;
             czml.push(d3Polygon[0]);
         }

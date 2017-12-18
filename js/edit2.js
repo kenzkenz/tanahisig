@@ -1,7 +1,7 @@
-
+var drawLayer = null;
+var drawContextmenuOverlay = null;
 $(function() {
     var drawSource = null;
-    var drawLayer = null;
     var haniSource = null;
     var haniLayer = null;
     var hoverSource = null;
@@ -1414,8 +1414,8 @@ $(function() {
     });
     drawPolygonFree.on("drawend", function(e) {
         var prop = e["feature"]["D"];
-        prop["_fillColor"] = "rgba(51,122,255,0.7)";
-        prop["_color"] = "rgba(51,122,255,0.7)";
+        prop["_fillColor"] = "rgba(192,192,192,0.5)";
+        prop["_color"] = "rgba(0,0,255,0.7)";
         prop["_weight"] = 1;
         featureSelect.getFeatures().clear();
         drawPolygon.nbpts = 0;
@@ -1481,10 +1481,6 @@ $(function() {
                         offsetY: 0
                     }),
                     geometry: function (feature) {
-                        //var coordAr = feature.getGeometry().getCoordinates()[0];
-                        //console.log(coordAr);
-                        //console.log(feature.getGeometry().getLastCoordinate());
-                        //if(coordAr.length) lastCoord =  coordAr[coordAr.length-2];
                         var lastCoord =  feature.getGeometry().getLastCoordinate();
                         return new ol.geom.Point(lastCoord)
                     }
@@ -1514,9 +1510,8 @@ $(function() {
     });
     drawPolygon.on("drawend", function(e) {
         var prop = e["feature"]["D"];
-        //prop["_fillColor"] = "rgba(51,122,255,0.7)";
         prop["_fillColor"] = "rgba(192,192,192,0.5)";
-        prop["_color"] = "rgba(51,122,255,0.7)";
+        prop["_color"] = "rgba(0,0,255,0.7)";
         prop["_weight"] = 1;
         featureSelect.getFeatures().clear();
         drawPolygon.nbpts = 0;
@@ -3217,31 +3212,32 @@ $(function() {
     contextContent += "<option value='Point'>点</option>";
     contextContent += "<option value='LineString'>線</option>";
     contextContent += "<option value='Polygon'>面</option>";
-    contextContent += "<option value='hanisitei'>範囲指定　</option>";
+    contextContent += "<option value='DrawHole'>面に穴を開ける</option>";
+    contextContent += "<option value='hanisitei'>範囲指定</option>";
     contextContent += "</select>";
     contextContent += "<hr class='my-hr'>";
     contextContent += "</div>";
 
     contextContent += "<div id='drawContextmenu-drawColor-div'>";
     contextContent += "step2<br>";
-    contextContent += "<span>　色 </span>";
+    contextContent += " <span class='color-span' id='fillcolor-color-span'>　色　</span> ";
     contextContent += "<select id='drawContextmenu-drawColor'>";
     contextContent += "<option value=''></option>";
-    contextContent += "<option value='red'>赤</option>";
-    contextContent += "<option value='green'>緑</option>";
-    contextContent += "<option value='blue'>青</option>";
-    contextContent += "<option value='yellow'>黄</option>";
-    contextContent += "<option value='gray'>灰</option>";
-    contextContent += "<option value='silver'>銀</option>";
-    contextContent += "<option value='black'>黒</option>";
-    contextContent += "<option value='maroon'>栗色</option>";
-    contextContent += "<option value='purple'>紫</option>";
-    contextContent += "<option value='olive'>オリーブ</option>";
-    contextContent += "<option value='navy'>濃紺</option>";
-    contextContent += "<option value='teal'>青緑</option>";
-    contextContent += "<option value='fuchsia'>赤紫</option>";
-    contextContent += "<option value='lime'>ライム</option>";
-    contextContent += "<option value='aqua'>水色aqua</option>";
+    contextContent += "<option value='rgb(255,0,0)'>赤</option>";
+    contextContent += "<option value='rgb(0,128,0)'>緑</option>";
+    contextContent += "<option value='rgb(0,0,255)'>青</option>";
+    contextContent += "<option value='rgb(255,255,0)'>黄</option>";
+    contextContent += "<option value='rgb(128,128,128)'>灰</option>";
+    contextContent += "<option value='rgb(192,192,192)'>銀</option>";
+    contextContent += "<option value='rgb(0,0,0)'>黒</option>";
+    contextContent += "<option value='rgb(128,0,0)'>栗色</option>";
+    contextContent += "<option value='rgb(128,0,128)'>紫</option>";
+    contextContent += "<option value='rgb(128,128,0)'>オリーブ</option>";
+    contextContent += "<option value='rgb(0,0,128)'>濃紺</option>";
+    contextContent += "<option value='rgb(0,128,128)'>青緑</option>";
+    contextContent += "<option value='rgb(255,0,255)'>赤紫</option>";
+    contextContent += "<option value='rgb(0,255,0)'>ライム</option>";
+    contextContent += "<option value='rgb(0,255,255)'>水色</option>";
     contextContent += "</select>";
 
     contextContent += " <button type='button' id='drawContextmenu-icon-btn' class='btn btn-xs btn-primary'>アイコン</button>";
@@ -3250,23 +3246,24 @@ $(function() {
     //contextContent += " <button type='button' id='drawContextmenu-colorSave-btn' class='btn btn-xs btn-primary'>反映</button>";
 
     contextContent += "<div id='drawContextmenu-drawColor-waku-div'>";
-    contextContent += "<span>　線 </span>";
+    contextContent += " <span class='color-span' id='color-color-span'>　線　</span> ";
     contextContent += "<select id='drawContextmenu-drawColor-waku'>";
-    contextContent += "<option value='red'>赤</option>";
-    contextContent += "<option value='green'>緑</option>";
-    contextContent += "<option value='blue'>青</option>";
-    contextContent += "<option value='yellow'>黄</option>";
-    contextContent += "<option value='gray'>灰</option>";
-    contextContent += "<option value='silver'>銀</option>";
-    contextContent += "<option value='black'>黒</option>";
-    contextContent += "<option value='maroon'>栗色</option>";
-    contextContent += "<option value='purple'>紫</option>";
-    contextContent += "<option value='olive'>オリーブ</option>";
-    contextContent += "<option value='navy'>濃紺</option>";
-    contextContent += "<option value='teal'>青緑</option>";
-    contextContent += "<option value='fuchsia'>赤紫</option>";
-    contextContent += "<option value='lime'>ライム</option>";
-    contextContent += "<option value='aqua'>水色aqua</option>";
+    contextContent += "<option value=''></option>";
+    contextContent += "<option value='rgb(255,0,0)'>赤</option>";
+    contextContent += "<option value='rgb(0,128,0)'>緑</option>";
+    contextContent += "<option value='rgb(0,0,255)'>青</option>";
+    contextContent += "<option value='rgb(255,255,0)'>黄</option>";
+    contextContent += "<option value='rgb(128,128,128)'>灰</option>";
+    contextContent += "<option value='rgb(192,192,192)'>銀</option>";
+    contextContent += "<option value='rgb(0,0,0)'>黒</option>";
+    contextContent += "<option value='rgb(128,0,0)'>栗色</option>";
+    contextContent += "<option value='rgb(128,0,128)'>紫</option>";
+    contextContent += "<option value='rgb(128,128,0)'>オリーブ</option>";
+    contextContent += "<option value='rgb(0,0,128)'>濃紺</option>";
+    contextContent += "<option value='rgb(0,128,128)'>青緑</option>";
+    contextContent += "<option value='rgb(255,0,255)'>赤紫</option>";
+    contextContent += "<option value='rgb(0,255,0)'>ライム</option>";
+    contextContent += "<option value='rgb(0,255,255)'>水色</option>";
     contextContent += "</select>";
     contextContent += "<span> 幅 </span>";
     contextContent += "<select id='drawContextmenu-drawColor-haba'>";
@@ -3279,6 +3276,9 @@ $(function() {
     contextContent += "<option value='40'>40px</option>";
     contextContent += "<option value='60'>60px　</option>";
     contextContent += "</select>";
+
+    contextContent += "<br>高さ<input type='text' id='height-input-text'>";
+
     contextContent += "<hr class='my-hr'>";
     contextContent += "</div>";
     contextContent += "<button type='button' id='drawContextmenu-delete-btn' class='btn btn-xs btn-primary' disabled='disabled'>削除</button>";
@@ -3297,7 +3297,7 @@ $(function() {
     drawContextmenuDrawColorHabaDD.set("disabled",true);
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイをマップに設定
-    var drawContextmenuOverlay = new ol.Overlay({
+    drawContextmenuOverlay = new ol.Overlay({
         element:$("#drawContextmenuOverlay-div")[0],
         autoPan:true,
         offset:[0,0]//横、縦
@@ -3358,15 +3358,44 @@ $(function() {
     //メニュー項目　調整
     var prevMsddIndex;
     function drawContextmenuCreate(feature){
-        console.log(feature);
         if(feature) {
             if(!Array.isArray(feature)) {//配列でないとき
                 var prop = feature.getProperties();
+                //--------------------------------
                 var fillColor = prop["_fillColor"];
                 var rgb = fillColor.substr(0,fillColor.lastIndexOf(",")).replace("rgba","rgb") + ")";//rgbaをrgbに変換
-                console.log(rgb);
+                drawContextmenuDrawColorDD.setIndexByValue(rgb);
+                $("#fillcolor-color-span").css({
+                    "background":rgb,
+                    "color":funcTextColor(rgb.r,rgb.g,rgb.b)
+                });
+                //--------------------------------
+                var color = prop["_color"];
+                if(color){
+                    rgb = color.substr(0,color.lastIndexOf(",")).replace("rgba","rgb") + ")";//rgbaをrgbに変換
+                    drawContextmenuDrawColorWakuDD.setIndexByValue(rgb);
+                }
+                $("#color-color-span").css({
+                    "background":rgb,
+                    "color":funcTextColor(rgb.r,rgb.g,rgb.b)
+                });
+                //--------------------------------
+                var weight = String(prop["_weight"]);
+                if(weight){
+                    drawContextmenuDrawColorHabaDD.setIndexByValue(weight);
+                }
+                //--------------------------------
+                var height = prop["_polygonHeight"];
+                if(height) {
+                    $("#height-input-text").val(height);
+                }else{
+                    $("#height-input-text").val(null);
+                }
 
 
+
+
+                //--------------------------------
                 var geomType = feature.getGeometry().getType();
                 switch (geomType) {
                     case "Point":
@@ -3422,7 +3451,7 @@ $(function() {
                 drawContextmenuDrawColorHabaDD.set("disabled",false);
             }
         }else{
-            console.log(7777);
+            console.log("地物なしのとき");
             $("#drawContextmenu-drawColor-div").show();
             $("#drawContextmenu-drawColor-waku-div").show();
             $("#drawContextmenu-icon-btn").show();
@@ -3432,7 +3461,6 @@ $(function() {
             drawContextmenuDrawColorWakuDD.set("disabled",true);
             drawContextmenuDrawColorHabaDD.set("disabled",true);
         }
-
     }
     //------------------------------------------------------------------------------------------------------------------
     //右クリックオーバーレイをクローズ
@@ -3511,13 +3539,13 @@ $(function() {
         }
     });
     //------------------------------------------------------------------------------------------------------------------
-    //右クリック　step1
-    /*
-    $("body").on("change","#drawType2",function(){
-        var val = $(this).val();
-        console.log(val);
+    //
+    $("#fillcolor-color-span").click(function(){
+        drawContextmenuDrawColorDD.open();
     });
-    */
+    $("#color-color-span").click(function(){
+        drawContextmenuDrawColorWakuDD.open();
+    });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　色　変更
     $("body").on("change","#drawContextmenu-drawColor",function(){
@@ -3538,6 +3566,11 @@ $(function() {
                 },silentBool);
             }
         }
+        $("#fillcolor-color-span").css({
+            "background":rgb,
+            "color":funcTextColor(rgb.r,rgb.g,rgb.b),
+            "border":"solid 1px " + rgb
+        });
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　枠色　変更
@@ -3561,6 +3594,11 @@ $(function() {
                 }
             }
         }
+        $("#color-color-span").css({
+            "background":rgb,
+            "color":funcTextColor(rgb.r,rgb.g,rgb.b),
+            "border":"solid 1px " + rgb
+        });
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　幅　変更
@@ -3582,6 +3620,31 @@ $(function() {
                 }
             }
         }
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //
+    $("#height-input-text").change(function() {
+        var val = $(this).val();
+        console.log(val);
+        if(val){
+            if(rightClickedFatyure) {
+                rightClickedFatyure.setProperties({
+                    "_polygonHeight":val
+                });
+            }else{
+                var features = featureSelect.getFeatures().getArray();
+                for(var i = 0; i <features.length; i++){
+                    if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
+                        var silentBool = true;
+                        if (i === features.length - 1) silentBool = false;
+                        features[i].setProperties({
+                            "_polygonHeight":val
+                        }, silentBool);
+                    }
+                }
+            }
+        }
+
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　アイコン

@@ -750,6 +750,15 @@ label:hover{
 #icon-input-text{
     width:50px;
 }
+.color-span{
+    border-radius:4px;
+}
+#height-input-text{
+    margin-left: 15px;
+    width:45px;
+    border-radius:3px;
+    border:solid 1px silver;
+}
 /*ツールチップ-----------------------------------------------------------------*/
 .tooltip {
     position: relative;
