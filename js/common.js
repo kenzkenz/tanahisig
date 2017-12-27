@@ -10,6 +10,26 @@ $(document).ajaxStop(function (){
         $("#loading-fa").hide(500);
     }
 });
+
+//---------------------------------------------------------------------------------
+//rgbaをrgbに変換
+var rgba2rgb = function(rgba) {
+    var rgb;
+    if(rgba.indexOf("rgba")!==-1) {
+        rgb = rgba.substr(0, rgba.lastIndexOf(",")).replace("rgba", "rgb") + ")";//rgbaをrgbに変換
+    }else{//実はもとからrgbだったとき
+        rgb = rgba;
+    }
+    return rgb;
+};
+//---------------------------------------------------------------------------------
+//全角数字を半角数字に変換
+var zen2han = function(str) {
+    str = str.replace(/[０-９]/g, function (s) {
+        return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+    return str;
+};
 //---------------------------------------------------------------------------------
 //↓産業技術総合研究所の西岡さんから頂きました。自分流に体裁をちょっと変えました。
 // ********************************************************************************

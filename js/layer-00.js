@@ -28,7 +28,7 @@ $(function(){
         jpnfukuoka011,jpnnoboribetu011,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    tositiiki1,youtotiiki1,suiro1,douro1,tondabayasit1,keikan1,
+                    tositiiki1,youtotiiki1,suiro1,douro1,kaigansen_1,keikan1,tondabayasit1,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
                     syougakkouku1,tyuugakkouku1,iryouken1,fukushi_1,
@@ -59,7 +59,7 @@ $(function(){
                     aya1,sobo1,soboZ1,
         //古地図
         sikiriKotizu,
-                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,aichikotizu1,simanekotizu1,
+                    miyagikotizu1,toukyoukotizu1,hukuikotizu1,aichikotizu1,osakakotizu1,hyogokotizu1,simanekotizu1,
                     okayamakotizu1,hiroshimakotizu1,yamagutikotizu1,koutikotizu1,hukuokakotizu1,sagakotizu1,
                     nagasakikotizu1,kumamotokotizu1,ooitakotizu1,kotizu1,kagosimakotizu1,obikoyizu1,//obi1,
         //戦前戦後
@@ -76,9 +76,8 @@ $(function(){
         sikiriHazard,
                     tunami1,tunamimvt1,sinsuisoutei1,kikenkeiryuu1,kyuukeisyakikenkasyo1,keikan_1,
         sikiriTest,
-                    test,
                     //anno1,
-                    m500mesh1,
+                    okugainobeoka_1,
                     nobeoka19521,
                     totiriyou1,
                     bingroad1,
@@ -112,7 +111,7 @@ $(function(){
                     jpnfukuoka012,jpnnoboribetu012,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    tositiiki2,youtotiiki2,suiro2,douro2,tondabayasit2,
+                    tositiiki2,youtotiiki2,suiro2,douro2,kaigansen_2,tondabayasit2,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
                     syougakkouku2,tyuugakkouku2,iryouken2,fukushi_2,
@@ -143,7 +142,7 @@ $(function(){
                     aya2,sobo2,soboZ2,
         //古地図
         sikiriKotizu,
-                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,aichikotizu2,simanekotizu2,
+                    miyagikotizu2,toukyoukotizu2,hukuikotizu2,aichikotizu2,osakakotizu1,hyogokotizu2,simanekotizu2,
                     okayamakotizu2,hiroshimakotizu2,yamagutikotizu2,koutikotizu2,hukuokakotizu2,sagakotizu2,
                     nagasakikotizu2,kumamotokotizu2,ooitakotizu2,kotizu2,kagosimakotizu2,obikoyizu2,//obi1,
         //戦前戦後
@@ -160,9 +159,8 @@ $(function(){
         sikiriHazard,
                     tunami2,tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
         sikiriTest,
-                    test,
                     //anno1,
-                    m500mesh1,
+                    okugainobeoka_1,
                     nobeoka19521,
                     totiriyou1,
                     bingroad2,
@@ -566,7 +564,7 @@ $(function(){
             //rmDialog:true
         });
         //------------------------------------------------------
-
+        console.log(prop);
         console.log(prop["name"]);
         /*
         if(prop["name"]==="keizai-census"){
@@ -614,6 +612,29 @@ $(function(){
             layer.getSource().changed();
         }
         */
+
+
+
+
+
+
+        //--------------------------------------------------------------------------------------------------------------
+        //全国海岸線
+        $("#" + mapName).on("change",".kaigansen-color-select,.kaigansen-width-select",function(){
+            var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
+            var colorVal = $(this).parents(".detail2-div").find(".kaigansen-color-select").val();
+            var width = $(this).parents(".detail2-div").find(".kaigansen-width-select").val();
+            kaigansenColorChange(mapName,layerId,colorVal,width);
+        });
+        function kaigansenColorChange(mapName,layerId,colorVal,width){
+            if(mapName==="map1") {
+                var targetLayer = useLayersArr1[layerId];
+            }else{
+                var targetLayer = useLayersArr2[layerId];
+            }
+            targetLayer.setStyle(kaigansebStyleFunction(colorVal,width));
+            targetLayer.getSource().changed();
+        }
         //--------------------------------------------------------------------------------------------------------------
         //osmmvt
         $("#" + mapName).on("change",".osmmvt-select",function(){
@@ -627,7 +648,7 @@ $(function(){
         //--------------------------------------------------------------------------------------------------------------
         //小地域
         $("#" + mapName + " .syoutiikitext").spinner({
-            max:5000, min:100, step:100,
+            max:5000, min:0, step:10,
             spin:function(event,ui){
                 var colorVal = $(this).parents(".detail2-div").find("select").val();
                 var layerId = $(this).parents(".dialog-base").find(".layer-id").val();

@@ -586,7 +586,8 @@ label:hover{
     border-bottom: 1px solid gainsboro;
 }
 #propTable{
-    width:300px;
+    width:100%;
+    font-size:10px;
 }
 .prop-input-text-name,.prop-input-text-val{
     width:100%;
@@ -606,7 +607,6 @@ label:hover{
     text-align:center;
     padding:2px!important;
 }
-
 .prop-th0{
     width:100px;
 }
@@ -639,11 +639,14 @@ label:hover{
     box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
     /*border:1px solid rgba(51,122,183,1.0);*/
     z-index:3;
-    width:220px;
+    width:240px;
     font-size: 12px;
 }
 #drawContextmenuOverlay-div div{
     margin:2px 0;
+}
+#drawContextmenuOverlay-content-div{
+    max-height:200px;
 }
 #drawContextmenuOverlay-content-div button{
     margin:2px 2px 2px 0;
@@ -759,7 +762,41 @@ label:hover{
     border-radius:3px;
     border:solid 1px silver;
 }
+#drawContextmenu-drawCircle-div .ui-spinner{
+    font-size:10px;
+    width:55px;
+    /*background:rgba(0,0,0,0);
+    border:none;*/
+}
+#drawContextmenu-msg-div,#second-div-msg-div{
+    font-size: 10px;
+    color: #d9534f;
+}
+#second-div{
+    display:none;
+    height:180px;
+}
+#prop-div{
+    max-height: 150px;
+    overflow-y: scroll;
+    border-bottom: 1px solid gainsboro;
+}
+.btn-xxs{
+    padding:1px 3px;
+    font-size:10px;
+    line-height:1.5;
+    border-radius:3px;
+}
+#drawContextmenu-save-ul{
+    font-size:12px;
+    padding:5px;
+    min-width:70px;
+}
+#drawContextmenu-save-ul a{
+    padding: 0 0;
+}
 /*ツールチップ-----------------------------------------------------------------*/
+/*
 .tooltip {
     position: relative;
     background: rgba(51,122,255,0.8);
@@ -792,5 +829,7 @@ label:hover{
 .tooltip-static:before {
     border-top-color: #ffcc33;
 }
+*/
+
 
 

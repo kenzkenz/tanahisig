@@ -153,35 +153,32 @@ $(function() {
     var content = selectHtml;
     var drawTypeMsDropDown;
     $(".draw-btn").click(function(){
-        drawDialogCreate()
-    });
-    function drawDialogCreate() {
         mydialog({
-            id: "draw-dialog",
-            class: "draw-dialog",
-            map: "map1",
-            title: "図形作成<span style='font-size:x-small;'>(作成中)</span>",
-            content: content,
-            top: "60px",
-            left: "10px",
-            info: true
+            id:"draw-dialog",
+            class:"draw-dialog",
+            map:"map1",
+            title:"図形作成<span style='font-size:x-small;'>(作成中)</span>",
+            content:content,
+            top:"60px",
+            left:"10px",
+            info:true
             //rmDialog:true
         });
         $(".bs-toggle").bootstrapToggle();
         drawTypeMsDropDown = $("#drawType").msDropDown().data("dd");
-        $("#drawColor,#effectType").msDropDown({height: 300});
+        $("#drawColor,#effectType").msDropDown({height:300});
         $("#buffer-radius-input").spinner({
-            max: 50000, min: 0, step: 10,
-            spin: function (event, ui) {
+            max:50000, min:0, step:10,
+            spin:function(event,ui){
                 var radius = ui.value;
                 funcBuffer(radius);
             }
         });
-        $(window).on('beforeunload', function () {
+        $(window).on('beforeunload', function() {
             //if($("#mydialog-draw-dialog").css("display")==="block") return "";
-            if (drawSourceChangeFlg) return "";
+            if(drawSourceChangeFlg) return "";
         });
-    }
+    });
     //------------------------------------------------------------------------------------------------------------------
     //geojsonのテキストを見せるダイアログを表示
     $("body").on("click","#mydialog-draw-dialog .dialog-info",function(){
@@ -206,12 +203,12 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイ要素作成
     var Overlaycontent = "";
-    Overlaycontent += "<button type='button' class='close' id='drawMenuOverlay-close'>&times;</button>";
-    Overlaycontent += "<div>";
-    Overlaycontent += "<button type='button' id='draw-remove-btn' class='btn btn-xs btn-primary'>削除</button>";
-    Overlaycontent += "<div id='circle-radius-div'>半径：<input id='circle-radius-input' type='text' value='100' size='3'>m</div>";
-    Overlaycontent += "<div id='circle-radius2-div'>半径：<input id='circle-radius2-input' type='text' value='50' size='3'>m</div>";
-    Overlaycontent += "</div>";
+        Overlaycontent += "<button type='button' class='close' id='drawMenuOverlay-close'>&times;</button>";
+        Overlaycontent += "<div>";
+        Overlaycontent += "<button type='button' id='draw-remove-btn' class='btn btn-xs btn-primary'>削除</button>";
+        Overlaycontent += "<div id='circle-radius-div'>半径：<input id='circle-radius-input' type='text' value='100' size='3'>m</div>";
+        Overlaycontent += "<div id='circle-radius2-div'>半径：<input id='circle-radius2-input' type='text' value='50' size='3'>m</div>";
+        Overlaycontent += "</div>";
     $("#map1").append('<div id="drawMenuOverlay-div" class="drawMenuOverlay-div">' + Overlaycontent + '</div>');
     //------------------------------------------------------------------------------------------------------------------
     //オーバーレイをマップに設定
@@ -1008,7 +1005,6 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //フィーチャーセレクト　セレクト時発火
     featureSelect.on("select", function(e) {
-        console.log(featureSelect.getFeatures());
         console.log("セレクト時発火");
         var features = e.selected;
         console.log(features);
@@ -2066,41 +2062,41 @@ $(function() {
         transform.setStyle ('rotate',
             new ol.style.Style(
                 {	text: new ol.style.Text (
-                        {	text:'\uf0e2',
-                            font:"16px Fontawesome",
-                            textAlign: "left",
-                            fill:new ol.style.Fill({color:'red'})
-                        }),
+                    {	text:'\uf0e2',
+                        font:"16px Fontawesome",
+                        textAlign: "left",
+                        fill:new ol.style.Fill({color:'red'})
+                    }),
                     image: circle
                 }));
         // Center of rotation
         transform.setStyle ('rotate0',
             new ol.style.Style(
                 {	text: new ol.style.Text (
-                        {	text:'\uf0e2',
-                            font:"20px Fontawesome",
-                            fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
-                            stroke: new ol.style.Stroke({ width:2, color:'red' })
-                        }),
+                    {	text:'\uf0e2',
+                        font:"20px Fontawesome",
+                        fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
+                        stroke: new ol.style.Stroke({ width:2, color:'red' })
+                    }),
                 }));
         // Style the move handle
         transform.setStyle('translate',
             new ol.style.Style(
                 {	text: new ol.style.Text (
-                        {	text:'\uf047',
-                            font:"20px Fontawesome",
-                            fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
-                            stroke: new ol.style.Stroke({ width:2, color:'red' })
-                        })
+                    {	text:'\uf047',
+                        font:"20px Fontawesome",
+                        fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
+                        stroke: new ol.style.Stroke({ width:2, color:'red' })
+                    })
                 }));
         transform2.setStyle('translate',
             new ol.style.Style(
                 {	text: new ol.style.Text (
-                        {	text:'\uf047',
-                            font:"20px Fontawesome",
-                            fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
-                            stroke: new ol.style.Stroke({ width:2, color:'red' })
-                        })
+                    {	text:'\uf047',
+                        font:"20px Fontawesome",
+                        fill: new ol.style.Fill({ color:[255,255,255,0.8] }),
+                        stroke: new ol.style.Stroke({ width:2, color:'red' })
+                    })
                 }));
         transform.set('translate', transform.get('translate'));
         transform2.set('translate', transform2.get('translate'));
@@ -2128,7 +2124,7 @@ $(function() {
     $("body").on("change","#select-toggle",function(){
         $("#select-toggle-div").animate({
             "background-color":"white"
-        },1000);
+         },1000);
         drawMenuOverlay.setPosition(null);
         featureSelect.getFeatures().clear();
         var interactions = map1.getInteractions().getArray();
@@ -2369,69 +2365,69 @@ $(function() {
 
 
     var sichosonGeojsonAR =
-        [
-            //"01hokkaido.geojson",
-            {"name":"01hokkaido01sorachi.geojson","title":"01北海道01空知総合振興局"},
-            {"name":"01hokkaido02ishikari.geojson","title":"01北海道02石狩振興局"},
-            {"name":"01hokkaido03shiribeshi.geojson","title":"01北海道03後志総合振興局"},
-            {"name":"01hokkaido04iburi.geojson","title":"01北海道04胆振総合振興局"},
-            {"name":"01hokkaido05hidaka.geojson","title":"01北海道05日高振興局"},
-            {"name":"01hokkaido06oshima.geojson","title":"01北海道06渡島総合振興局"},
-            {"name":"01hokkaido07hiyama.geojson","title":"01北海道07檜山振興局"},
-            {"name":"01hokkaido08kamikawa.geojson","title":"01北海道08上川総合振興局"},
-            {"name":"01hokkaido09rumoi.geojson","title":"01北海道09留萌振興局"},
-            {"name":"01hokkaido10souya.geojson","title":"01北海道10宗谷総合振興局"},
-            {"name":"01hokkaido11ohotsuku.geojson","title":"01北海道11オホーツク総合振興局"},
-            {"name":"01hokkaido12tokachi.geojson","title":"01北海道12十勝総合振興局"},
-            {"name":"01hokkaido13kushiro.geojson","title":"01北海道13釧路総合振興局"},
-            {"name":"01hokkaido14nemuro.geojson","title":"01北海道14根室振興局"},
-            {"name":"02aomori.geojson","title":"02青森県"},
-            {"name":"03iwate.geojson","title":"03岩手県"},
-            {"name":"04miyagi.geojson","title":"04宮城県"},
-            {"name":"05akita.geojson","title":"05秋田県"},
-            {"name":"06yamagata.geojson","title":"06山形県"},
-            {"name":"07fukushima.geojson","title":"07福島県"},
-            {"name":"08ibaraki.geojson","title":"08茨城県"},
-            {"name":"09tochigi.geojson","title":"09栃木県"},
-            {"name":"10gumma.geojson","title":"10群馬県"},
-            {"name":"11saitama.geojson","title":"11埼玉県"},
-            {"name":"12chiba.geojson","title":"12千葉県"},
-            {"name":"13tokyo.geojson","title":"13東京都"},
-            {"name":"14kanagawa.geojson","title":"14神奈川県"},
-            {"name":"15niigata.geojson","title":"15新潟県"},
-            {"name":"16toyama.geojson","title":"16富山県"},
-            {"name":"17ishikawa.geojson","title":"17石川県"},
-            {"name":"18fukui.geojson","title":"18福井県"},
-            {"name":"19yamanashi.geojson","title":"19山梨県"},
-            {"name":"20nagano.geojson","title":"20長野県"},
-            {"name":"21gifu.geojson","title":"21岐阜県"},
-            {"name":"22shizuoka.geojson","title":"22静岡県"},
-            {"name":"23aichi.geojson","title":"23愛知県"},
-            {"name":"24mie.geojson","title":"24三重県"},
-            {"name":"25shiga.geojson","title":"25滋賀県"},
-            {"name":"26kyoto.geojson","title":"26京都府"},
-            {"name":"27osaka.geojson","title":"27大阪府"},
-            {"name":"28hyogo.geojson","title":"28兵庫県"},
-            {"name":"29nara.geojson","title":"29奈良県"},
-            {"name":"30wakayama.geojson","title":"30和歌山県"},
-            {"name":"31tottori.geojson","title":"31鳥取県"},
-            {"name":"32shimane.geojson","title":"32島根件"},
-            {"name":"33okayama.geojson","title":"33岡山県"},
-            {"name":"34hiroshima.geojson","title":"34広島県"},
-            {"name":"35yamaguchi.geojson","title":"35山口県"},
-            {"name":"36tokushima.geojson","title":"36徳島県"},
-            {"name":"37kagawa.geojson","title":"37香川県"},
-            {"name":"38ehime.geojson","title":"38愛媛県"},
-            {"name":"39kochi.geojson","title":"39高知県"},
-            {"name":"40fukuoka.geojson","title":"40福岡県"},
-            {"name":"41saga.geojson","title":"41佐賀県"},
-            {"name":"42nagasaki.geojson","title":"42長崎県"},
-            {"name":"43kumamoto.geojson","title":"43熊本県"},
-            {"name":"44oita.geojson","title":"44大分県"},
-            {"name":"45miyazaki.geojson","title":"45宮崎県"},
-            {"name":"46kagoshima.geojson","title":"46鹿児島県"},
-            {"name":"47okinawa.geojson","title":"47沖縄県"}
-        ];
+    [
+        //"01hokkaido.geojson",
+        {"name":"01hokkaido01sorachi.geojson","title":"01北海道01空知総合振興局"},
+        {"name":"01hokkaido02ishikari.geojson","title":"01北海道02石狩振興局"},
+        {"name":"01hokkaido03shiribeshi.geojson","title":"01北海道03後志総合振興局"},
+        {"name":"01hokkaido04iburi.geojson","title":"01北海道04胆振総合振興局"},
+        {"name":"01hokkaido05hidaka.geojson","title":"01北海道05日高振興局"},
+        {"name":"01hokkaido06oshima.geojson","title":"01北海道06渡島総合振興局"},
+        {"name":"01hokkaido07hiyama.geojson","title":"01北海道07檜山振興局"},
+        {"name":"01hokkaido08kamikawa.geojson","title":"01北海道08上川総合振興局"},
+        {"name":"01hokkaido09rumoi.geojson","title":"01北海道09留萌振興局"},
+        {"name":"01hokkaido10souya.geojson","title":"01北海道10宗谷総合振興局"},
+        {"name":"01hokkaido11ohotsuku.geojson","title":"01北海道11オホーツク総合振興局"},
+        {"name":"01hokkaido12tokachi.geojson","title":"01北海道12十勝総合振興局"},
+        {"name":"01hokkaido13kushiro.geojson","title":"01北海道13釧路総合振興局"},
+        {"name":"01hokkaido14nemuro.geojson","title":"01北海道14根室振興局"},
+        {"name":"02aomori.geojson","title":"02青森県"},
+        {"name":"03iwate.geojson","title":"03岩手県"},
+        {"name":"04miyagi.geojson","title":"04宮城県"},
+        {"name":"05akita.geojson","title":"05秋田県"},
+        {"name":"06yamagata.geojson","title":"06山形県"},
+        {"name":"07fukushima.geojson","title":"07福島県"},
+        {"name":"08ibaraki.geojson","title":"08茨城県"},
+        {"name":"09tochigi.geojson","title":"09栃木県"},
+        {"name":"10gumma.geojson","title":"10群馬県"},
+        {"name":"11saitama.geojson","title":"11埼玉県"},
+        {"name":"12chiba.geojson","title":"12千葉県"},
+        {"name":"13tokyo.geojson","title":"13東京都"},
+        {"name":"14kanagawa.geojson","title":"14神奈川県"},
+        {"name":"15niigata.geojson","title":"15新潟県"},
+        {"name":"16toyama.geojson","title":"16富山県"},
+        {"name":"17ishikawa.geojson","title":"17石川県"},
+        {"name":"18fukui.geojson","title":"18福井県"},
+        {"name":"19yamanashi.geojson","title":"19山梨県"},
+        {"name":"20nagano.geojson","title":"20長野県"},
+        {"name":"21gifu.geojson","title":"21岐阜県"},
+        {"name":"22shizuoka.geojson","title":"22静岡県"},
+        {"name":"23aichi.geojson","title":"23愛知県"},
+        {"name":"24mie.geojson","title":"24三重県"},
+        {"name":"25shiga.geojson","title":"25滋賀県"},
+        {"name":"26kyoto.geojson","title":"26京都府"},
+        {"name":"27osaka.geojson","title":"27大阪府"},
+        {"name":"28hyogo.geojson","title":"28兵庫県"},
+        {"name":"29nara.geojson","title":"29奈良県"},
+        {"name":"30wakayama.geojson","title":"30和歌山県"},
+        {"name":"31tottori.geojson","title":"31鳥取県"},
+        {"name":"32shimane.geojson","title":"32島根件"},
+        {"name":"33okayama.geojson","title":"33岡山県"},
+        {"name":"34hiroshima.geojson","title":"34広島県"},
+        {"name":"35yamaguchi.geojson","title":"35山口県"},
+        {"name":"36tokushima.geojson","title":"36徳島県"},
+        {"name":"37kagawa.geojson","title":"37香川県"},
+        {"name":"38ehime.geojson","title":"38愛媛県"},
+        {"name":"39kochi.geojson","title":"39高知県"},
+        {"name":"40fukuoka.geojson","title":"40福岡県"},
+        {"name":"41saga.geojson","title":"41佐賀県"},
+        {"name":"42nagasaki.geojson","title":"42長崎県"},
+        {"name":"43kumamoto.geojson","title":"43熊本県"},
+        {"name":"44oita.geojson","title":"44大分県"},
+        {"name":"45miyazaki.geojson","title":"45宮崎県"},
+        {"name":"46kagoshima.geojson","title":"46鹿児島県"},
+        {"name":"47okinawa.geojson","title":"47沖縄県"}
+    ];
     $("body").on("click","#githubgeojson-btn",function() {
         console.log("githubgeojson-btn");
         var content = "<div style='height:400px;overflow: auto'>";
@@ -3376,7 +3372,6 @@ $(function() {
     //右クリック時の動作
     var rightClickedFatyure = null;
     function drawContextmenu(evt){
-        if(!$("#mydialog-draw-dialog").length) drawDialogCreate();
         evt.preventDefault();
         rightClickedFatyure = null;
         //人口５００メッシュと共存するときは下記を復活

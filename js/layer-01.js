@@ -1,14 +1,3 @@
-//宮崎犬
-var inu = new ol.layer.Tile({
-    extent:transformE([131.423495,31.9105397,131.42432348,31.91107022]),
-    source: new ol.source.XYZ({
-        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/miyazakiken/{z}/{x}/{-y}.png",
-        //minZoom :1,
-        crossOrigin:"anonymous",
-        maxZoom:21
-    })
-});
-
 //仕切り
 var sikiriKotizu = new ol.layer.Tile({
     folder:"parent",
@@ -133,7 +122,7 @@ var sikiriKosodateFukushi = new ol.layer.Tile({
 var sikiriToshiDouroKasen = new ol.layer.Tile({
     folder:"parent",
     category:"ToshiDouroKasen",
-    title:"都市・道路・河川",
+    title:"都市・道路・河川・海岸",
     origin:"",
     detail:"",
     icon:"<i class='fa fa-folder fa-fw fa-lg' style='color:rgba(51,122,183,1.0);'></i>",
@@ -148,400 +137,214 @@ var sikiriDrTashiro = new ol.layer.Tile({
 });
 //国土地理院（災害以外）---------------------------------------------------------------------------------------------------
 //国土地理院淡色地図のレイヤー
-var pale1 = new ol.layer.Tile({
-    title:"地理院_淡色地図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source:new ol.source.XYZ({
+function pale(){
+    this.title = "地理院_淡色地図";
+    this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
+    this.detail = "";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
         url:"./php/proxy-png.php?url=https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         minZoom:2,
         maxZoom:18
-    })
-});
-var pale2 = new ol.layer.Tile({
-    title:"地理院_淡色地図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source:new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-        //url:"./php/proxy-png.php?url=https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-        urls:[
-            "./php/proxy-png.php?url=https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png",
-            "./php/proxy-png.php?url=https://cyberjapandata.gsi.go.jp/xyz/pale/{z}/{x}/{y}.png"
-        ],
-        crossOrigin:"anonymous",
-        minZoom:2,
-        maxZoom:18
-    })
-});
+    });
+}
+var pale1 = new ol.layer.Tile(new pale());
+var pale2 = new ol.layer.Tile(new pale());
 //国土地理院_白地図
-var blank1 = new ol.layer.Tile({
-    title:"地理院_白地図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+function blank_(){
+    this.title = "地理院_白地図";
+    this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
+    this.detail = "";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
         url:"https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         maxZoom:14
-    })
-});
-var blank2 = new ol.layer.Tile({
-    title:"地理院_白地図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-        url:"https://cyberjapandata.gsi.go.jp/xyz/blank/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:14
-    })
-});
+    });
+}
+var blank1 = new ol.layer.Tile(new blank_());
+var blank2 = new ol.layer.Tile(new blank_());
 //国土地理院_色別標高図
-var relief1 = new ol.layer.Tile({
-    title:"地理院_色別標高図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"海域部は会場保安庁海洋情報部の資料を使用して作成",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+function relief_(){
+    this.title = "地理院_色別標高図";
+    this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
+    this.detail = "海域部は会場保安庁海洋情報部の資料を使用して作成";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
         url:"https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         maxZoom:15
-    })
-});
-var relief2 = new ol.layer.Tile({
-    title:"地理院_色別標高図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"海域部は会場保安庁海洋情報部の資料を使用して作成",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-        url:"https://cyberjapandata.gsi.go.jp/xyz/relief/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:15
-    })
-});
+    });
+}
+var relief1 = new ol.layer.Tile(new relief_());
+var relief2 = new ol.layer.Tile(new relief_());
 //国土地理院_治水地形分類図
-var lcmfc2_1 = new ol.layer.Tile({
-    title:"地理院_治水地形分類図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"治水地形分類図 更新版（2007～2014年）",
-    detail2:"<div style='overflow:auto;height:300px;text-align:center'>" +
-            "<a href='https://cyberjapandata.gsi.go.jp/legend/lcmfc2_legend.jpg' target='_blank'>" +
-            "<img src='https://cyberjapandata.gsi.go.jp/legend/lcmfc2_legend.jpg' style='width:250px;'>" +
-            "</a>" +
-            "</div>",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-        url:"https://cyberjapandata.gsi.go.jp/xyz/lcmfc2/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:16
-    })
-});
-var lcmfc2_2 = new ol.layer.Tile({
-    title:"地理院_治水地形分類図",
-    origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
-    detail:"治水地形分類図 更新版（2007～2014年）",
-    detail2:"<div style='overflow:auto;height:300px;text-align:center'>" +
+function lcmfc2_(){
+    this.title = "地理院_治水地形分類図";
+    this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
+    this.detail = "治水地形分類図 更新版（2007～2014年）";
+    this.detail2 = "<div style='overflow:auto;height:300px;text-align:center'>" +
     "<a href='https://cyberjapandata.gsi.go.jp/legend/lcmfc2_legend.jpg' target='_blank'>" +
     "<img src='https://cyberjapandata.gsi.go.jp/legend/lcmfc2_legend.jpg' style='width:250px;'>" +
     "</a>" +
-    "</div>",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+    "</div>";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
         url:"https://cyberjapandata.gsi.go.jp/xyz/lcmfc2/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         maxZoom:16
-    })
-});
+    });
+}
+var lcmfc2_1 = new ol.layer.Tile(new lcmfc2_());
+var lcmfc2_2 = new ol.layer.Tile(new lcmfc2_());
 //国土地理院（災害以外）ここまで--------------------------------------------------------------------------------------------
 //オープンストリートマップ
-var osm1 = new ol.layer.Tile({
-    title:"OpenStreetMap",
-    origin:"<a href='https://openstreetmap.jp' target='_blank'>OpenStreetMap</a>",
-    detail:"OpenStreetMapは、道路地図などの地理情報データを誰でも利用できるよう、フリーの地理情報データを作成することを目的としたプロジェクトです。",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.OSM({
+function osm_(){
+    this.title = "OpenStreetMap";
+    this.origin = "<a href='https://openstreetmap.jp' target='_blank'>OpenStreetMap</a>";
+    this.detail = "OpenStreetMapは、道路地図などの地理情報データを誰でも利用できるよう、フリーの地理情報データを作成することを目的としたプロジェクトです。";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.OSM({
         crossOrigin:"anonymous"
-    })
-});
-var osm2 = new ol.layer.Tile({
-    title:"OpenStreetMap",
-    origin:"<a href='https://openstreetmap.jp' target='_blank'>OpenStreetMap</a>",
-    detail:"OpenStreetMapは、道路地図などの地理情報データを誰でも利用できるよう、フリーの地理情報データを作成することを目的としたプロジェクトです。",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.OSM({
-        crossOrigin:"anonymous"
-    })
-});
-//ミエルネ地図
-var mieruneNormal1 = new ol.layer.Tile({
-    //folder:"child",
-    //category:"mierune",
-    title:"MIERUNE地図Normal(デモ)",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
-            "<hr class='my-hr'>ご自分のシステム等でMIERUNE地図Normalを使用したい場合はinfo@mierune.co.jpまで連絡を！",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+    });
+}
+var osm1 = new ol.layer.Tile(new osm_());
+var osm2 = new ol.layer.Tile(new osm_());
+//ミエルネ地図------------------------------------------------------------------------------------------------------------
+//ノーマル
+function mieruneNormal_(){
+    //this.folder = "child";
+    //this.category = "mierune";
+    this.title = "MIERUNE地図Normal(デモ)";
+    this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
+    this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
+    "<hr class='my-hr'>ご自分のシステム等でMIERUNE地図Normalを使用したい場合はinfo@mierune.co.jpまで連絡を！";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'><label>OpenStreetMap</label></a> contributors, under ODbL."})],
-        //url:"https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png",
         url:"https://tile.cdn.mierune.co.jp/styles/normal/{z}/{x}/{y}.png?key=227f0537b49914faf4453586db3fb0bd483ec3242e75b4605ef912eb5f9b31f58e7d8e907355e63703bee54f9206d3a932023538a51d90a8b294d617e8337d77a0c43f72",
         crossOrigin:"anonymous",
         maxZoom:20
-    })
-});
-var mieruneNormal2 = new ol.layer.Tile({
-    //folder:"child",
-    //category:"mierune",
-    title:"MIERUNE地図Normal(デモ)",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
-            "<hr class='my-hr'>ご自分のシステム等でMIERUNE地図Normalを使用したい場合はinfo@mierune.co.jpまで連絡を！",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+    });
+}
+var mieruneNormal1 = new ol.layer.Tile(new mieruneNormal_());
+var mieruneNormal2 = new ol.layer.Tile(new mieruneNormal_());
+//ブルーのmierune
+function mierune_(){
+    this.folder = "child";
+    this.category = "mierune";
+    this.title = "MIERUNE地図";
+    this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
+    this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'><label>OpenStreetMap</label></a> contributors, under ODbL."})],
-        //url:"https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png",
-        url:"https://tile.cdn.mierune.co.jp/styles/normal/{z}/{x}/{y}.png?key=227f0537b49914faf4453586db3fb0bd483ec3242e75b4605ef912eb5f9b31f58e7d8e907355e63703bee54f9206d3a932023538a51d90a8b294d617e8337d77a0c43f72",
-        crossOrigin:"anonymous",
-        maxZoom:20
-    })
-});
-
-
-
-
-
-
-var mierune1 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
-    title:"MIERUNE地図",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'><label>OpenStreetMap</label></a> contributors, under ODbL."})],
-        //url:"https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png",
-        urls:[
-            "https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png",
-            "https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png"
-        ],
-        crossOrigin:"anonymous",
-        maxZoom:15
-    })
-});
-var mierune2 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
-    title:"MIERUNE地図",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by OpenStreetMap contributors, under ODbL."})],
         url:"https://tile.mierune.co.jp/mierune/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         maxZoom:15
-    })
-});
-var mieruneMono1 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
-    title:"MIERUNE地図モノクロ",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
+    });
+}
+var mierune1 = new ol.layer.Tile(new mierune_());
+var mierune2 = new ol.layer.Tile(new mierune_());
+//モノクロのmierune
+function mieruneMono_(){
+    this.folder = "child";
+    this.category = "mierune";
+    this.title = "MIERUNE地図モノクロ";
+    this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
+    this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
         attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by <a href='http://osm.org/copyright' target='_blank'><label>OpenStreetMap</label></a> contributors, under ODbL."})],
         url:"https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
         maxZoom:18
-    })
-});
-var mieruneMono2 = new ol.layer.Tile({
-    folder:"child",
-    category:"mierune",
-    title:"MIERUNE地図モノクロ",
-    origin:"<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    detail:"Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:"Maptiles by <a href='http://www.mierune.co.jp/' target='_blank'><label>MIERUNE</label></a>, under CC BY. Data by OpenStreetMap contributors, under ODbL."})],
-        url:"https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:18
-    })
-});
-
-
-//toner
-var toner1 = new ol.layer.Tile({
-    title:"Stamen Toner",
-    origin:"<a href='http://maps.stamen.com/#toner/5/35.661/139.380' target='_blank'>maps.stamen.com</a>",
-    detail:"Map Tiles by Stamen Design, under CC BY 3.0, Date by OpenStreetMap, Under CC BY SA.",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:""})],
-        url:"./php/proxy-png.php?url=http://a.tile.stamen.com/toner/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:20
-    })
-});
-var toner2 = new ol.layer.Tile({
-    title:"Stamen Toner",
-    origin:"<a href='http://maps.stamen.com/#toner/5/35.661/139.380' target='_blank'>maps.stamen.com</a>",
-    detail:"Map Tiles by Stamen Design, under CC BY 3.0, Date by OpenStreetMap, Under CC BY SA.",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.XYZ({
-        attributions:[new ol.Attribution({html:""})],
-        url:"./php/proxy-png.php?url=http://a.tile.stamen.com/toner/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        maxZoom:20
-    })
-});
+    });
+}
+var mieruneMono1 = new ol.layer.Tile(new mieruneMono_());
+var mieruneMono2 = new ol.layer.Tile(new mieruneMono_());
 //ハザードマップ関係------------------------------------------------------------------------------------------------------------------------------------------------------
 //津波
-var tunami1 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"津波浸水想定区域(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([131.161,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/tsunamishinsui/{z}/{x}/{y}.png",
+function tunami_(){
+    this.folder = "child";
+    this.category = "hazard";
+    this.title = "津波浸水想定区域(宮崎県)";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>";
+    this.extent = transformE([131.161,31.36,131.921,32.892]);
+    this.source = new ol.source.XYZ({
+        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
+        url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/tsunamishinsui/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:17
-	})
-});
-var tunami2 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"津波浸水想定区域(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([131.161,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/tsunamishinsui/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:17
-	})
-});
+        minZoom :1,
+        maxZoom:17
+    });
+}
+var tunami1 = new ol.layer.Tile(new tunami_());
+var tunami2 = new ol.layer.Tile(new tunami_());
 //浸水想定
-var sinsuisoutei1 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"洪水浸水想定(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/SHINSUI/{z}/{x}/{y}.png",
+function sinsuisoutei_(){
+    this.folder = "child";
+    this.category = "hazard";
+    this.title = "洪水浸水想定(宮崎県)";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>";
+    this.extent = transformE([130.705,31.36,131.921,32.892]);
+    this.source = new ol.source.XYZ({
+        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
+        url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/SHINSUI/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:18
-	})
-});
-var sinsuisoutei2 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"洪水浸水想定区域(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/SHINSUI/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:18
-	})
-});
+        minZoom :1,
+        maxZoom:18
+    });
+}
+var sinsuisoutei1 = new ol.layer.Tile(new sinsuisoutei_());
+var sinsuisoutei2 = new ol.layer.Tile(new sinsuisoutei_());
 //土石流危険渓流
-var kikenkeiryuu1 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"土石流危険渓流(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/dosekiryukikenkeiryu/{z}/{x}/{y}.png",
+function kikenkeiryuu_(){
+    this.folder = "child";
+    this.category = "hazard";
+    this.title = "土石流危険渓流(宮崎県)";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>";
+    this.extent = transformE([130.705,31.36,131.921,32.892]);
+    this.source = new ol.source.XYZ({
+        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
+        url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/dosekiryukikenkeiryu/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:16
-	})
-});
-var kikenkeiryuu2 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"土石流危険渓流(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/dosekiryukikenkeiryu/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:16
-	})
-});
+        minZoom :1,
+        maxZoom:16
+    });
+}
+var kikenkeiryuu1 = new ol.layer.Tile(new kikenkeiryuu_());
+var kikenkeiryuu2 = new ol.layer.Tile(new kikenkeiryuu_());
 //急傾斜地崩壊危険箇所
-var kyuukeisyakikenkasyo1 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"急傾斜地崩壊危険箇所(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/kyukeisyachihoukai/{z}/{x}/{y}.png",
+function kyuukeisyakikenkasyo_(){
+    this.folder = "child";
+    this.category = "hazard";
+    this.title = "急傾斜地崩壊危険箇所(宮崎県)";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>";
+    this.extent = transformE([130.705,31.36,131.921,32.892]);
+    this.source = new ol.source.XYZ({
+        attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
+        url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/kyukeisyachihoukai/{z}/{x}/{y}.png",
         crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:16
-	})
-});
-var kyuukeisyakikenkasyo2 = new ol.layer.Tile({
-    folder:"child",
-    category:"hazard",
-    title:"急傾斜地崩壊危険箇所(宮崎県)",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:red;'></i>",
-    extent:transformE([130.705,31.36,131.921,32.892]),
-	source: new ol.source.XYZ({
-		attributions:[new ol.Attribution({html:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>"})],
-		url:"./php/proxy-png.php?url=http://disaportal.gsi.go.jp/hazardmap_data/raster/kyukeisyachihoukai/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-		minZoom :1,
-		maxZoom:16
-	})
-});
+        minZoom :1,
+        maxZoom:16
+    });
+}
+var kyuukeisyakikenkasyo1 = new ol.layer.Tile(new kyuukeisyakikenkasyo_());
+var kyuukeisyakikenkasyo2 = new ol.layer.Tile(new kyuukeisyakikenkasyo_());
 //------------------------------------------------------------------------------
 //飫肥城
 var obi1 = new ol.layer.Tile({
@@ -3379,7 +3182,40 @@ var aichikotizu2 = new ol.layer.Tile({
         maxZoom:13
     })
 });
-
+//兵庫県古地図
+function osakakotizu() {
+    this.folder = "child";
+    this.category = "kotizu";
+    this.name = "kotizu";
+    this.title = "27大阪府古地図(大正14年)";
+    this.origin = "<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より";
+    this.detail = "<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>";
+    this.icon = "<i class='fa fa-map fa-fw' style='color:brown;'></i>";
+    this.source = new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/osakafukotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        maxZoom:13
+    });
+}
+var osakakotizu1 = new ol.layer.Tile(new osakakotizu());
+var osakakotizu2 = new ol.layer.Tile(new osakakotizu());
+//兵庫県古地図
+function hyogokotizu() {
+    this.folder = "child";
+    this.category = "kotizu";
+    this.name = "kotizu";
+    this.title = "28兵庫県古地図(大正13年)";
+    this.origin = "<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より";
+    this.detail = "<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>";
+    this.icon = "<i class='fa fa-map fa-fw' style='color:brown;'></i>";
+    this.source = new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/hyogokenkotizu/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        maxZoom:13
+    });
+}
+var hyogokotizu1 = new ol.layer.Tile(new hyogokotizu());
+var hyogokotizu2 = new ol.layer.Tile(new hyogokotizu());
 //岡山県古地図
 var okayamakotizu1 = new ol.layer.Tile({
     folder:"child",
@@ -4582,3 +4418,21 @@ function evevtSuirostyleFunction(feature, resolution) {
     }
     return style;
 }
+//屋外広告物規制概要---------------------------------------------------------------------------------------------------
+//延岡市のレイヤー
+function okugainobeoka_(){
+    this.folder = "child";
+    this.category = "test";
+    this.title = "延岡市規制概要図";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/okugai/nobeoka/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        minZoom:2,
+        maxZoom:18
+    });
+}
+var okugainobeoka_1 = new ol.layer.Tile(new okugainobeoka_());
+var okugainobeoka2 = new ol.layer.Tile(new okugainobeoka_());

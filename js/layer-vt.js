@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------
 //自然地形
-var codeList_sizen = new Array(//2次元配列 [図式コード,"色"]
+var codeList_sizen = new Array(//図式コード,"色"]
     [10101,"#d9cbae"],
     [1010101,"#d9cbae"],
     [11201,"#d9cbae"],
@@ -183,60 +183,36 @@ var codeList_sizen2 = new Array(//2次元配列 [図式コード,"地形分類�
     [11010,"改変工事中","調査時に土地の改変工事が行われていた土地。",""],
     [9999,"拡大すると地形分類が表示されます。","",""]
 );
-var tikeiVectorTileSizen1 = new ol.layer.VectorTile({
-    //folder:"child",
-    //category:"test",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    title:"地理院_地形分類（自然地形）(VT)",
-    name:"sizentikei",
-    origin:"<a href='https://github.com/gsi-cyberjapan/experimental_landformclassification' target='_blank'>国土地理院ベクトルタイル提供実験（地形分類）</a>",
-    detail:"",
-    source: new ol.source.VectorTile({
+function tikeiVectorTileSizen(){
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.title = "地理院_地形分類（自然地形）(VT)";
+    this.name = "sizentikei";
+    this.origin = "<a href='https://github.com/gsi-cyberjapan/experimental_landformclassification' target='_blank'>国土地理院ベクトルタイル提供実験（地形分類）</a>";
+    this.detail = "";
+    this.source = new ol.source.VectorTile({
         //attributions: [new ol.Attribution({html:"<a href='https://github.com/gsi-cyberjapan/vector-tile-experiment' target='_blank'>国土地理院</a>"})],
         format: new ol.format.GeoJSON({defaultProjection:'EPSG:4326'}),
         tileGrid: new ol.tilegrid.createXYZ({
             maxZoom:14
         }),
         url:"https://cyberjapandata.gsi.go.jp/xyz/experimental_landformclassification1/{z}/{x}/{y}.geojson"
-    }),
-    //maxResolution:38.22,
-    style: sizentikeiStyleFunction
-});
-var tikeiVectorTileSizen2 = new ol.layer.VectorTile({
-    //folder:"child",
-    //category:"test",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    title:"地理院_地形分類（自然地形）(VT)",
-    name:"sizentikei",
-    origin:"<a href='https://github.com/gsi-cyberjapan/experimental_landformclassification' target='_blank'>国土地理院ベクトルタイル提供実験（地形分類）</a>",
-    detail:"",
-    source: new ol.source.VectorTile({
-        //attributions: [new ol.Attribution({html:"<a href='https://github.com/gsi-cyberjapan/vector-tile-experiment' target='_blank'>国土地理院</a>"})],
-        format: new ol.format.GeoJSON({defaultProjection:'EPSG:4326'}),
-        tileGrid: new ol.tilegrid.createXYZ({
-            maxZoom:14
-        }),
-        url:"https://cyberjapandata.gsi.go.jp/xyz/experimental_landformclassification1/{z}/{x}/{y}.geojson"
-    }),
-    //maxResolution:38.22,
-    style: sizentikeiStyleFunction
-});
-
+    });
+    this.style = sizentikeiStyleFunction;
+}
+var tikeiVectorTileSizen1 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
+var tikeiVectorTileSizen2 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
 function sizentikeiStyleFunction(feature, resolution) {
     var code = Number(feature.getProperties()["code"]);
-    //console.log(code)
     var fillColor = 'rgba(0,0,0,0.1)';
     for(var i=0;i<codeList_sizen.length;i++){
         if(codeList_sizen[i][0]==code){
             fillColor = codeList_sizen[i][1];
-            //if(code==9999) fillOpacity -= 0.2;
             break;
         }
     }
     return [new ol.style.Style({
         fill: new ol.style.Fill({
-            color:fillColor,
-            //opacity:fillOpacity
+            color:fillColor
         })
     })];
 }

@@ -12,6 +12,7 @@ $(function(){
     $(window).on('resize',function(){
         $("#map1,#map2").height($(window).height());
         funcResize();
+        $(document).snowfall('clear');
     });
     funcResize();
     function funcResize() {
@@ -45,16 +46,19 @@ $(function(){
         //msg += "<i class='fa fa-exclamation fa-fw'></i>";
         msg += "<div style='text-align:center;margin-bottom:10px;'><span class='label label-default label-danger'>New</span></div>";
         //msg += "★iphoneのsafariで画面移動ができない現象があるようです。その場合はブラウザをクローム等に変えてみてください。<br>";
-        msg += "★背景が多くなりすぎたのでカテゴリわけしています。<br>";
-        msg += "★<a href='http://www.gsi.go.jp/bousaichiri/bousaichiri61013.html' target='_blank'>宮崎県立佐土原高校情報技術部 防災アプリ大賞受賞!！</a><br>";
+        //msg += "★背景が多くなりすぎたのでカテゴリわけしています。<br>";
+        //msg += "★<a href='http://www.gsi.go.jp/bousaichiri/bousaichiri61013.html' target='_blank'>宮崎県立佐土原高校情報技術部 防災アプリ大賞受賞!！</a><br>";
         msg += "★背景のうち(MVT/VT)とついているものは3D化できません！<br>";
         msg += "★詳しい追加情報等は<a href='https://www.facebook.com/hinatagis' target='_blank'><i class='fa fa-facebook-square fa-fw' style='color:navy;'></i>FBへ</a><br>";
         //msg += "<canvas id='canvas1'></canvas>";
-        msg += "1 ドロー機能大幅強化中。「draw」ボタンから<br>";
-        msg += "2 シームレス地質図V2でクリックすると凡例を表示します。<br>";
-        msg += "3 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
-        msg += "4 背景にH26商業統計(MVT)を追加しました。<br>";
-        msg += "5 背景に市町村現役世代率(MVT)を追加しました。<br>";
+        msg += "1 背景に全国海岸線(MVT)を追加しました。<br>";
+        msg += "2 背景に大阪府の古地図を追加しました。<br>";
+        msg += "3 背景に岡山県、広島県、愛知県、兵庫県の古地図を追加しました。<br>";
+        //msg += "4 ドロー機能大幅強化中。「図形」ボタンから<br>";
+        //msg += "5 シームレス地質図V2でクリックすると凡例を表示します。<br>";
+        //msg += "4 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
+        //msg += "5 背景にH26商業統計(MVT)を追加しました。<br>";
+        //msg += "6 背景に市町村現役世代率(MVT)を追加しました。<br>";
         //msg += "5 背景にH26経済センサス(MVT)を追加しました。<br>";
         //msg += "5 背景に500Mメッシュ人口(MVT)を追加しました。<br>";
         //msg += "4 背景に二次医療圏(MVT)を追加しました。<br>";
@@ -95,7 +99,7 @@ $(function(){
         //msg += "10 宮崎県(九州)赤色立体地図を追加しました。<br>";
         //msg += "10 画面左下に標高表示機能を追加しました。<br>";
         msg += "<div style='text-align:center;'>";
-        msg += "宮崎県情報政策課<br>最終更新:2017/12/04</div>";
+        msg += "宮崎県情報政策課<br>最終更新:2017/12/25</div>";
         msg += "<div style='position:absolute;bottom:0px;right:0px;'><a href='https://www.osgeo.jp/' target='_blank'><img src='icon/osgeo.png' style='width:80px;background:'></a></div>";
         $.notify({//options
             message: msg
@@ -170,7 +174,6 @@ $(function(){
         ])
     });
     //DragRotateAndZoom.setActive(false);
-
     //--------------------------------------------------------------------------
     //デフォルトで設定されているインタラクション（PinchRotate）を使用不可に
     var interactions1 = map1.getInteractions().getArray();
@@ -294,7 +297,7 @@ $(function(){
         });
     }
     map1.on("click",function(evt){
-        console.log(ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326"));
+        //console.log(ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326"));
     });
     //--------------------------------------------------------------------------
     //ピンチ時の回転を制御
@@ -322,13 +325,9 @@ $(function(){
     $("body").on("click",".osm-btn",function() {
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
-        //alert("作成中")
         var zoom = Math.floor(eval(mapName).getView().getZoom());
         var coord = ol.proj.transform(eval(mapName).getView().getCenter(),"EPSG:3857","EPSG:4326");
-        console.log(zoom);
-        console.log(coord[1],coord[0]);
         var url = "http://www.openstreetmap.org/edit#map=" + zoom + "/" + coord[1] + "/" + coord[0];
-        //var url = "http://www.openstreetmap.org/edit#map=" + zoom + "/31.887292341936988/131.47626831928417";
         window.open(url,'_blank')
     });
     //--------------------------------------------------------------------------
@@ -355,44 +354,16 @@ $(function(){
     ol.hash(map1);
     ol.hash(map2);
     //------------------------------------------------------------------------
-    /*
-    //現在地取得
-    $(".here-btn").click(function(){
-        var mapObj = funcMaps($(this));
-        if(navigator.geolocation){
-            navigator.geolocation.getCurrentPosition(
-                function(position){
-                    eval(mapObj["name"]).getView().setCenter(ol.proj.transform([position.coords.longitude,position.coords.latitude],"EPSG:4326","EPSG:3857"));
-                },
-                function(){
-                    alert("座標を取得できませんでした。.")
-                },
-                {
-                    enableHighAccuracy: true,
-                    timeout : 5000
-                }
-            );
-        }else{
-            alert("お使いのブラウザには座標取得機能がありません。")
-        }
+    $(document).snowfall({
+        flakeCount : 100,
+        flakeColor : "lavender",
+        minSize : 1,
+        maxSize : 8,
+        minSpeed : 1,
+        maxSpeed : 3,
+        round : true,
+        collection : ".addres-input"
     });
-    */
-    //--------------------------------------------------------------------------
-    //クラスbtnにクリック感を付与。汎用性のため非cssで。今は使っていない。タッチがうまくいかないときがあるので
-    /*
-    $("body").on("mousedown",".btn",function(){
-        var marginTop = Number($(this).css("margin-top").replace("px",""));
-        var marginBottom = Number($(this).css("margin-bottom").replace("px",""));
-        $(this).css({
-            "margin-top":(marginTop+5)+"px",
-            "margin-bottom":(marginBottom-5)+"px"
-        });
-    }).mouseup(function(){
-        $(".btn").css({
-            "margin-top":"",
-            "margin-bottom":""
-        });
-    });
-    */
-    //--------------------------------------------------------------------------
+    //map1.addInteraction(new ol.interaction.TinkerBell());
+    //map2.addInteraction(new ol.interaction.TinkerBell());
 });

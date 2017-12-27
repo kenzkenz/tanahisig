@@ -2,7 +2,6 @@ var ol3d1 = null;
 var ol3d2 = null;
 var prevTilt = 0.5;
 var d3Flg = true;
-
 $(function(){
     $(".elevMag-text").spinner({
         max:10, min:1, step:1,
@@ -17,7 +16,6 @@ $(function(){
             }else{
                 var scene = ol3d2.getCesiumScene();
             }
-
             var terrain = new Cesium.PngElevationTileTerrainProvider({
                 url:"https://gsj-seamless.jp/labs/elev2/elev/gsi10m_latlng_257/{z}/{y}/{x}.png",
                 tilingScheme: new Cesium.GeographicTilingScheme(),
@@ -87,8 +85,6 @@ $(function(){
                 });
                 */
 
-
-
                 scene1.terrainProvider = terrain;
                 scene1.screenSpaceCameraController._minimumZoomRate = 1;//10000
                 // ズームしたときの，ホイールに対する動作制御。
@@ -135,16 +131,14 @@ $(function(){
             }
            // cTilt();
             $(this).text("2D");
-
+            //estatLayer
             var estatLayer = eval("estatLayer" + mapName);
             if(estatLayer){
                 var features = eval("estatLayer" + mapName).getSource().getFeatures();
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
-
-
+            /*
             if(mapName==="map1") {
                 var mobakuu = mobakuu1;
             }else{
@@ -155,16 +149,14 @@ $(function(){
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
-
+            */
             if(dataLayer["map1-kyuusyuuCity"]){
                 var features = dataLayer["map1-kyuusyuuCity"].getSource().getFeatures();
                 console.log(features);
                 czmlCreate(features,$(this));
 
             }
-
-
+            //resasLayer
             if(mapName==="map1") {
                 var resasLayer = resasLayermap1;
             }else{
@@ -175,8 +167,7 @@ $(function(){
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
-
+            /*
             if(mapName==="map1") {
                 var csvLayer = csvLayer1;
             }else{
@@ -187,7 +178,8 @@ $(function(){
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
+            */
+            //mesh500
             if(mapName==="map1") {
                 var mesh500Layer = mesh500Layer1;
             }else{
@@ -198,24 +190,21 @@ $(function(){
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
-
+            //ドロー関係
             if(drawLayer){
                 var features = drawLayer.getSource().getFeatures();
                 console.log(features);
                 drawContextmenuOverlay.setPosition(null);
+                $("#mydialog-draw-dialog").hide();
                 czmlCreate(features,$(this));
             }
-
-
+            //選挙区
             if(dataLayer["map1-senkyoku"]){
                 var features = dataLayer["map1-senkyoku"].getSource().getFeatures();
                 console.log(features);
                 czmlCreate(features,$(this));
             }
-
-
-        }else{
+        }else{//2Dになるとき
 
             $("#" + mapName + " .cesium-btn-up").hide(500);
             $("#" + mapName + " .cesium-btn-down").hide(500);
@@ -238,6 +227,8 @@ $(function(){
             }
             cTilt2();
             $(this).text("3D");
+
+            if($("#mydialog-draw-dialog")) $("#mydialog-draw-dialog").show();//ドローダイアログがあったら表示する。
         }
     });
     //------------------------------------------------------------
@@ -267,8 +258,7 @@ $(function(){
         var mapName = mapObj["name"];
         var text = $("#" + mapName + " .d3d2-btn").text();
         if(text==="3D"){
-            alert("MVT時は3D操作できません。")
-
+            alert("MVT時は3D操作できません。");
         }else {
             var ol3d = eval(mapObj["ol3d"]);
             tiltFlg = true;
@@ -303,7 +293,6 @@ $(function(){
                 tiltUp("down");
             }
         }
-
         return false;
     }).mouseup(function(){
         tiltFlg = false;
@@ -378,56 +367,67 @@ function czmlCreate(features,element){
     }];
     var czmlId = 1;
     for (i=0; i<features.length; i++){
-        var multiLength = features[i].getGeometry().getCoordinates().length
-        for (j=0; j<multiLength;j++) {
-            var coordArr2 = [];
-            if(features[i].getGeometry().getType()!="MultiPolygon"){
-            //if(multiLength==1) {
-                var coordArr = features[i].getGeometry().getCoordinates()[0];
-            }else{
-                var coordArr = features[i].getGeometry().getCoordinates()[j][0];
-            }
-            for (k = 0; k < coordArr.length; k++) {
-                var coord = ol.proj.transform(coordArr[k], "EPSG:3857", "EPSG:4326");
-                coordArr2.push(Number(coord[0]));
-                coordArr2.push(Number(coord[1]));
-                coordArr2.push(0);
-            }
-            var fillColor = features[i].getProperties()["_fillColor"];
-            var fillColorRgb = fillColor.replace("a", "").substr(0, fillColor.lastIndexOf(",") - 1) + ")";
-            var color0 = new RGBColor(fillColorRgb);
-            if (features[i].getProperties()["_fillOpacity"]) {
-                var rgba = [Number(color0.r), Number(color0.g), Number(color0.b), 150];
-            } else {
-                var rgba = [Number(color0.r), Number(color0.g), Number(color0.b), 150];
-            }
-            var polygonHeight = features[i].getProperties()["_polygonHeight"];
-            //var polygonHeight = 40
-            var description = features[i].getProperties()["hover"];
-            var d3Polygon = [
-                {
-                    "id": czmlId++, "description": description,
-                    "polygon": {
-                        "extrudedHeight": polygonHeight,
-                        "outline": {"boolean": true},
-                        "outlineColor": {"rgba": [0, 0, 0, 255]},
-                        "material": {
-                            "solidColor": {
-                                "color": {
-                                    "rgba": rgba
+        var multiLength = features[i].getGeometry().getCoordinates().length;
+        console.log(multiLength);//マルチポリゴンのときと穴あきポリゴンのときに１以上になる。
+        //czmlは穴あきポリゴンに対応していないらしいので苦肉の作
+        var geomType = features[i].getGeometry().getType();
+        //if(geomType==="Polygon") multiLength = 1;
+        if(geomType!=="Point" && geomType!=="LineString") {
+            for (j = 0; j < multiLength; j++) {
+                var coordArr2 = [];
+                if (geomType !== "MultiPolygon") {//ポリゴンのとき
+                    //var coordArr = features[i].getGeometry().getCoordinates()[0];//本当はこっちていい
+                    //穴ポリゴンのときは穴の個数だけ余分にポリゴンを作って擬似的に穴ポリゴンに見せかける。
+                    var coordArr = features[i].getGeometry().getCoordinates()[j];
+                } else {//マルチポリゴンのとき
+                    var coordArr = features[i].getGeometry().getCoordinates()[j][0];
+                }
+                for (k = 0; k < coordArr.length; k++) {
+                    var coord = ol.proj.transform(coordArr[k], "EPSG:3857", "EPSG:4326");
+                    coordArr2.push(Number(coord[0]));
+                    coordArr2.push(Number(coord[1]));
+                    coordArr2.push(0);
+                }
+                var fillColor = features[i].getProperties()["_fillColor"];
+                var fillColorRgb = fillColor.replace("a", "").substr(0, fillColor.lastIndexOf(",") - 1) + ")";
+                var color0 = new RGBColor(fillColorRgb);
+                var rgba;
+                if (features[i].getProperties()["_fillOpacity"]) {
+                    rgba = [Number(color0.r), Number(color0.g), Number(color0.b), 150];
+                } else {
+                    rgba = [Number(color0.r), Number(color0.g), Number(color0.b), 150];
+                }
+                var polygonHeight = features[i].getProperties()["_polygonHeight"];
+                var description = features[i].getProperties()["hover"];
+                if (geomType === "Polygon" && j > 0) {
+                    rgba = [0, 0, 0, 0];
+                    //polygonHeight = Number(polygonHeight) + 100;
+                }//穴ポリゴンを透明化して誤魔化す。
+                console.log(polygonHeight);
+                var d3Polygon = [
+                    {
+                        "id": czmlId++, "description": description,
+                        "polygon": {
+                            "extrudedHeight": polygonHeight,
+                            "outline": {"boolean": true},
+                            "outlineColor": {"rgba": [0, 0, 0, 255]},
+                            "material": {
+                                "solidColor": {
+                                    "color": {
+                                        "rgba": rgba
+                                    }
                                 }
+                            },
+                            "positions": {
+                                "cartographicDegrees": coordArr2
                             }
-                        },
-                        "positions": {
-                            "cartographicDegrees": coordArr2
                         }
                     }
-                }
-            ];
-            //czml =d3Polygon;
-            czml.push(d3Polygon[0]);
+                ];
+                //czml =d3Polygon;
+                czml.push(d3Polygon[0]);
+            }
         }
-
     }
     //console.log(JSON.stringify(czml));
     //console.log(czml)
