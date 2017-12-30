@@ -633,17 +633,17 @@ label:hover{
     padding:0!important;
 }
 #drawContextmenuOverlay-div{
-    padding:10px;
+    padding:8px;
     background:white;
     border-radius:4px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.4);
     /*border:1px solid rgba(51,122,183,1.0);*/
     z-index:3;
     width:240px;
-    font-size: 12px;
+    font-size: 10px;
 }
 #drawContextmenuOverlay-div div{
-    margin:2px 0;
+    margin:1px 0;
 }
 #drawContextmenuOverlay-content-div{
     max-height:200px;
@@ -758,9 +758,10 @@ label:hover{
 }
 #height-input-text{
     margin-left: 15px;
-    width:45px;
+    width:37px;
     border-radius:3px;
-    border:solid 1px silver;
+    border:solid 1px #c3c3c3;
+    height:15px;
 }
 #drawContextmenu-drawCircle-div .ui-spinner{
     font-size:10px;
@@ -771,10 +772,11 @@ label:hover{
 #drawContextmenu-msg-div,#second-div-msg-div{
     font-size: 10px;
     color: #d9534f;
+    margin-bottom: 8px!important;
 }
 #second-div{
     display:none;
-    height:180px;
+    height:170px;
 }
 #prop-div{
     max-height: 150px;
@@ -787,13 +789,56 @@ label:hover{
     line-height:1.5;
     border-radius:3px;
 }
-#drawContextmenu-save-ul{
+.my-toggle-ul{
     font-size:12px;
-    padding:5px;
     min-width:70px;
 }
-#drawContextmenu-save-ul a{
-    padding: 0 0;
+.my-toggle-ul a{
+    padding: 0 5px!important;
+    font-size: 10px;
+}
+.dialog-content ul{
+    padding-left: 20px;
+}
+.my-toggle-ul a:hover{
+    background-color:rgba(51,122,183,0.9)!important;
+    color:white!important;
+}
+.draw-popup-tbl{
+    width:200px;
+    table-layout:fixed;
+    margin-bottom:5px;
+    user-select: text;
+    font-size: 10px;
+}
+.draw-popup-th{
+    /*width:50px;*/
+    color:white;
+    background:rgba(51,122,183,1.0);
+    font-weight:normal;
+    text-align:center;
+    padding:2px!important;
+}
+.draw-popup-td{
+    background: white;
+    width:150px;
+    word-break:break-all;
+    padding:2px!important;
+}
+#drawContextmenu-opacity-div{
+    position: relative;
+    margin-top: 5px!important;
+}
+#drawContextmenu-opacity-div2{
+    position: absolute;
+    left:35px;
+    top:0;
+    width:110px;
+}
+#drawContextmenu-opacity-div3{
+    position: absolute;
+    left:155px;
+    top:-3px;
 }
 /*ツールチップ-----------------------------------------------------------------*/
 /*

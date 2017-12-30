@@ -8,11 +8,10 @@ $(function(){
     //--------------------------------------------------------------------------
     //起動時に画面リサイズ、部品リサイズ
     $("#map1").height($(window).height());
-    //$("#map1 .cesium-btn-div").show();
     $(window).on('resize',function(){
         $("#map1,#map2").height($(window).height());
         funcResize();
-        $(document).snowfall('clear');
+        //$(document).snowfall('clear');
     });
     funcResize();
     function funcResize() {
@@ -24,17 +23,11 @@ $(function(){
             $(".dropdown-div").hide();
             $(".osm-dropdown-div").hide();
             $(".draw-btn").hide();
-            $(".btn").css({
-                //"padding":"6px 10px"
-            })
         } else {
             $(".data-btn").text("data").show();
             $(".dropdown-div").show();
             $(".osm-dropdown-div").show();
             $(".draw-btn").show();
-            $(".btn").css({
-                //"padding":"6px 12px"
-            })
         }
     }
     //--------------------------------------------------------------------------
@@ -296,9 +289,9 @@ $(function(){
             }
         });
     }
-    map1.on("click",function(evt){
+    //map1.on("click",function(evt){
         //console.log(ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326"));
-    });
+    //});
     //--------------------------------------------------------------------------
     //ピンチ時の回転を制御
     $("body").on("change",".rotate-toggle",function(){
@@ -354,6 +347,7 @@ $(function(){
     ol.hash(map1);
     ol.hash(map2);
     //------------------------------------------------------------------------
+    /*
     $(document).snowfall({
         flakeCount : 100,
         flakeColor : "lavender",
@@ -364,6 +358,5 @@ $(function(){
         round : true,
         collection : ".addres-input"
     });
-    //map1.addInteraction(new ol.interaction.TinkerBell());
-    //map2.addInteraction(new ol.interaction.TinkerBell());
+    */
 });

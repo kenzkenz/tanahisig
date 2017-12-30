@@ -192,10 +192,11 @@ $(function(){
             }
             //ドロー関係
             if(drawLayer){
+                rightClickedFeatyure = null;
+                drawLayer.getSource().changed();
                 var features = drawLayer.getSource().getFeatures();
                 console.log(features);
                 drawContextmenuOverlay.setPosition(null);
-                $("#mydialog-draw-dialog").hide();
                 czmlCreate(features,$(this));
             }
             //選挙区
@@ -372,7 +373,8 @@ function czmlCreate(features,element){
         //czmlは穴あきポリゴンに対応していないらしいので苦肉の作
         var geomType = features[i].getGeometry().getType();
         //if(geomType==="Polygon") multiLength = 1;
-        if(geomType!=="Point" && geomType!=="LineString") {
+        //if(geomType!=="Point" && geomType!=="LineString") {
+        if(geomType==="Polygon" || geomType==="MultiPolygon") {
             for (j = 0; j < multiLength; j++) {
                 var coordArr2 = [];
                 if (geomType !== "MultiPolygon") {//ポリゴンのとき

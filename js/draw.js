@@ -1,8 +1,8 @@
 var drawLayer = null;
 var drawContextmenuOverlay = null;
+var rightClickedFeatyure = null;
 $(function() {
-    var rightClickedFeatyure = null;
-    var drawHelpFlg = false;
+    //var drawHelpFlg = false;
     var theGlyph = null;//アイコン用
     var drawCancelFlg = false;//ドローキャンセル用
     var modify = null;//モディファイ用。その都度作る必要があるため
@@ -24,12 +24,6 @@ $(function() {
         }
     });
     //------------------------------------------------------------------------------------------------------------------
-    //
-    $(".draw-btn").click(function(){
-        console.log(222222222222222222)
-        //drawDialogCreate()
-    });
-    //------------------------------------------------------------------------------------------------------------------
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //右クリックメニュー
     $("#map1")[0].addEventListener('contextmenu',drawContextmenu,false);
@@ -41,172 +35,193 @@ $(function() {
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイ要素作成
-    var menuContent = "";
-    menuContent += "<button type='button' class='close' id='drawContextmenuOverlay-close'>&times;</button>";
-
-    menuContent += "<div id='drawContextmenuOverlay-content-div'>";
-    menuContent += "<div id='first-div'>";
-
-    menuContent += "<div id='drawContextmenu-msg-div'></div>";
-    //
-    menuContent += "<div id='drawContextmenu-step1-div'>";
-    //menuContent += "選択：";
-    menuContent += "<select id='drawType2'>";
-    menuContent += "<option value='0' selected>選択してください　　</option>";
-    menuContent += "<option value='1' >描画終了</option>";
-    menuContent += "<option value='Point'>点</option>";
-    menuContent += "<option value='LineString'>線</option>";
-    menuContent += "<option value='Polygon'>面</option>";
-    menuContent += "<option value='DrawHole'>面に穴を開ける</option>";
-    menuContent += "<option value='hanisitei'>範囲指定</option>";
-    menuContent += "</select>";
-    menuContent += "<hr class='my-hr'>";
-    menuContent += "</div>";
+    var menu = "";
+    menu += "<button type='button' class='close' id='drawContextmenuOverlay-close'>&times;</button>";
+    menu += "<div id='drawContextmenuOverlay-content-div'>";
+    menu += "<div id='first-div'>";
+    menu += "<div id='drawContextmenu-msg-div'></div>";
+    //ドロー選択
+    menu += "<div id='drawContextmenu-step1-div' class='menu-item'>";
+    menu += "<select id='drawType'>";
+    menu += "<option value='0' selected>選択してください　　</option>";
+    menu += "<option value='1' >描画終了</option>";
+    menu += "<option value='Point'>点</option>";
+    menu += "<option value='LineString'>線</option>";
+    menu += "<option value='Polygon'>面</option>";
+    menu += "<option value='DrawHole'>面に穴を開ける</option>";
+    menu += "<option value='hanisitei'>範囲指定</option>";
+    menu += "</select>";
+    menu += "</div>";
+    //ドロー選択ここまで
     //色、線、アイコン等
-    menuContent += "<div id='drawContextmenu-drawColor-div'>";
-    //menuContent += "step2<br>";
-    menuContent += " <span class='color-span' id='fillcolor-color-span'>　色　</span> ";
-    menuContent += "<select id='drawContextmenu-drawColor'>";
-    menuContent += "<option value=''></option>";
-    menuContent += "<option value='rgb(255,0,0)'>赤</option>";
-    menuContent += "<option value='rgb(0,128,0)'>緑</option>";
-    menuContent += "<option value='rgb(0,0,255)'>青</option>";
-    menuContent += "<option value='rgb(255,255,0)'>黄</option>";
-    menuContent += "<option value='rgb(128,128,128)'>灰</option>";
-    menuContent += "<option value='rgb(192,192,192)'>銀</option>";
-    menuContent += "<option value='rgb(0,0,0)'>黒</option>";
-    menuContent += "<option value='rgb(128,0,0)'>栗色</option>";
-    menuContent += "<option value='rgb(128,0,128)'>紫</option>";
-    menuContent += "<option value='rgb(128,128,0)'>オリーブ</option>";
-    menuContent += "<option value='rgb(0,0,128)'>濃紺</option>";
-    menuContent += "<option value='rgb(0,128,128)'>青緑</option>";
-    menuContent += "<option value='rgb(255,0,255)'>赤紫</option>";
-    menuContent += "<option value='rgb(0,255,0)'>ライム</option>";
-    menuContent += "<option value='rgb(0,255,255)'>水色</option>";
-    menuContent += "</select>";
-
-    menuContent += "<span id='currentIcon'></span>";
-    menuContent += " <button type='button' id='drawContextmenu-icon-btn' class='btn btn-xs btn-primary'>icon</button>";
-    menuContent += "<hr class='my-hr' id='my-hr-point'>";
-
-    menuContent += "</div>";
-    //menuContent += " <button type='button' id='drawContextmenu-colorSave-btn' class='btn btn-xs btn-primary'>反映</button>";
-    menuContent += "<div id='drawContextmenu-drawColor-waku-div'>";
-    menuContent += " <span class='color-span' id='color-color-span'>　線　</span> ";
-    menuContent += "<select id='drawContextmenu-drawColor-waku'>";
-    menuContent += "<option value=''></option>";
-    menuContent += "<option value='rgb(255,0,0)'>赤</option>";
-    menuContent += "<option value='rgb(0,128,0)'>緑</option>";
-    menuContent += "<option value='rgb(0,0,255)'>青</option>";
-    menuContent += "<option value='rgb(255,255,0)'>黄</option>";
-    menuContent += "<option value='rgb(128,128,128)'>灰</option>";
-    menuContent += "<option value='rgb(192,192,192)'>銀</option>";
-    menuContent += "<option value='rgb(0,0,0)'>黒</option>";
-    menuContent += "<option value='rgb(128,0,0)'>栗色</option>";
-    menuContent += "<option value='rgb(128,0,128)'>紫</option>";
-    menuContent += "<option value='rgb(128,128,0)'>オリーブ</option>";
-    menuContent += "<option value='rgb(0,0,128)'>濃紺</option>";
-    menuContent += "<option value='rgb(0,128,128)'>青緑</option>";
-    menuContent += "<option value='rgb(255,0,255)'>赤紫</option>";
-    menuContent += "<option value='rgb(0,255,0)'>ライム</option>";
-    menuContent += "<option value='rgb(0,255,255)'>水色</option>";
-    menuContent += "</select>";
-    menuContent += "<span> 幅 </span>";
-    menuContent += "<select id='drawContextmenu-drawColor-haba'>";
-    menuContent += "<option value='1'>1px</option>";
-    menuContent += "<option value='3'>3px</option>";
-    menuContent += "<option value='5'>5px</option>";
-    menuContent += "<option value='10'>10px</option>";
-    menuContent += "<option value='15'>15px</option>";
-    menuContent += "<option value='25'>25px</option>";
-    menuContent += "<option value='40'>40px</option>";
-    menuContent += "<option value='60'>60px　</option>";
-    menuContent += "</select>";
-    menuContent += "<div id='drawContextmenu-height-div'>";
-    menuContent += "<hr class='my-hr'>";
-    menuContent += "高さ<input type='text' id='height-input-text'>m ←任意";
-    menuContent += "</div>";
-    menuContent += "<hr class='my-hr'>";
-    menuContent += "</div>";
+    menu += "<div id='drawContextmenu-drawColor-div' class='menu-item'>";
+    menu += " <span class='color-span' id='fillcolor-color-span'>　色　</span> ";
+    menu += "<select id='drawContextmenu-drawColor'>";
+    menu += "<option value=''></option>";
+    menu += "<option value='rgb(255,0,0)'>赤</option>";
+    menu += "<option value='rgb(0,128,0)'>緑</option>";
+    menu += "<option value='rgb(0,0,255)'>青</option>";
+    menu += "<option value='rgb(255,255,0)'>黄</option>";
+    menu += "<option value='rgb(128,128,128)'>灰</option>";
+    menu += "<option value='rgb(192,192,192)'>銀</option>";
+    menu += "<option value='rgb(0,0,0)'>黒</option>";
+    menu += "<option value='rgb(128,0,0)'>栗色</option>";
+    menu += "<option value='rgb(128,0,128)'>紫</option>";
+    menu += "<option value='rgb(128,128,0)'>オリーブ</option>";
+    menu += "<option value='rgb(0,0,128)'>濃紺</option>";
+    menu += "<option value='rgb(0,128,128)'>青緑</option>";
+    menu += "<option value='rgb(255,0,255)'>赤紫</option>";
+    menu += "<option value='rgb(0,255,0)'>ライム</option>";
+    menu += "<option value='rgb(0,255,255)'>水色</option>";
+    menu += "</select>";
+    menu += "<span id='currentIcon' class='menu-item'></span>";
+    menu += " <button type='button' id='drawContextmenu-icon-btn' class='btn btn-xs btn-primary menu-item'>icon</button>";
+    menu += "</div>";
+    //色、線、アイコン等ここまで
+    menu += "<div id='drawContextmenu-drawColor-waku-div' class='menu-item'>";
+    menu += " <span class='color-span' id='color-color-span'>　線　</span> ";
+    menu += "<select id='drawContextmenu-drawColor-waku'>";
+    menu += "<option value=''></option>";
+    menu += "<option value='rgb(255,0,0)'>赤</option>";
+    menu += "<option value='rgb(0,128,0)'>緑</option>";
+    menu += "<option value='rgb(0,0,255)'>青</option>";
+    menu += "<option value='rgb(255,255,0)'>黄</option>";
+    menu += "<option value='rgb(128,128,128)'>灰</option>";
+    menu += "<option value='rgb(192,192,192)'>銀</option>";
+    menu += "<option value='rgb(0,0,0)'>黒</option>";
+    menu += "<option value='rgb(128,0,0)'>栗色</option>";
+    menu += "<option value='rgb(128,0,128)'>紫</option>";
+    menu += "<option value='rgb(128,128,0)'>オリーブ</option>";
+    menu += "<option value='rgb(0,0,128)'>濃紺</option>";
+    menu += "<option value='rgb(0,128,128)'>青緑</option>";
+    menu += "<option value='rgb(255,0,255)'>赤紫</option>";
+    menu += "<option value='rgb(0,255,0)'>ライム</option>";
+    menu += "<option value='rgb(0,255,255)'>水色</option>";
+    menu += "</select>";
+    menu += "<span>　幅 </span>";
+    menu += "<select id='drawContextmenu-drawColor-haba'>";
+    menu += "<option value='1'>1px</option>";
+    menu += "<option value='3'>3px</option>";
+    menu += "<option value='5'>5px</option>";
+    menu += "<option value='10'>10px</option>";
+    menu += "<option value='15'>15px</option>";
+    menu += "<option value='25'>25px</option>";
+    menu += "<option value='40'>40px</option>";
+    menu += "<option value='60'>60px　</option>";
+    menu += "</select>";
+    menu += "<div id='drawContextmenu-height-div' class='menu-item'>";
+    //透過度
+    menu += "<div id='drawContextmenu-opacity-div' class='menu-item'>透過度<div id='drawContextmenu-opacity-div2'></div><div id='drawContextmenu-opacity-div3'>aaa</div></div>";
+    //高さ
+    menu += "高さ<input type='text' id='height-input-text' data-toggle='tooltip' data-placement='bottom' title='' placeholder='任意'> m";
+    menu += "</div>";
+    menu += "</div>";
     //円の半径
-    menuContent += "<div id='drawContextmenu-drawCircle-div'>";
-    menuContent += "半径<input id='circle-radius1-input' type='text' value='100'>m　";
-    menuContent += "半径<input id='circle-radius2-input' type='text' value='50'>m";
-    menuContent += "<hr class='my-hr'>";
-    menuContent += "</div>";
+    menu += "<div id='drawContextmenu-drawCircle-div' class='menu-item'>";
+    menu += "半径<input id='circle-radius1-input' type='text' value='100'>m　";
+    menu += "半径<input id='circle-radius2-input' type='text' value='50'>m";
+    menu += "</div>";
+    menu += "</div>";
+    //first-divここまで
+    menu += "<div id='second-div'>";
+    menu += "<div id='second-div-msg-div'>属性を記入します。</div>";
+    menu += "<div id='prop-div'>";
+    menu += "<table id='propTable' class='table table-bordered table-hover'>";
+    menu += "<tr><th class='prop-th-num'></th><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
+    menu += "<tr><td class='prop-td-num'>1</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>2</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>3</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>4</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>5</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>6</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>7</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>8</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>9</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "<tr><td class='prop-td-num'>10</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
+    menu += "</table>";
+    menu += "</div>";
+    menu += "</div>";
+    //second-divここまで
+    //ここから下部メニュー
+    menu += "<hr class='my-hr'>";
+    menu += "<button type='button' id='drawContextmenu-prop-btn' class='btn btn-xxs btn-danger'><span data-toggle='tooltip' data-placement='bottom' title=''>属性</span></button>";
+    //操作トグル
+    menu += "<div class='dropdown-div' id='drawContextmenu-op-div'>";
+    menu += "<button id='drawContextmenu-op-btn' class='btn btn-xxs btn-primary dropdown-toggle my-toggle-btn' type='button' data-toggle='dropdown'>操作<span class='caret'></span></button>";
+    menu += "<ul id='drawContextmenu-op-ul' class='dropdown-menu my-toggle-ul'>";
+    menu += "<li><a>選択物のみ削除</a></li>";
+    menu += "<li><a>全削除</a></li>";
+    menu += "<li><a>コピー</a></li>";
+    menu += "</ul>";
+    menu += "</div>";
+    //操作トグルここまで
+    //ファイルトグル
+    menu += "<div class='dropdown-div' id='drawContextmenu-file-div'>";
+    menu += "<button id='drawContextmenu-file-btn' class='btn btn-xxs btn-primary dropdown-toggle my-toggle-btn' type='button' data-toggle='dropdown'>ファイル<span class='caret'></span></button>";
+    menu += "<ul id='drawContextmenu-file-ul' class='dropdown-menu my-toggle-ul'>";
+    menu += "<li><a>ファイル読込</a></li>";
+    menu += "<hr class='my-hr'>";
+    menu += "<li><a>geojson保存</a></li>";
+    menu += "<li><a>csv保存</a></li>";
+    menu += "<li><a>gist保存</a></li>";
+    menu += "</ul>";
+    menu += "</div>";
+    //ファイルトグルここまで
+    //効果トグル
+    menu += "<div class='dropdown-div' id='drawContextmenu-effect-div'>";
+    menu += "<button id='drawContextmenu-effect-btn' class='btn btn-xxs btn-primary dropdown-toggle my-toggle-btn' type='button' data-toggle='dropdown'>効果<span class='caret'></span></button>";
+    menu += "<ul id='drawContextmenu-effect-ul' class='dropdown-menu my-toggle-ul'>";
+    menu += "<li><a>リセット</a></li>";
+    menu += "<li><a>ボロノイ図</a></li>";
+    menu += "<li><a>バッファー</a></li>";
+    menu += "<li><a>ヒートマップ</a></li>";
+    menu += "</ul>";
+    menu += "</div>";
+    //効果トグルここまで
+    menu += "<button type='button' id='drawContextmenu-measure-btn' class='btn btn-xxs btn-default'><span data-toggle='tooltip' data-placement='bottom' title=''>計測</span></button>";
+    menu += "<button type='button' id='drawContextmenu-help-btn' class='btn btn-xxs btn-primary'><span data-toggle='tooltip' data-placement='bottom' title=''><i class=\"fa fa-question-circle-o fa-lg\"></i></span></button>";
+    //下部メニューここまで
+    menu += "</div>";//最後のdiv
 
-    menuContent += "</div>";//first-divここまで
-
-    menuContent += "<div id='second-div'>";
-    menuContent += "<div id='second-div-msg-div'>属性を記入します。</div>";
-    menuContent += "<div id='prop-div'>";
-    menuContent += "<table id='propTable' class='table table-bordered table-hover'>";
-    menuContent += "<tr><th class='prop-th-num'></th><th class='prop-th0'>項目名</th><th class='prop-th1'></th></tr>";
-    menuContent += "<tr><td class='prop-td-num'>1</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>2</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>3</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>4</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>5</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>6</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>7</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>8</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>9</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "<tr><td class='prop-td-num'>10</td><td class='prop-td'><input type='text' class='prop-input-text-name'></td><td class='prop-td'><input type='text' class='prop-input-text-val'></td></tr>";
-    menuContent += "</table>";
-    menuContent += "</div>";
-    menuContent += "<hr class='my-hr'>";
-    menuContent += "</div>";//second-divここまで
-
-    //削除ボタン等
-    menuContent += "<button type='button' id='drawContextmenu-delete-btn' class='btn btn-xxs btn-primary'><span data-toggle='tooltip' data-placement='bottom' title='一つだけ削除します。'>削除</span></button>";
-    menuContent += "<button type='button' id='drawContextmenu-deleteall-btn' class='btn btn-xxs btn-primary'><span data-toggle='tooltip' data-placement='bottom' title='全て削除します。要注意！'>全削除</span></button>";
-    menuContent += "<button type='button' id='drawContextmenu-copy-btn' class='btn btn-xxs btn-primary'><span data-toggle='tooltip' data-placement='bottom' title='選択物をコピーします。'>コピー</span></button>";
-    //menuContent += "<button type='button' id='drawContextmenu-paste-btn' class='btn btn-xs btn-primary'>ペースト</button>";
-    menuContent += "<button type='button' id='drawContextmenu-prop-btn' class='btn btn-xxs btn-danger'><span data-toggle='tooltip' data-placement='bottom' title='名称等を設定します。'>属性</span></button>";
-
-    menuContent += "<div class='dropdown-div' id='drawContextmenu-save-div'>";
-    menuContent += "<button id='drawContextmenu-save-btn' class='btn btn-xxs btn-primary dropdown-toggle' type='button' data-toggle='dropdown'>保存<span class='caret'></span></button>";
-    menuContent += "<ul id='drawContextmenu-save-ul' class='dropdown-menu'>";
-    menuContent += "<li><a>geojson</a></li>";
-    menuContent += "<li><a>csv</a></li>";
-    menuContent += "<li><a>gist</a></li>";
-    menuContent += "</ul>";
-    menuContent += "</div>";
-
-    menuContent += "<button type='button' id='drawContextmenu-measure-btn' class='btn btn-xxs btn-default'><span data-toggle='tooltip' data-placement='bottom' title=''>計測</span></button>";
-
-
-    //menuContent += "<br>計測：";
-    //menuContent += "<input type='checkbox' data-toggle='toggle' id='measure-toggle' class='bs-toggle' data-size='mini'>";
-
-    menuContent += "</div>";//最後のdiv
-
-    //menuContent += "<div>テスト中</div>";
-    $("#map1").append('<div id="drawContextmenuOverlay-div" class="drawContextmenuOverlay-div">' + menuContent + '</div>');
+    //menu += "<div>テスト中</div>";
+    $("#map1").append('<div id="drawContextmenuOverlay-div" class="drawContextmenuOverlay-div">' + menu + '</div>');
     $('[data-toggle="tooltip"]').tooltip();
     $(".bs-toggle").bootstrapToggle();
     var drawContextmenuDrawColorDD = $("#drawContextmenu-drawColor").msDropDown().data("dd");
     var drawContextmenuDrawColorWakuDD = $("#drawContextmenu-drawColor-waku").msDropDown().data("dd");
     var drawContextmenuDrawColorHabaDD = $("#drawContextmenu-drawColor-haba").msDropDown().data("dd");
-    var drawTypeMsDropDown2 = $("#drawType2").msDropDown().data("dd");
+    var drawTypeMsDropDown = $("#drawType").msDropDown().data("dd");
     drawContextmenuDrawColorDD.set("disabled",true);
     drawContextmenuDrawColorWakuDD.set("disabled",true);
     drawContextmenuDrawColorHabaDD.set("disabled",true);
+    $("#drawContextmenu-opacity-div2").slider({
+        min:0,max:1,value:1,step:0.01,
+        slide: function(event,ui){
+            var fillColor = rightClickedFeatyure.getProperties()["_fillColor"];
+            var rgba = setRgbaOpacity(fillColor,ui.value);
+            rightClickedFeatyure.setProperties({
+                "_fillColor":rgba
+            });
+            $("#drawContextmenu-opacity-div3").html(ui.value);
+        }
+    });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイをマップに設定
     drawContextmenuOverlay = new ol.Overlay({
         element:$("#drawContextmenuOverlay-div")[0],
-        autoPan:true,
-        autoPanAnimation:{duration:200},
+        //autoPan:true,
+        //autoPanAnimation:{duration:200},
         offset:[0,0]//横、縦
     });
     map1.addOverlay(drawContextmenuOverlay);
     //------------------------------------------------------------------------------------------------------------------
     //⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
-    // 右クリック時の動作
+    //右クリック時の動作その１
     function drawContextmenu(evt){
         evt.preventDefault();
         rightClickedFeatyure = null;
+        drawTypeMsDropDown.set("selectedIndex", 0);
+        addInteractions();
         //人口５００メッシュと共存するときは下記を復活
         //if($("#mydialog-draw-dialog").css("display")!=="block") return;
         var top = evt.clientY;
@@ -249,37 +264,33 @@ $(function() {
         drawContextmenuCreate(feature);
     }
     //------------------------------------------------------------------------------------------------------------------
+    //右クリック時の動作その2
     //★★★メニュー項目　調整★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //var prevMsddIndex;
     function drawContextmenuCreate(feature){
-        console.log(feature);
         //最初に全て隠す
-        $("#drawContextmenu-step1-div").hide();
-        $("#drawContextmenu-drawColor-div").hide();
-        $("#drawContextmenu-drawColor-waku-div").hide();
-        $("#drawContextmenu-icon-btn").hide();
-        $("#currentIcon").hide();
-        $("#drawContextmenu-drawCircle-div").hide();
-        $("#drawContextmenu-height-div").hide();$("#drawContextmenu-delete-btn").prop("disabled","disabled");
-        $("#drawContextmenu-copy-btn").prop("disabled","disabled");
+        $(".menu-item").hide();
+
+        //$("#drawContextmenu-height-div").hide();$("#drawContextmenu-delete-btn").prop("disabled","disabled");
+        //$("#drawContextmenu-copy-btn").prop("disabled","disabled");
         $("#drawContextmenu-prop-btn").prop("disabled","disabled");
         //$("#drawContextmenu-paste-btn").prop("disabled","disabled");
 
         $(".prop-input-text-name").val("");
         $(".prop-input-text-val").val("");
-
         if(feature) {//地物があるとき
             //地物を選択地物としてセット--------------------------
             rightClickedFeatyure = feature;
-            console.log(rightClickedFeatyure);
             drawLayer.getSource().changed();
             //モディファイインタラクション------------------------
+            map1.removeInteraction(snap);
             map1.removeInteraction(modify);
             modify = new ol.interaction.Modify({
                 features:new ol.Collection([rightClickedFeatyure]),
                 deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにしたｓ
             });
             map1.addInteraction(modify);
+            map1.addInteraction(snap);
             //------------------------------------------------
             var prop,geomType;
             if(!Array.isArray(feature)) {//配列でないとき　つまり一つだけ選択しているとき
@@ -287,10 +298,9 @@ $(function() {
                 geomType = feature.getGeometry().getType();
                 var type = prop["_type"];
                 console.log(type);
-                //色--------------------------------
+                //色-----------------------------------
                 var fillColor = prop["_fillColor"];
                 var rgb;
-                console.log(fillColor);
                 if(fillColor) {
                     rgb = rgba2rgb(fillColor);
                     drawContextmenuDrawColorDD.setIndexByValue(rgb);
@@ -300,8 +310,18 @@ $(function() {
                         "color": funcTextColor(rgb.r, rgb.g, rgb.b)
                     });
                 }
-                //線の色--------------------------------
+                //透過度-------------------------------
+                if(fillColor) {
+                    var opacity = getRgbaOpacity(fillColor);
+                    console.log(String(opacity*100) + "%");
+                    $("#drawContextmenu-opacity-div2 .ui-slider-handle").css({
+                        left:String(opacity*100) + "%"
+                    });
+                    $("#drawContextmenu-opacity-div3").html(opacity);
+                }
+                //線の色-------------------------------
                 var color = prop["_color"];
+                console.log(color);
                 if(color){
                     rgb = rgba2rgb(color);
                     drawContextmenuDrawColorWakuDD.setIndexByValue(rgb);
@@ -314,14 +334,14 @@ $(function() {
                 //線の幅--------------------------------
                 var weight = String(prop["_weight"]);
                 if(weight) drawContextmenuDrawColorHabaDD.setIndexByValue(weight);
-                //３D時高さ--------------------------------
+                //３D時高さ-----------------------------
                 var height = prop["_polygonHeight"];
                 if(height) {
                     $("#height-input-text").val(height);
                 }else{
                     $("#height-input-text").val(null);
                 }
-                //円--------------------------------
+                //円-----------------------------------
                 if(type==="circle") {
                     var tRadius = funcTRadius(feature);
                     var tRadiusNum1, tRadiusNum2;
@@ -354,7 +374,6 @@ $(function() {
                     $("#circle-radius2-input").val(null);
                 }
                 //属性---------------------------------------------------
-
                 var i = 0;
                 for(key in prop){
                     if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="経度" && key!=="緯度" && key!=="経度old" && key!=="緯度old" && key!=="移動"){
@@ -364,8 +383,8 @@ $(function() {
                         i++
                     }
                 }
-
-                //--------------------------------
+                //------------------------------------------------------
+                //メニューを地物のタイプによって書き換える
                 switch (geomType) {
                     case "Point":
                         $("#drawContextmenu-msg-div").html("(点)色を変えます。iconで形状変更します。");
@@ -373,7 +392,7 @@ $(function() {
                         drawContextmenuOverlay.setPosition(pointCoord);
                         drawContextmenuOverlay.setOffset([10, 10]);
                         $("#drawContextmenu-drawColor-div").show();
-                        $("#drawContextmenu-icon-btn").show();
+                        //$("#drawContextmenu-icon-btn").show();
                         $("#currentIcon").show();
                         $("#drawContextmenu-prop-btn").prop("disabled",false);
                         break;
@@ -383,6 +402,7 @@ $(function() {
                         $("#drawContextmenu-drawColor-div").show();
                         $("#drawContextmenu-drawColor-waku-div").show();
                         if(type==="circle") $("#drawContextmenu-drawCircle-div").show();
+                        $("#drawContextmenu-opacity-div").show();
                         $("#drawContextmenu-height-div").show();
                         $("#drawContextmenu-prop-btn").prop("disabled",false);
                         break;
@@ -397,8 +417,8 @@ $(function() {
                 //addInteractions();
 
                 //--------------------------------------------------------
-                $("#drawContextmenu-delete-btn").prop("disabled", false);
-                $("#drawContextmenu-copy-btn").prop("disabled",false);
+                //$("#drawContextmenu-delete-btn").prop("disabled", false);
+                //$("#drawContextmenu-copy-btn").prop("disabled",false);
                 drawContextmenuDrawColorDD.set("disabled", false);
                 drawContextmenuDrawColorWakuDD.set("disabled", false);
                 drawContextmenuDrawColorHabaDD.set("disabled", false);
@@ -412,10 +432,10 @@ $(function() {
                 $("#drawContextmenu-msg-div").html("複数選択。まとめて変更します。");
                 $("#drawContextmenu-drawColor-div").show();
                 $("#drawContextmenu-drawColor-waku-div").show();
-                $("#drawContextmenu-icon-btn").show();
+                //$("#drawContextmenu-icon-btn").show();
                 $("#currentIcon").show();
                 $("#drawContextmenu-height-div").show();
-                $("#drawContextmenu-delete-btn").prop("disabled",false);
+                //$("#drawContextmenu-delete-btn").prop("disabled",false);
                 drawContextmenuDrawColorDD.set("disabled",false);
                 drawContextmenuDrawColorWakuDD.set("disabled",false);
                 drawContextmenuDrawColorHabaDD.set("disabled",false);
@@ -433,10 +453,91 @@ $(function() {
             drawContextmenuDrawColorHabaDD.set("disabled",true);
             $("#second-div").hide();
             $("#first-div").show();
-
         }
     }
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
+    //------------------------------------------------------------------------------------------------------------------
+    //クリック時の動作
+    map1.on("click",function(evt){
+        console.log(evt);
+        var clickedCoord = evt.coordinate;
+        console.log(clickedCoord);
+        console.log(evt.coordinate)
+        var interactions = map1.getInteractions().getArray();
+        var drawFlg,modifyFlg;
+        for(var i = 0; i <interactions.length; i++){//drawとmodifyから作られたオブジェクトの存在チェック
+            if(interactions[i] instanceof ol.interaction.Draw) drawFlg = true;
+            if(interactions[i] instanceof ol.interaction.Modify) modifyFlg = true;
+        }
+        var features = [];
+        map1.forEachFeatureAtPixel(evt.pixel,function(feature,layer){
+            if(layer){
+                if(layer.getProperties()["name"]==="drawLayer") features.push(feature);
+            }
+        });
+        var feature;
+        if(modifyFlg && features.length===0) {//modifyかつ地物の外
+            console.log("modifyかつ外");
+            rightClickedFeatyure = null;
+            drawLayer.getSource().changed();
+            drawContextmenuOverlay.setPosition(null);
+            map1.removeInteraction(modify);
+        }else if(!drawFlg && !modifyFlg && features.length>0){//drawとmodifyじゃなくかつ地物の内
+            feature = features[0];
+            drawContextmenuOverlay.setPosition(null);
+            popupShow(feature,evt);//クリック時の動作その２　ポップアップへ　すぐ下
+        }else if(!drawFlg && modifyFlg && features.length>0){//modifyかつ地物の内。でもdrawじゃない。
+            feature = features[0];
+            var coordAr = feature.getGeometry().getCoordinates()[0];
+            var verticesFlg = false;
+            for(var i = 0; i <coordAr.length; i++){
+                //console.log(coordAr[i]);
+                //if(Math.abs(coordAr[i][0]-clickedCoord[0])<50){
+                if(coordAr[i][0]===clickedCoord[0]){
+                        console.log("頂点");
+                        verticesFlg = true;
+                        break;
+
+                }
+            }
+            if(!verticesFlg) popupShow(feature,evt);//クリック時の動作その２　ポップアップへ　すぐ下
+
+            //popupShow(feature,evt);//クリック時の動作その２　ポップアップへ　すぐ下
+        }else if(!drawFlg){//drawじゃない
+            drawContextmenuOverlay.setPosition(null);
+        }
+        console.log("drawFlg=" + drawFlg,"modifyFlg=" + modifyFlg,"features.length=" + features.length);
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //クリック時の動作その２　ポップアップ
+    var drawPopup = new ol.Overlay.Popup();
+    map1.addOverlay(drawPopup);
+    function popupShow(feature,evt){
+        var geomType = feature.getGeometry().getType();
+        var coord;
+        if(geomType==="Point"){
+            coord = feature.getGeometry().getCoordinates();
+        }else{
+            coord = evt.coordinate;
+        }
+        var prop = feature.getProperties();
+        var flg = false;
+        var content = "";
+        var table = "<table class='draw-popup-tbl table table-bordered table-hover' style=''>";
+        for(key in prop){
+            if(key!=="geometry" && key.substr(0,1)!=="_"){
+                table += "<tr>";
+                var val = prop[key];
+                table += "<th class='draw-popup-th'>" + key + "</th><td class='draw-popup-td'>" + val + "</td>";
+                table += "</tr>";
+                flg = true;
+            }
+        }
+        content += table;
+        if(!flg) content = "属性未設定です。";
+        content = content.replace(/undefined/gi,"");
+        drawPopup.show(coord,content);
+    }
     //------------------------------------------------------------------------------------------------------------------
     //各レイヤー設定
     //ドロー用（通常）のソース、レイヤーを設置
@@ -451,6 +552,15 @@ $(function() {
     drawLayer.set("selectable",true);
     drawLayer.set("altitudeMode","clampToGround");
     drawLayer.setZIndex(9999);
+
+
+
+    //------------------------------------------------------------------------------------------------------------------
+    //ソースに変更があった時に発火
+    drawLayer.getSource().on("change", function(e) {
+        console.log("change")
+        drawPopup.setPosition(null);//nige
+    });
     //------------------------------------------------------------------------------------------------------------------
     //★★★★ソースに地物が追加されたときの処理 今の所同じ座標にポイントを打とうとしたときだけに使っている。
     drawLayer.getSource().on("addfeature", function(e) {
@@ -577,16 +687,95 @@ $(function() {
         return function(feature, resolution) {
             var prop = feature.getProperties();
             var geoType = feature.getGeometry().getType();
+            var type = prop["_type"];
             var fillColor = prop["_fillColor"];
             if (!fillColor) fillColor = "rgba(0,122,255,0.7)";
             var strokeColor = prop["_color"];
             var strokeWidth = prop["_weight"];
-            var type = prop["_type"];
+            var text = "",text2 = "",lastCoord,lastCoord2,returnGeom,returnGeom2,tRadius,tArea,tDistance;
+            //面積や長さを測る
+            switch (type) {
+                case "circle":
+                case "buffer":
+                    tRadius = funcTRadius(feature);
+                    switch (geoType) {
+                        case "Polygon":
+                            text = "半径" + tRadius;
+                            text2 = "";
+                            lastCoord = feature.getGeometry().getLastCoordinate();
+                            returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
+                            break;
+                        case "MultiPolygon":
+                            text = "半径" + tRadius[0];
+                            text2 = "半径" + tRadius[1];
+                            lastCoord = feature.getGeometry().getCoordinates()[0][0][0];
+                            lastCoord2 = feature.getGeometry().getCoordinates()[1][0][0];
+                            returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
+                            returnGeom2 = new ol.geom.Point(lastCoord2);//テキスト用ジオメトリー
+                            break;
+                    }
+                    break;
+                default://通常のポリゴンはこっち
+                    if(geoType==="Polygon" || geoType==="MultiPolygon") {
+                        tArea = funcTArea(feature);
+                        tDistance = funcTDistance(feature);
+                        if (tDistance) {
+                            text = "面積\n" + tArea + "\n周長" + tDistance;
+                        } else {
+                            if (tArea) {
+                                text = "面積\n" + tArea;
+                            } else {
+                                text = "";
+                            }
+                        }
+                        returnGeom = feature.getGeometry();//テキスト用ジオメトリー
+                    }
+            }
+            var polygonTextStyle =[
+                new ol.style.Style({//通常および外円用テキスト用スタイル
+                    text: new ol.style.Text({
+                        font: "10px sans-serif",
+                        text: text,
+                        fill: new ol.style.Fill({
+                            color: "black"
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: "white",
+                            width: 3
+                        }),
+                        offsetY: 0
+                    }),
+                    geometry: function (feature) {
+                        return returnGeom
+                    },
+                    zIndex: 0
+                }),
+                new ol.style.Style({//内円用テキスト用スタイル
+                    text: new ol.style.Text({
+                        font: "10px sans-serif",
+                        text: text2,
+                        fill: new ol.style.Fill({
+                            color: "black"
+                        }),
+                        stroke: new ol.style.Stroke({
+                            color: "white",
+                            width: 3
+                        }),
+                        offsetY: 0
+                    }),
+                    geometry: function (feature) {
+                        return returnGeom2
+                    },
+                    zIndex: 0
+                })
+            ];
+            //面積や長さを測るここまで-----------------------------------------------
+
             //--------------------------------------------------------------------
             switch (geoType) {
                 //線（ライン）
                 case "LineString":
-                    var tDistance = funcTDistance(feature);
+                    tDistance = funcTDistance(feature);
                     if(feature!==rightClickedFeatyure) {
                         var style = [
                             new ol.style.Style({
@@ -682,44 +871,6 @@ $(function() {
                 //面と円（ポリゴンとマルチポリゴン）
                 case "Polygon":
                 case "MultiPolygon":
-                    var text = "";
-                    var text2 = "";
-                    switch (type) {
-                        case "circle":
-                        case "buffer":
-                            var tRadius = funcTRadius(feature);
-                            switch (geoType) {
-                                case "Polygon":
-                                    text = "半径" + tRadius;
-                                    text2 = "";
-                                    var lastCoord = feature.getGeometry().getLastCoordinate();
-                                    var returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
-                                    break;
-                                case "MultiPolygon":
-                                    text = "半径" + tRadius[0];
-                                    text2 = "半径" + tRadius[1];
-                                    var lastCoord = feature.getGeometry().getCoordinates()[0][0][0];
-                                    var lastCoord2 = feature.getGeometry().getCoordinates()[1][0][0];
-                                    var returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
-                                    var returnGeom2 = new ol.geom.Point(lastCoord2);//テキスト用ジオメトリー
-                                    break;
-                            }
-                            break;
-                        default:
-                            var tArea = funcTArea(feature);
-                            var tDistance = funcTDistance(feature);
-                            if (tDistance) {
-                                text = "面積\n" + tArea + "\n周長" + tDistance;
-                            } else {
-                                if (tArea) {
-                                    text = "面積\n" + tArea;
-                                } else {
-                                    text = "";
-                                }
-                            }
-                            var returnGeom = feature.getGeometry();//テキスト用ジオメトリー
-                    }
-                    //switchここまで
                     if(feature!==rightClickedFeatyure) {
                         var style = [
                             new ol.style.Style({
@@ -727,47 +878,13 @@ $(function() {
                                     color: fillColor
                                 }),
                                 stroke: new ol.style.Stroke({
-                                    color: strokeColor ? strokeColor : "gray",
-                                    width: strokeWidth ? strokeWidth : 2
+                                    color: strokeColor,
+                                    width: strokeWidth
                                 }),
                                 zIndex: 0
                             }),
-                            new ol.style.Style({//通常および外円用テキスト用スタイル
-                                text: new ol.style.Text({
-                                    font: "10px sans-serif",
-                                    text: text,
-                                    fill: new ol.style.Fill({
-                                        color: "black"
-                                    }),
-                                    stroke: new ol.style.Stroke({
-                                        color: "white",
-                                        width: 3
-                                    }),
-                                    offsetY: 0
-                                }),
-                                geometry: function (feature) {
-                                    return returnGeom
-                                },
-                                zIndex: 0
-                            }),
-                            new ol.style.Style({//内円用テキスト用スタイル
-                                text: new ol.style.Text({
-                                    font: "10px sans-serif",
-                                    text: text2,
-                                    fill: new ol.style.Fill({
-                                        color: "black"
-                                    }),
-                                    stroke: new ol.style.Stroke({
-                                        color: "white",
-                                        width: 3
-                                    }),
-                                    offsetY: 0
-                                }),
-                                geometry: function (feature) {
-                                    return returnGeom2
-                                },
-                                zIndex: 0
-                            })
+                            polygonTextStyle[0],
+                            polygonTextStyle[1]
                         ];
                     }else{//選択しているとき
                         var style = [
@@ -781,13 +898,15 @@ $(function() {
                                 }),
                                 zIndex: 0
                             }),
+                            polygonTextStyle[0],
+                            polygonTextStyle[1],
                             new ol.style.Style({//頂点の六角形
                                 image: new ol.style.RegularShape({
                                     fill: new ol.style.Fill({
                                         color: "white"
                                     }),
                                     stroke: new ol.style.Stroke({
-                                        color: "navy",
+                                        color: "red",
                                         width: 1
                                     }),
                                     points: 6,
@@ -930,7 +1049,7 @@ $(function() {
         if(colorVal) {
             prop["_fillColor"] = colorVal;
         }else{
-            prop["_fillColor"] = "rgb(51,122,183)";
+            prop["_fillColor"] = "rgb(0,0,255)";
         }
         prop["_icon"] = theGlyph;
     });
@@ -1076,7 +1195,7 @@ $(function() {
     drawLineString.on("drawend", function(e) {
         var prop = e["feature"]["D"];
         //prop["_color"] = "rgba(51,122,255,0.7)";
-        prop["_color"] = "rgba(0,0,240,0.7)";
+        prop["_color"] = "rgba(0,0,255,0.7)";
         prop["_weight"] = 3;
         drawLineString.nbpts = 0;
     });
@@ -1168,8 +1287,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //インタラクション追加
     function addInteractions() {
-        drawHelpFlg = false;
-        var typeVal = $("#drawType2").val();
+        //drawHelpFlg = false;
+        var typeVal = $("#drawType").val();
         console.log(typeVal);
         //map1.removeInteraction(featureSelect);
         map1.removeInteraction(snap);
@@ -1178,7 +1297,6 @@ $(function() {
         map1.removeInteraction(drawhole);
         map1.removeInteraction(drawLineString);
         //map1.removeInteraction(modify);
-
         /*
         map1.removeInteraction(drawPolygonFree);
         map1.removeInteraction(drawPolygonHanisuteiFree);
@@ -1196,6 +1314,7 @@ $(function() {
         map1.removeInteraction(drawPaste);
         map1.removeInteraction(modify);
         */
+
         switch (typeVal) {
             case "1":
             case "0":
@@ -1274,12 +1393,10 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ここから各コントロール
     //ドロータイプ選択
-    $("body").on("change","#drawType2",function(){
-        //featureSelect.getFeatures().clear();
+    $("body").on("change","#drawType",function(){
         drawContextmenuOverlay.setPosition(null);
         rightClickedFeatyure = null;
         addInteractions()
-
     });
     //------------------------------------------------------------------------------------------------------------------
     //クローズ ×マーク
@@ -1290,7 +1407,51 @@ $(function() {
         //drawLayer.getSource().changed();
     });
     //------------------------------------------------------------------------------------------------------------------
+    //トグルオープン＆クローズ （普通は必要ない。なぜかオーバーレイ上ではbootstrapが動かないので）
+    $(".my-toggle-btn").click(function(){
+        var tgtElem = $(this).next(".my-toggle-ul");
+        $(".my-toggle-ul").not(tgtElem).hide(500);//対象以外を隠す。
+        tgtElem.toggle(500);//対象を表示する。
+        return false;
+    });
+    $("body,.ol-overlay-container").click(function(){
+        $(".my-toggle-ul").hide(500);
+        $(".ddChild").hide();
+    });
+    //------------------------------------------------------------------------------------------------------------------
+    //操作
+    $("#drawContextmenu-op-ul a").click(function() {
+        var text = $(this).text();
+        switch (text) {
+            case "選択物のみ削除":
+                if(rightClickedFeatyure) {
+                    if (confirm("削除しますか？")) {
+                        drawLayer.getSource().removeFeature(rightClickedFeatyure);
+                        //transform2.select(null);
+                        rightClickedFeatyure = null;
+                        drawContextmenuOverlay.setPosition(null);
+                        $(this).parents(".my-toggle-ul").hide(500);
+                    }
+                }
+                break;
+            case "全削除":
+                if (confirm("全削除しますか？")) {
+                    drawLayer.getSource().clear();
+                    //transform2.select(null);
+                    rightClickedFeatyure = null;
+                    drawContextmenuOverlay.setPosition(null);
+                    $(this).parents(".my-toggle-ul").hide(500);
+                }
+                break;
+            case "コピー":
+                alert("作成中！");
+                break;
+            default:
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
     //削除
+    /*
     $("#drawContextmenu-delete-btn").click(function(){
         if(rightClickedFeatyure) {
             if (confirm("削除しますか？")) {
@@ -1300,7 +1461,7 @@ $(function() {
                 drawContextmenuOverlay.setPosition(null);
             }
         }else{
-            /*
+
             var features = featureSelect.getFeatures().getArray();
             if(confirm("選択された地物を削除しますか？")){
                 for(var i = 0; i <features.length; i++){
@@ -1310,71 +1471,48 @@ $(function() {
                 featureSelect.getFeatures().clear();
                 drawContextmenuOverlay.setPosition(null);
             }
-            */
+
         }
         return false;
     });
-    //------------------------------------------------------------------------------------------------------------------
-    //全削除
-    $("#drawContextmenu-deleteall-btn").click(function(){
-        if (confirm("全削除しますか？")) {
-            drawLayer.getSource().clear();
-            //transform2.select(null);
-            rightClickedFeatyure = null;
-            drawContextmenuOverlay.setPosition(null);
-        }
-    });
+    */
     //------------------------------------------------------------------------------------------------------------------
     //属性オープンクローズ
     $("#drawContextmenu-prop-btn").click(function(){
         if($("#first-div").css("display")==="block") {
-            $("#first-div").toggle(500, function () {
-                $("#second-div").toggle(500);
+            $("#first-div").toggle(150, function () {
+                $("#second-div").toggle(150);
             });
         }else{
-            $("#second-div").toggle(500, function () {
-                $("#first-div").toggle(500);
+            $("#second-div").toggle(150, function () {
+                $("#first-div").toggle(150);
             })
         }
     });
     //------------------------------------------------------------------------------------------------------------------
     //計測オンオフ
     $("#drawContextmenu-measure-btn").click(function(){
-        if($(this).hasClass("btn-primary")) {
-            $(this).removeClass("btn-primary");
-            $(this).addClass("btn-default");
-        }else{
-            $(this).addClass("btn-primary");
-            $(this).removeClass("btn-default");
-        }
+        $(this).toggleClass("btn-primary");
+        $(this).toggleClass("btn-default");
         drawLayer.getSource().changed();
     });
     //------------------------------------------------------------------------------------------------------------------
-    //保存 （普通は必要ない。なぜかオーバーレイではbootstrapが動かないので）
-    $("#drawContextmenu-save-btn").click(function(){
-        $("#drawContextmenu-save-ul").toggle(500)
-    });
-    $("#drawContextmenu-save-ul a").click(function(){
-        console.log($(this).text());
-    });
-    //------------------------------------------------------------------------------------------------------------------
     //色　枠色　変更のセレクトボックスをオープン
-    $("#fillcolor-color-span").click(function(){
-        drawContextmenuDrawColorDD.open();
-    });
-    $("#color-color-span").click(function(){
-        drawContextmenuDrawColorWakuDD.open();
+    $("#fillcolor-color-span,#color-color-span").click(function(){
+        $(".ddChild").hide();
+        $(this).parent().find(".ddChild").eq(0).show();
+        return false;
     });
     //------------------------------------------------------------------------------------------------------------------
     //色　変更
     $("body").on("change","#drawContextmenu-drawColor",function(){
         var colorVal = $(this).val();
         var rgb = d3.rgb(colorVal);
-        var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.7)";
+        var opacity = $("#drawContextmenu-opacity-div3").text();
+        var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
         if(rightClickedFeatyure) {
             rightClickedFeatyure.setProperties({
                 "_fillColor": rgba
-                //"_fillColor": colorVal
             });
         }else{
             var features = featureSelect.getFeatures().getArray();
@@ -1383,7 +1521,6 @@ $(function() {
                 if(i===features.length-1) silentBool = false;
                 features[i].setProperties({
                     "_fillColor": rgba
-                    //"_fillColor": colorVal
                 },silentBool);
             }
         }
@@ -1475,12 +1612,26 @@ $(function() {
     $(".prop-input-text-name,.prop-input-text-val").change(function() {
         var nameElements = $(".prop-input-text-name");
         var valElements = $(".prop-input-text-val");
+        var name,val;
+        //地物のプロパティを操作---------------------------------------------------
         for(var i = 0; i <nameElements.length; i++) {
-            var name = nameElements.eq(i).val();
-            var val = valElements.eq(i).val();
+            name = nameElements.eq(i).val();
+            val = valElements.eq(i).val();
             if(name) rightClickedFeatyure["D"][name] = val;
         }
+        //ドロー用のポップアップを操作　見やすいようにあえて冗長に書いている-------------
+        var table = "<table class='draw-popup-tbl table table-bordered table-hover' style=''>";
+        for(var i = 0; i <nameElements.length; i++) {
+            name = nameElements.eq(i).val();
+            val = valElements.eq(i).val();
+            if(name) {
+                table += "<tr><th class='draw-popup-th'>" + name + "</th><td class='draw-popup-td'>" + val + "</td></tr>";
+            }
+        }
+        table += "</table>";
+        $(".ol-popup-content").html(table);
+        //----------------------------------------------------------------------
     });
-    //-----------------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
 });
 

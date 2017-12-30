@@ -23,6 +23,27 @@ var rgba2rgb = function(rgba) {
     return rgb;
 };
 //---------------------------------------------------------------------------------
+//rgbaの透過度を取得
+var getRgbaOpacity = function(rgba) {
+    var opacity;
+    if(rgba.indexOf("rgba")!==-1) {
+        opacity = rgba.match(/([^,]+)\)/)[1];
+    }else{//実はもとからrgbだったとき
+        opacity = 1;
+    }
+    return opacity;
+};
+//---------------------------------------------------------------------------------
+//rgbaの透過度を設定
+var setRgbaOpacity = function(rgba,opacity) {
+    if(rgba.indexOf("rgba")!==-1) {
+        rgba = rgba.substr(0, rgba.lastIndexOf(",")) + "," + opacity + ")";
+    }else{//実はもとからrgbだったとき
+
+    }
+    return rgba;
+};
+//---------------------------------------------------------------------------------
 //全角数字を半角数字に変換
 var zen2han = function(str) {
     str = str.replace(/[０-９]/g, function (s) {

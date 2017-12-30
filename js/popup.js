@@ -280,9 +280,11 @@ $(function(){
                 console.log(feature.getProperties());
                 funcZaiseiryokuPopup(layer,feature,map,evt);
                 break;
+                /*
             case "drawLayer":
                 funcDrawPopup(feature,map,evt);
                 break;
+                */
             case "keikanchiku":
                 console.log(feature.getProperties());
                 funcKeikanchikuPopup(feature,map,evt);
