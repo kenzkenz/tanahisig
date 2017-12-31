@@ -825,6 +825,21 @@ label:hover{
     word-break:break-all;
     padding:2px!important;
 }
+#drawContextmenu-layeropacity-div{
+    position: relative;
+    margin-top: 5px!important;
+}
+#drawContextmenu-layeropacity-div2{
+    position: absolute;
+    left:65px;
+    top:0;
+    width:110px;
+}
+#drawContextmenu-layeropacity-div3{
+    position: absolute;
+    left:185px;
+    top:-3px;
+}
 #drawContextmenu-opacity-div{
     position: relative;
     margin-top: 5px!important;
@@ -840,41 +855,11 @@ label:hover{
     left:155px;
     top:-3px;
 }
-/*ツールチップ-----------------------------------------------------------------*/
-/*
-.tooltip {
-    position: relative;
-    background: rgba(51,122,255,0.8);
-    border-radius: 4px;
+.tooltip .tooltip-inner{
+    background-color:rgba(51,122,183,0.9);
     color: white;
-    padding: 4px 8px;
-    opacity: 1.0;
-    white-space: nowrap;
 }
-.tooltip-measure {
-    opacity: 1;
-    font-weight: bold;
+.tooltip .tooltip-arrow{
+    border-bottom-color: rgba(51,122,183,0.9)!important;
 }
-.tooltip-static {
-    background-color: #ffcc33;
-    color: black;
-    border: 1px solid white;
-}
-.tooltip-measure:before,
-.tooltip-static:before {
-    border-top: 6px solid rgba(0, 0, 0, 0.5);
-    border-right: 6px solid transparent;
-    border-left: 6px solid transparent;
-    content: "";
-    position: absolute;
-    bottom: -6px;
-    margin-left: -7px;
-    left: 50%;
-}
-.tooltip-static:before {
-    border-top-color: #ffcc33;
-}
-*/
-
-
 

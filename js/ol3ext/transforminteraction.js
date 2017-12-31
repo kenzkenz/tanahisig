@@ -67,6 +67,9 @@ ol.interaction.Transform = function(options)
     // setstyle
     this.setDefaultStyle();
 
+    //追加
+    this.condition_ = options.condition ? options.condition : ol.events.condition.singleClick;
+
 };
 ol.inherits(ol.interaction.Transform, ol.interaction.Pointer);
 
@@ -109,7 +112,9 @@ ol.interaction.Transform.prototype.setMap = function(map)
 ol.interaction.Transform.prototype.setVisible = function(b) {
     this.overlayLayer_.setVisible(b);
 };
-
+ol.interaction.Transform.prototype.getFeatures = function() {
+    return this.overlayLayer_.getSource().getFeaturesCollection();
+};
 /**
  * Activate/deactivate interaction
  * @param {bool}
@@ -304,13 +309,20 @@ ol.interaction.Transform.prototype.select = function(feature)
  */
 ol.interaction.Transform.prototype.handleDownEvent_ = function(evt)
 {
+
+
     var sel = this.getFeatureAtPixel_(evt.pixel);
     var feature = sel.feature;
     if (this.feature_ && this.feature_==feature && ((this.ispt_ && this.get('translate')) || this.get('translateFeature')))
     {	sel.handle = 'translate';
     }
     if (sel.handle)
-    {	this.mode_ = sel.handle;
+    {
+        //２行追加　ポイントでは動かさない。
+        var geomType = this.feature_.getGeometry().getType();
+        if(geomType==="Point") return true;
+
+        this.mode_ = sel.handle;
         this.opt_ = sel.option;
         this.constraint_ = sel.constraint;
         // Save info
