@@ -511,6 +511,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //クリック時の動作　重要！！ここでユーザーの操作によって見方や機能を変化させている。！！！！！！！！！！！！！！！！！！！！！！！！
     map1.on("click",function(evt){
+        console.log(evt)
         var interactions = map1.getInteractions().getArray();
         var drawFlg,modifyFlg;
         for(var i = 0; i <interactions.length; i++){//drawとmodifyから作られたオブジェクトの存在チェック
@@ -525,7 +526,6 @@ $(function() {
         });
         var feature = features[0];
         transform2.setVisible(false);//まず消す
-        console.log(888)
         if(modifyFlg && features.length===0) {//modifyかつ地物の外
             console.log("modifyかつ外");
             rightClickedFeatyure = null;
@@ -1145,6 +1145,16 @@ $(function() {
     }
     //------------------------------------------------------------------------------------------------------------------
     //ここから各コントロール
+    $(".ol-overlay-container").draggable({
+        handle:"#drawContextmenu-msg-div,#second-div-msg-div",
+        drag:function(event,ui){
+            var pixel = [ui.position["left"],ui.position["top"]];
+            var coord = map1.getCoordinateFromPixel(pixel);
+            console.log(coord);
+            drawContextmenuOverlay.setPosition(coord);
+        }
+    });
+    //------------------------------------------------------------------------------------------------------------------
     //ドロータイプ選択
     $("body").on("change","#drawType",function(){
         drawContextmenuOverlay.setPosition(null);

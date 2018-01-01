@@ -290,7 +290,7 @@ $(function() {
         var csv = exportcsv([contentAr]);
         console.log(csv);
 
-        
+
         //----------------------------------------------------------
         // Unicodeコードポイントの配列に変換する
         var unicode_array = str_to_unicode_array(csv);

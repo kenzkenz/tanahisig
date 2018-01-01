@@ -773,6 +773,7 @@ label:hover{
     font-size: 10px;
     color: #d9534f;
     margin-bottom: 8px!important;
+    cursor: move;
 }
 #second-div{
     display:none;
