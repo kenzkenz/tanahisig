@@ -32,6 +32,9 @@ $(function() {
             case "gist保存":
                 gistSave();
                 break;
+            case "csv保存":
+                csvSave();
+                break;
             default:
                 alert("作成中！")
         }
@@ -183,6 +186,20 @@ $(function() {
         };
     }
     //------------------------------------------------------------------------------------------------------------------
+    //blob保存
+    function blobSave(content,fileName) {
+        var type = "text/plain";
+        var blob = new Blob([content], {type: type});
+        $(".save-a").remove();
+        $("body").append("<a class='save-a'></a>");
+        $(".save-a").attr({
+            "href": window.URL.createObjectURL(blob),
+            "download": fileName
+        });
+        $(".save-a")[0].click();
+        drawSourceChangeFlg = false;
+    }
+    //------------------------------------------------------------------------------------------------------------------
     //geojson保存
     function geojsonSave(){
         var features = drawLayer.getSource().getFeatures();
@@ -190,16 +207,103 @@ $(function() {
             featureProjection: "EPSG:3857"
         });
         drawnGeojson = JSON.stringify(JSON.parse(drawnGeojson),null,1);
-        //$("#geojson-text").html("<pre>" + drawnGeojson + "</pre>");
-        var type = "text/plain";
-        var blob = new Blob([drawnGeojson], {type: type});
-        $(".save-a").remove();
-        $("body").append("<a class='save-a'></a>");
-        $(".save-a").attr({
-            "href": window.URL.createObjectURL(blob),
-            "download":"draw.geojson"
-        });
-        $(".save-a")[0].click();
+        blobSave(drawnGeojson,"draw.geojson")
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //csv
+    function exportcsv(content) {
+        /*
+        var finalVal = '';
+        for (var i = 0; i < content.length; i++) {
+            var value = content[i];
+            console.log(value)
+            for (var j = 0; j < value.length; j++) {
+                console.log(value[j])
+                var innerValue = value[j] === null ? '' : value[j].toString();
+                var result = innerValue.replace(/"/g, '""');
+                if (result.search(/("|,|\n)/g) >= 0)
+                    result = '"' + result + '"';
+                if (j > 0)
+                    finalVal += ',';
+                finalVal += result;
+            }
+            finalVal += '\n';
+        }
+        */
+
+
+        var finalVal = '';
+        for (var i = 0; i < content.length; i++) {
+            var value = content[i];
+            for (var j = 0; j < value.length; j++) { var innerValue = value[j]===null?'':value[j].toString(); var result = innerValue.replace(/"/g, '""'); if (result.search(/("|,|\n)/g) >= 0)
+                result = '"' + result + '"';
+                if (j > 0)
+                    finalVal += ',';
+                finalVal += result;
+            }
+            finalVal += '\n';
+        }
+
+
+        return finalVal;
+    }
+    //------------------------------------------------------------------------------------------------------------------
+    //csv保存
+    function csvSave(){
+        alert("作成中！！！！")
+        var features = drawLayer.getSource().getFeatures();
+        console.log(features);
+        if(!features.length) {
+            alert("データがありません。");
+            return;
+        }
+        var headerAr = [];
+        var header = "";
+        var content = "";
+        var contentAr = [];
+        for(var i = 0; i <features.length; i++) {
+            var prop = features[i].getProperties();
+            for(key in prop){
+                console.log(key);
+                if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="移動") {
+                    PushArray(headerAr, key)
+                }
+            }
+        }
+        //console.log(headerAr);
+        /*
+        for(var i = 0; i <features.length; i++) {
+            var coord = features[i].getGeometry().getCoordinates();
+            console.log(coord);
+            var lonlat = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+            content += lonlat + "\n"
+        }
+        */
+        for(var i = 0; i <features.length; i++) {
+            var coord = features[i].getGeometry().getCoordinates();
+            console.log(coord);
+            var lonlat = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+            //contentAr.push(JSON.stringify(lonlat).replace(/,/gi,"zzz"));
+            contentAr.push("aaaaaa");
+        }
+        console.log(contentAr);
+        var csv = exportcsv([contentAr]);
+        console.log(csv);
+
+        
+        //----------------------------------------------------------
+        // Unicodeコードポイントの配列に変換する
+        var unicode_array = str_to_unicode_array(csv);
+        // SJISコードポイントの配列に変換
+        var sjis_code_array = Encoding.convert(
+            unicode_array, // ※文字列を直接渡すのではない点に注意
+            'SJIS',  // to
+            'UNICODE' // from
+        );
+        // 文字コード配列をTypedArrayに変換する
+        var uint8_array = new Uint8Array( sjis_code_array );
+        //-----------------------------------------------------------
+        blobSave(uint8_array,"draw.csv")
     }
     //------------------------------------------------------------------------------------------------------------------
     //gist保存
@@ -263,5 +367,6 @@ $(function() {
             $("#loading-fa2").hide(500);
         };
         xhr.send(JSON.stringify(data));
+        drawSourceChangeFlg = false;
     }
 });

@@ -1,4 +1,5 @@
 var drawLayer = null;
+var drawSourceChangeFlg = false;
 var rangeLayer = null;
 var drawContextmenuOverlay = null;
 var rightClickedFeatyure = null;
@@ -8,6 +9,11 @@ $(function() {
     var drawCancelFlg = false;//ドローキャンセル用
     var modify = null;//モディファイ用。その都度作る必要があるため
     //var rangeFeatures = [];
+    //------------------------------------------------------------------------------------------------------------------
+    $(window).on('beforeunload', function () {
+        //if($("#mydialog-draw-dialog").css("display")==="block") return "";
+        if (drawSourceChangeFlg) return "";
+    });
     //------------------------------------------------------------------------------------------------------------------
     //キーボード操作　キーダウン時　ctrl+zで戻す　同時押しはこちらに描く
     $(window).keydown(function(e){
@@ -272,6 +278,7 @@ $(function() {
     //★★★メニュー項目　調整★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //var prevMsddIndex;
     function drawContextmenuCreate(feature){
+        console.log(feature);
         //最初に全て隠す
         $(".menu-item").hide();
         //$("#drawContextmenu-height-div").hide();$("#drawContextmenu-delete-btn").prop("disabled","disabled");
@@ -281,6 +288,7 @@ $(function() {
         $(".prop-input-text-name").val("");
         $(".prop-input-text-val").val("");
         if(feature) {//地物があるとき
+            /*
             //地物を選択地物としてセット--------------------------
             rightClickedFeatyure = feature;
             drawLayer.getSource().changed();
@@ -297,8 +305,25 @@ $(function() {
             transform2.setVisible(true);
             console.log(rightClickedFeatyure)
             //------------------------------------------------
+            */
             var prop,geomType;
             if(!Array.isArray(feature)) {//配列でないとき　つまり一つだけ選択しているとき
+                //地物を選択地物としてセット--------------------------
+                rightClickedFeatyure = feature;
+                drawLayer.getSource().changed();
+                //モディファイと移動　インタラクション-----------------
+                map1.removeInteraction(snap);
+                map1.removeInteraction(modify);
+                modify = new ol.interaction.Modify({
+                    features:new ol.Collection([rightClickedFeatyure]),
+                    deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにした
+                });
+                map1.addInteraction(modify);
+                map1.addInteraction(snap);
+                transform2.select(rightClickedFeatyure);
+                transform2.setVisible(true);
+                console.log(rightClickedFeatyure)
+                //------------------------------------------------
                 prop = feature.getProperties();
                 geomType = feature.getGeometry().getType();
                 var type = prop["_type"];
@@ -429,12 +454,38 @@ $(function() {
                 drawContextmenuDrawColorHabaDD.set("disabled", false);
             }else{//配列のとき　つまり複数選択の時
                 console.log("配列");
+
+
+                //色
+                var rgb = "rgb(192,192,192)";//銀色
+                drawContextmenuDrawColorDD.setIndexByValue(rgb);
+                $("#fillcolor-color-span").css({
+                    "background": rgb,
+                    "border":"1px solid " + rgb,
+                    "color": funcTextColor(rgb.r, rgb.g, rgb.b)
+                });
+                //透過度
+                $("#drawContextmenu-opacity-div2 .ui-slider-handle").css({
+                    left:"50%"
+                });
+                $("#drawContextmenu-opacity-div3").html("0.5");
+                //線の色
+                drawContextmenuDrawColorWakuDD.setIndexByValue(rgb);
+                $("#color-color-span").css({
+                    "background":rgb,
+                    "border":"1px solid " + rgb,
+                    "color":funcTextColor(rgb.r,rgb.g,rgb.b)
+                });
+
+
+
                 $("#drawContextmenu-msg-div").html("複数選択。まとめて変更します。");
                 $("#drawContextmenu-drawColor-div").show();
                 $("#drawContextmenu-drawColor-waku-div").show();
                 //$("#drawContextmenu-icon-btn").show();
                 $("#currentIcon").show();
                 $("#drawContextmenu-height-div").show();
+                $("#drawContextmenu-opacity-div").show();
                 //$("#drawContextmenu-delete-btn").prop("disabled",false);
                 drawContextmenuDrawColorDD.set("disabled",false);
                 drawContextmenuDrawColorWakuDD.set("disabled",false);
@@ -553,6 +604,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
     drawLayer.getSource().on("change", function(e) {
+        drawSourceChangeFlg = true;
         geojsonText();
     });
     //範囲指定用レイヤー
@@ -586,417 +638,6 @@ $(function() {
         }
         drawCancelFlg = false;
     });
-    /*
-    //------------------------------------------------------------------------------------------------------------------
-    //スタイルファンクション-----------------------------------------------------------------------------------------------
-    //基本のスタイルファンクションはここに書く。ドロー専用は別の場所に
-    //ポイント用のスタイル------------------------------------------------------------------------------------------------
-    function pointStyle(feature,resolution) {
-        var prop = feature.getProperties();
-        var fillColor = prop["_fillColor"];
-        if(!fillColor) fillColor = "rgba(0,122,255,0.7)";
-        var icon = prop["_icon"];
-        var text = prop["ラベル"];
-        var style = [];
-        if (icon) {
-                style.push(
-                    new ol.style.Style({
-                        image: new ol.style.FontSymbol({
-                            form: "",
-                            gradient: true,
-                            glyph: icon,
-                            fontSize: 1,
-                            radius: 16,
-                            //offsetX: -15,
-                            rotation: 0 * Math.PI / 180,
-                            rotateWithView: true,
-                            offsetY: 0,
-                            color: fillColor ? fillColor : "orange",
-                            fill: new ol.style.Fill({
-                                color: "black"
-                            }),
-                            stroke: new ol.style.Stroke({
-                                color: "white",
-                                width: 1
-                            })
-                        }),
-                        stroke: new ol.style.Stroke({
-                            width: 2,
-                            color: '#f80'
-                        }),
-                        fill: new ol.style.Fill({
-                            color: [255, 136, 0, 0.6]
-                        }),
-                        zIndex:2
-                    })
-                );
-
-        } else {//iconでない通常のとき
-            var color,width;
-            if(feature===rightClickedFeatyure || rangeFeatures.indexOf(feature)!==-1) {
-                color = "red";
-                width = 3;
-            }else{
-                color = "white";
-                width = 1;
-            }
-            style.push(
-                new ol.style.Style({
-                    image: new ol.style.Circle({
-                        radius: 10,
-                        fill: new ol.style.Fill({
-                            color: fillColor
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: color, width: width
-                        }),
-                        zIndex:2
-                    }),
-                    text: new ol.style.Text({
-                        font: "8px sans-serif",
-                        text: text,
-                        offsetY:10,
-                        stroke: new ol.style.Stroke({
-                            color: "white",
-                            width: 3
-                        })
-                    })
-                })
-            )
-        }
-        return style;
-    }
-    //ラインストリング用のスタイル------------------------------------------------------------------------------------------
-    function lineStringStyle(feature,resolution) {
-        var prop = feature.getProperties();
-        var fillColor = prop["_fillColor"];
-        if (!fillColor) fillColor = "rgba(0,122,255,0.7)";
-        var strokeColor = prop["_color"];
-        var strokeWidth = prop["_weight"];
-        var tDistance;
-        tDistance = funcTDistance(feature);
-        if(feature!==rightClickedFeatyure && rangeFeatures.indexOf(feature)===-1) {
-            var style = [
-                new ol.style.Style({
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: strokeWidth
-                    }),
-                    zIndex: 0
-                }),
-                new ol.style.Style({//頂点の六角形
-                    image: new ol.style.RegularShape({
-                        fill: new ol.style.Fill({
-                            color: "white"
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: "white",
-                            width: 1
-                        }),
-                        points: 6,
-                        radius: 8,
-                        angle: 45
-                    }),
-                    text: new ol.style.Text({
-                        font: "10px sans-serif",
-                        text: tDistance,
-                        fill: new ol.style.Fill({
-                            color: "black"
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: "white",
-                            width: 3
-                        }),
-                        offsetY: 0
-                    }),
-                    zIndex: 1,
-                    geometry: function (feature) {
-                        var lastCoord = feature.getGeometry().getLastCoordinate();
-                        return new ol.geom.Point(lastCoord)
-                    }
-                })
-            ];
-        }else{//選択しているとき
-            var style = [
-                new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: strokeWidth
-                    }),
-                    text: new ol.style.Text({
-                        font: "10px sans-serif",
-                        text: tDistance,
-                        fill: new ol.style.Fill({
-                            color: "black"
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: "white",
-                            width: 3
-                        }),
-                        offsetY: 0
-                    })
-                }),
-                new ol.style.Style({//頂点の六角形
-                    image: new ol.style.RegularShape({
-                        fill: new ol.style.Fill({
-                            color: "white"
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: "red",
-                            width: 1
-                        }),
-                        points: 6,
-                        radius: 8,
-                        angle: 45
-                    }),
-                    geometry: function (feature) {
-                        var coord = feature.getGeometry().getCoordinates();
-                        return new ol.geom.MultiPoint(coord)
-                    }
-                })
-            ];
-        }
-        return style;
-    }
-    //ポリゴン用のスタイル-------------------------------------------------------------------------------------------------
-    function polygonStyle(feature,resolution) {
-        var prop = feature.getProperties();
-        var geoType = feature.getGeometry().getType();
-        var type = prop["_type"];
-        var fillColor = prop["_fillColor"];
-        if (!fillColor) fillColor = "rgba(0,122,255,0.7)";
-        var strokeColor = prop["_color"];
-        var strokeWidth = prop["_weight"];
-        var text = "",text2 = "",lastCoord,lastCoord2,returnGeom,returnGeom2,tRadius,tArea,tDistance;
-        //面積や長さを測る
-        switch (type) {
-            case "circle":
-            case "buffer":
-                tRadius = funcTRadius(feature);
-                switch (geoType) {
-                    case "Polygon":
-                        text = "半径" + tRadius;
-                        text2 = "";
-                        lastCoord = feature.getGeometry().getLastCoordinate();
-                        returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
-                        break;
-                    case "MultiPolygon":
-                        text = "半径" + tRadius[0];
-                        text2 = "半径" + tRadius[1];
-                        lastCoord = feature.getGeometry().getCoordinates()[0][0][0];
-                        lastCoord2 = feature.getGeometry().getCoordinates()[1][0][0];
-                        returnGeom = new ol.geom.Point(lastCoord);//テキスト用ジオメトリー
-                        returnGeom2 = new ol.geom.Point(lastCoord2);//テキスト用ジオメトリー
-                        break;
-                }
-                break;
-            default://通常のポリゴンはこっち
-                if(geoType==="Polygon" || geoType==="MultiPolygon") {
-                    tArea = funcTArea(feature);
-                    tDistance = funcTDistance(feature);
-                    if (tDistance) {
-                        text = "面積\n" + tArea + "\n周長" + tDistance;
-                    } else {
-                        if (tArea) {
-                            text = "面積\n" + tArea;
-                        } else {
-                            text = "";
-                        }
-                    }
-                    returnGeom = feature.getGeometry();//テキスト用ジオメトリー
-                }
-        }
-        //面積や長さを測るここまで-----------------------------------------------
-        var polygonTextStyle =[
-            new ol.style.Style({//通常および外円用テキスト用スタイル
-                text: new ol.style.Text({
-                    font: "10px sans-serif",
-                    text: text,
-                    fill: new ol.style.Fill({
-                        color: "black"
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: "white",
-                        width: 3
-                    }),
-                    offsetY: 0
-                }),
-                geometry: function (feature) {
-                    return returnGeom
-                },
-                zIndex: 0
-            }),
-            new ol.style.Style({//内円用テキスト用スタイル
-                text: new ol.style.Text({
-                    font: "10px sans-serif",
-                    text: text2,
-                    fill: new ol.style.Fill({
-                        color: "black"
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: "white",
-                        width: 3
-                    }),
-                    offsetY: 0
-                }),
-                geometry: function (feature) {
-                    return returnGeom2
-                },
-                zIndex: 0
-            })
-        ];
-        if(feature!==rightClickedFeatyure && rangeFeatures.indexOf(feature)===-1) {
-            var style = [
-                new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: strokeWidth
-                    }),
-                    zIndex: 0
-                }),
-                polygonTextStyle[0],
-                polygonTextStyle[1]
-            ];
-        }else{//選択しているとき
-            var style = [
-                new ol.style.Style({
-                    fill: new ol.style.Fill({
-                        color: fillColor
-                    }),
-                    stroke: new ol.style.Stroke({
-                        color: strokeColor,
-                        width: strokeWidth
-                    }),
-                    zIndex: 0
-                }),
-                polygonTextStyle[0],
-                polygonTextStyle[1],
-                new ol.style.Style({//頂点の六角形
-                    image: new ol.style.RegularShape({
-                        fill: new ol.style.Fill({
-                            color: "white"
-                        }),
-                        stroke: new ol.style.Stroke({
-                            color: "red",
-                            width: 1
-                        }),
-                        points: 6,
-                        radius: 6,
-                        angle: 45
-                    }),
-                    geometry: function (feature) {
-                        var coord = feature.getGeometry().getCoordinates()[0];
-                        return new ol.geom.MultiPoint(coord);//ノード用ジオメトリー
-                    }
-                })
-            ];
-        }
-        return style;
-    }
-    //------------------------------------------------------------------------------------------------------------------
-    //スタイルファンクション本体
-    function drawStyleFunction() {
-        return function(feature, resolution) {
-            var geoType = feature.getGeometry().getType();
-            //--------------------------------------------------------------------
-            switch (geoType) {
-                //線（ライン）
-                case "LineString":
-                    var style = lineStringStyle(feature,resolution);
-                    break;
-                //-----------------------------------------------------------------
-                //点（ポイント）
-                case "Point":
-                    var style = pointStyle(feature,resolution);
-                    break;
-                //-----------------------------------------------------------------
-                //面と円（ポリゴンとマルチポリゴン）
-                case "Polygon":
-                case "MultiPolygon":
-                    var style = polygonStyle(feature,resolution);
-                    break;
-                default:
-            }
-            return style;
-        }
-    }
-
-    //------------------------------------------------------------------------------------------------------------------
-    //各種計測
-    //------------------------------------------------------------------------------------------------------------------
-    //線の長さを計算
-    function funcTDistance(feature){
-        if(!$("#drawContextmenu-measure-btn").hasClass("btn-primary")) return;
-        var tDistance = 0;
-        var fromCoord,toCoord;
-        var coordAr = feature.getGeometry().getCoordinates();
-        var geomType = feature.getGeometry().getType();
-        switch (geomType) {
-            case "Point":
-                return;//描き初めは１点でありPoint。そのときは抜ける。
-                break;
-            case "LineString":
-                for(var i = 0; i <coordAr.length-1; i++){
-                    fromCoord = turf.toWgs84(coordAr[i]);
-                    toCoord = turf.toWgs84(coordAr[i+1]);
-                    tDistance = tDistance + turf.distance(fromCoord,toCoord);
-                }
-                break;
-            case "Polygon":
-                for(var i = 0; i <coordAr[0].length-1; i++){
-                    fromCoord = turf.toWgs84(coordAr[0][i]);
-                    toCoord = turf.toWgs84(coordAr[0][i+1]);
-                    tDistance = tDistance + turf.distance(fromCoord,toCoord);
-                }
-                break;
-            case "MultiPolygon":
-                //マルチポリゴンのときは計算しない。0を送る。
-                tDistance = null;
-                return tDistance;
-            default:
-        }
-        if(tDistance===0) {
-            tDistance = "";
-        }else if(tDistance<1) {
-            tDistance = String((Math.round(tDistance*1000)/1000*1000).toLocaleString()) + "m";//1m単位で四捨五入
-        }else{
-            tDistance = String((Math.round(tDistance*100)/100).toLocaleString()) + "km";//10m単位で四捨五入
-        }
-        //console.log(tDistance)
-        return tDistance;
-    }
-    //------------------------------------------------------------------------------------------------------------------
-    //地物の面積を計算
-    function funcTArea(feature){
-        if(!$("#drawContextmenu-measure-btn").hasClass("btn-primary")) return;
-        var coordAr = feature.getGeometry().getCoordinates();
-        var geomType = feature.getGeometry().getType();
-        var tPolygon;
-        switch (geomType) {
-            case "Polygon":
-                tPolygon = turf.polygon(coordAr);
-                break;
-            case "MultiPolygon":
-                tPolygon = turf.multiPolygon(coordAr);
-                break;
-            default:
-        }
-        tPolygon = turf.toWgs84(tPolygon);
-        var tArea = turf.area(tPolygon);//面積計算
-        if(tArea<1000000) {
-            tArea = String((Math.floor(tArea*100)/100).toLocaleString()) + "m2";
-        }else{
-            tArea = String((Math.floor(tArea/1000000*100)/100).toLocaleString()) + "km2";
-        }
-        return tArea;
-    }
-    */
     //------------------------------------------------------------------------------------------------------------------
     //各インタラクション
     //ドロー専用のスタイルファンクションもここに書く
@@ -1408,10 +1049,8 @@ $(function() {
         drawLayer.getSource().changed();
         var extent = feature.getGeometry().getExtent();
         drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
-
-
-
         //drawContextmenuCreate(featureSelect.getFeatures().getArray());
+        drawContextmenuCreate(rangeFeatures);
     });
     //------------------------------------------------------------------------------------------------------------------
     //トランスフォーム
@@ -1641,16 +1280,18 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //色　変更
     $("body").on("change","#drawContextmenu-drawColor",function(){
-        var colorVal = $(this).val();
-        var rgb = d3.rgb(colorVal);
-        var opacity = $("#drawContextmenu-opacity-div3").text();
-        var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
+        var colorVal,rgb,opacity,rgba;
+        colorVal = $(this).val();
+        rgb = d3.rgb(colorVal);
+        opacity = $("#drawContextmenu-opacity-div3").text();
+        rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
         if(rightClickedFeatyure) {
             rightClickedFeatyure.setProperties({
                 "_fillColor": rgba
             });
         }else{
-            var features = featureSelect.getFeatures().getArray();
+            console.log(rgba);
+            var features = rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 var silentBool = true;
                 if(i===features.length-1) silentBool = false;
@@ -1679,7 +1320,7 @@ $(function() {
                 "_color": rgba
             });
         }else{
-            var features = featureSelect.getFeatures().getArray();
+            var features = rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                     var silentBool = true;
@@ -1705,7 +1346,7 @@ $(function() {
                 "_weight":val
             });
         }else{
-            var features = featureSelect.getFeatures().getArray();
+            var features = rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                     var silentBool = true;
@@ -1729,7 +1370,7 @@ $(function() {
                     "_polygonHeight":val
                 });
             }else{
-                var features = featureSelect.getFeatures().getArray();
+                var features = rangeFeatures;
                 for(var i = 0; i <features.length; i++){
                     if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                         var silentBool = true;

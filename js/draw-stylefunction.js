@@ -121,7 +121,8 @@
         var strokeColor = prop["_color"];
         var strokeWidth = prop["_weight"];
         var tDistance;
-        tDistance = funcTDistance(feature);
+        //tDistance = funcTDistance(feature);
+        tDistance = measure("distance",feature);
         if(feature!==rightClickedFeatyure && rangeFeatures.indexOf(feature)===-1) {
             var style = [
                 new ol.style.Style({
