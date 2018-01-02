@@ -223,6 +223,7 @@
         switch (type) {
             case "circle":
             case "buffer":
+                /*
                 tRadius = funcTRadius(feature);
                 switch (geoType) {
                     case "Polygon":
@@ -240,6 +241,7 @@
                         returnGeom2 = new ol.geom.Point(lastCoord2);//テキスト用ジオメトリー
                         break;
                 }
+                */
                 break;
             default://通常のポリゴンはこっち
                 if(geoType==="Polygon" || geoType==="MultiPolygon") {

@@ -863,4 +863,6 @@ label:hover{
 .tooltip .tooltip-arrow{
     border-bottom-color: rgba(51,122,183,0.9)!important;
 }
-
+.close:focus, .close:hover{
+    color: red;
+}

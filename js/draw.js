@@ -477,8 +477,6 @@ $(function() {
                     "color":funcTextColor(rgb.r,rgb.g,rgb.b)
                 });
 
-
-
                 $("#drawContextmenu-msg-div").html("複数選択。まとめて変更します。");
                 $("#drawContextmenu-drawColor-div").show();
                 $("#drawContextmenu-drawColor-waku-div").show();
@@ -1145,12 +1143,12 @@ $(function() {
     }
     //------------------------------------------------------------------------------------------------------------------
     //ここから各コントロール
+    //オーバーレイをドラッグ可能にする。
     $(".ol-overlay-container").draggable({
         handle:"#drawContextmenu-msg-div,#second-div-msg-div",
         drag:function(event,ui){
             var pixel = [ui.position["left"],ui.position["top"]];
             var coord = map1.getCoordinateFromPixel(pixel);
-            console.log(coord);
             drawContextmenuOverlay.setPosition(coord);
         }
     });
@@ -1165,7 +1163,12 @@ $(function() {
     //クローズ ×マーク
     $("#drawContextmenuOverlay-close").click(function(){
         drawContextmenuOverlay.setPosition(null);
-        //transform2.setVisible(false);
+        rightClickedFeatyure = null;
+        drawTypeMsDropDown.set("selectedIndex", 0);
+        addInteractions();
+        map1.removeInteraction(modify);
+        transform2.setVisible(false);
+        drawLayer.getSource().changed();
     });
     //------------------------------------------------------------------------------------------------------------------
     //トグルオープン＆クローズ （普通は必要ない。なぜかオーバーレイ上ではbootstrapが動かないので）
@@ -1193,6 +1196,7 @@ $(function() {
                         drawContextmenuOverlay.setPosition(null);
                         drawPopup.setPosition(null);
                         $(this).parents(".my-toggle-ul").hide(500);
+                        transform2.setVisible(false);
                     }
                 }
                 break;
@@ -1204,6 +1208,7 @@ $(function() {
                     drawContextmenuOverlay.setPosition(null);
                     drawPopup.setPosition(null);
                     $(this).parents(".my-toggle-ul").hide(500);
+                    transform2.setVisible(false);
                 }
                 break;
             case "コピー":
