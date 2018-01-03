@@ -33,12 +33,12 @@ $(function() {
     });
     //------------------------------------------------------------------------------------------------------------------
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
-    //右クリックメニュー
-    $("#map1")[0].addEventListener('contextmenu',drawContextmenu,false);
-    $("body").on("mouseenter",".ol-popup,.dialog-base,input",function(){//contentにマウスが当たったら通常の右クリックメニュー復活。
+    //右クリックメニュー 付けたり外したり
+    $("body").on("mouseenter",".ol-viewport",function() {
+        $("#map1")[0].addEventListener('contextmenu', drawContextmenu, false);
+    });
+    $("body").on("mouseleave",".ol-viewport",function(){
         $("#map1")[0].removeEventListener('contextmenu',drawContextmenu,false);
-    }).on("mouseleave",".ol-popup,.dialog-base,input",function(){//contentからマウスが抜けたら通常の右クリックメニューを無効化。
-        $("#map1")[0].addEventListener('contextmenu',drawContextmenu,false);
     });
     //★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
     //------------------------------------------------------------------------------------------------------------------
@@ -172,7 +172,13 @@ $(function() {
     menu += "<ul id='drawContextmenu-effect-ul' class='dropdown-menu my-toggle-ul'>";
     menu += "<li><a>リセット</a></li>";
     menu += "<li><a>ボロノイ図</a></li>";
-    menu += "<li><a>バッファー</a></li>";
+
+    menu += "<li id='drawContextmenu-effect-li-buffer' class='dropdown-submenu'><a>バッファー</a>";
+    menu += "<ul id='ddd' class='dropdown-menu dropdown-menu2 my-toggle-ul'>";
+    menu += "<input type='text' id='buffer-input-text'>m";
+    menu += "</ul>";
+    menu += "</li>";
+
     menu += "<li><a>ヒートマップ</a></li>";
     menu += "</ul>";
     menu += "</div>";
@@ -211,6 +217,7 @@ $(function() {
             $("#drawContextmenu-opacity-div3").html(ui.value);
         }
     });
+
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイをマップに設定
     drawContextmenuOverlay = new ol.Overlay({
@@ -537,7 +544,23 @@ $(function() {
             console.log("パターン2")
         }else if(!drawFlg && modifyFlg && features.length>0){//modifyかつ地物の内。でもdrawじゃない。
             if(feature===rightClickedFeatyure) transform2.setVisible(true);//更に右クリック地物のときに移動を可視化
-            var coordAr = feature.getGeometry().getCoordinates()[0];
+            var geomType = feature.getGeometry().getType();
+            console.log(geomType);
+            var coordAr;
+            switch (geomType) {
+                case "Point":
+                    popupShow(feature,evt);
+                    return;
+                    break;
+                case "LineString":
+                    coordAr = feature.getGeometry().getCoordinates();
+                    break;
+                case "Polygon":
+                    coordAr = feature.getGeometry().getCoordinates()[0];
+                    break;
+                default:
+            }
+
             var verticesFlg = false;
             for(var i = 0; i <coordAr.length; i++){
                 var verticesPixel = map1.getPixelFromCoordinate(coordAr[i]);
@@ -1178,7 +1201,16 @@ $(function() {
         tgtElem.toggle(500);//対象を表示する。
         return false;
     });
+    //バブリングを止めて$("body,.ol-overlay-container").click(function(){を作動させない
+    $(".dropdown-submenu").click(function(){
+        return false;
+    });
+    $(".dropdown-menu2").click(function(){
+        return false;
+    });
+    //画面をクリックしたら非表示にする。
     $("body,.ol-overlay-container").click(function(){
+        console.log(333);
         $(".my-toggle-ul").hide(500);
         $(".ddChild").hide();
     });

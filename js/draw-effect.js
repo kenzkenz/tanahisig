@@ -8,9 +8,6 @@ $(function() {
             case "ボロノイ図":
                 voronoiCreate();
                 break;
-            case "バッファー":
-                bufferCreate(500);
-                break;
             case "ヒートマップ":
                 alert("作成中！");
                 break;
@@ -28,16 +25,43 @@ $(function() {
         }
     }
     //------------------------------------------------------------------------------------------------------------------
-    //バッファー
+    //バッファー図　実際に作ったりする
     function bufferCreate(radius){
-        var features = source.getFeatures();
+        if(!rightClickedFeatyure) return;
+        var features = [rightClickedFeatyure];//右クリック地物を対象とする。配列で書いているが今の所右クリック地物は一つ
+        //まず右クリック地物の既存のバッファーを消す
         for(var i = 0; i <features.length; i++){
-            var effet = features[i].getProperties()["_type"];
-            if(effet==="buffer") source.removeFeature(features[i])
+            var geomType = features[i].getGeometry().getType();
+            var coord;
+            switch (geomType) {
+                case "Point":
+                    coord = features[i].getGeometry().getCoordinates();
+                    break;
+                case "LineString":
+                    coord = features[i].getGeometry().getCoordinates()[0];
+                    break;
+                case "Polygon":
+                    coord = features[i].getGeometry().getCoordinates()[0][0];
+                    break;
+                default:
+            }
+            var pixel = map1.getPixelFromCoordinate(coord);
+            var f = [],l = [];
+            map1.forEachFeatureAtPixel(pixel,function(feature,layer){
+                if(layer){
+                    if(layer.getProperties()["name"]==="drawLayer"){
+                        f.push(feature);
+                        l.push(layer);
+                    }
+                }
+            });
+            for(var j = 0; j <f.length; j++){
+                if(f[j].getProperties()["_type"]==="buffer") source.removeFeature(f[j]);
+            }
         }
-        features = source.getFeatures();
+        if(radius===0) return;
         radius = radius * 1.179832968;
-        console.log(radius);
+        //ここからバッファーを作る
         for (var i = 0; i < features.length; i++) {
             var geomType = features[i].getGeometry().getType();
             var coordAr,coord,geojsonFeature;
@@ -63,16 +87,12 @@ $(function() {
                     break;
                 default:
             }
-            console.log(geojsonFeature);
-            //var buffered = turf.buffer(point4326,radius,{"units":"kilometers","steps":64});
             var options = {
                 units:"meters",
                 steps: 32
             };
             var buffered = turf.buffer(geojsonFeature,radius,options);
-            console.log(buffered["geometry"]["coordinates"]);
             buffered = turf.toMercator(buffered);
-            console.log(buffered["geometry"]["coordinates"]);
             var geometry = new ol.geom.Polygon(buffered["geometry"]["coordinates"]);
             var newFeature = new ol.Feature({
                 "_fillColor": "rgba(0,0,255,0.3)",
@@ -84,6 +104,25 @@ $(function() {
             source.addFeature(newFeature);
         }
     }
+    //------------------------------------------------------------------------------------------------------------------
+    //バッファー図　コントロール関係
+    $("#drawContextmenu-effect-li-buffer").click(function(){
+        var tgtElem = $(this).find("ul");
+        tgtElem.toggle(500);
+        tgtElem.css({
+            left:"102%",
+            top:$(this).position()["top"] + "px"
+        })
+    });
+    $("#buffer-input-text").change(function(){
+        bufferCreate(Number(zen2han($(this).val())));
+    });
+    $("#buffer-input-text").spinner({
+        max:50000, min:0, step:10,
+        spin:function(event,ui){
+            bufferCreate(ui.value);
+        }
+    });
     //------------------------------------------------------------------------------------------------------------------
     //ボロノイ図
     function voronoiCreate(){

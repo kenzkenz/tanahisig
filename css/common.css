@@ -790,13 +790,21 @@ label:hover{
     line-height:1.5;
     border-radius:3px;
 }
+.dropdown-menu2{
+    padding: 3px!important;
+    width:110%;
+}
+#buffer-input-text{
+    width:20px;
+}
 .my-toggle-ul{
     font-size:12px;
     min-width:70px;
+    font-size: 10px;
 }
 .my-toggle-ul a{
     padding: 0 5px!important;
-    font-size: 10px;
+
 }
 .dialog-content ul{
     padding-left: 20px;

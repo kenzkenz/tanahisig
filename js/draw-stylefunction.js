@@ -138,7 +138,7 @@
                             color: "white"
                         }),
                         stroke: new ol.style.Stroke({
-                            color: "white",
+                            color: "blue",
                             width: 1
                         }),
                         points: 6,
