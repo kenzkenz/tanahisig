@@ -3,6 +3,7 @@ var useLayersArr2 = null;
 var plusLayer1 = [];
 var plusLayer2 = [];
 var plI = 0;
+
 $(function(){
     //使用するレイヤーを設定
     useLayersArr1 = [mieruneNormal1,
@@ -28,14 +29,14 @@ $(function(){
         jpnfukuoka011,jpnnoboribetu011,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    tositiiki1,youtotiiki1,suiro1,douro1,kaigansen_1,keikan1,tondabayasit1,
+                    mvt.tositiiki1,mvt.youtotiiki1,mvt.suiro1,mvt.douro1,kaigansen_1,keikan1,tondabayasit1,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
-                    syougakkouku1,tyuugakkouku1,iryouken1,fukushi_1,
+                    mvt.syougakkouku1,mvt.tyuugakkouku1,mvt.iryouken1,fukushi_1,
         //人口と経済
         sikiriZinkouKeizai,
-                    syoutiikiH17_1,syoutiikiH22_1,syoutiiki1,
-                    mesh500_1,keizaiCensus_1,cityGeneki_1,cityZaisei_1,syougyou500m_1,syougyou1000m_s_1,syougyou1000m_g_1,syougyou1000m_k_1, suikei1000m_1,did1,
+                    mvt.syoutiikiH17_1,mvt.syoutiikiH22_1,mvt.syoutiiki1,
+                    mesh500_1,keizaiCensus_1,mvt.cityGeneki_1,mvt.cityZaisei_1,syougyou500m_1,syougyou1000m_s_1,syougyou1000m_g_1,syougyou1000m_k_1, suikei1000m_1,did1,
         //九州北部豪雨
         sikiriKyuusyuuHokubuGouu,
                     ooameasahi01,
@@ -53,7 +54,7 @@ $(function(){
                     rekisitekikantou1,zinsokugazou1,rekisitekitoukyou1,rekisitekihukuyama1,
         //遺跡文化財
         sikiriIsekibunkazai,
-                    bunkatyoudb1,zenkokuHakubutukan1,bunkazai1,zenkokuIseki1,yayoi1,kumamotoIseki1,
+                    mvt.bunkatyoudb1,mvt.zenkokuHakubutukan1,mvt.bunkazai1,mvt.zenkokuIseki1,mvt.yayoi1,kumamotoIseki1,
         //ユネスコ
         sikiriUnesco,
                     aya1,sobo1,soboZ1,
@@ -71,19 +72,18 @@ $(function(){
         sikiriTisititikei,
                     kawadake1,ryuuiki1,ecoris1,sekiz1,seamlessArr1,
                     nihonCs1,csArr1,sizuokaCs1,
-                    syokusei1,dozyouzu1,
+                    mvt.syokusei1,mvt.dozyouzu1,
         //ハザード
         sikiriHazard,
-                    tunami1,tunamimvt1,sinsuisoutei1,kikenkeiryuu1,kyuukeisyakikenkasyo1,keikan_1,
+                    tunami1,mvt.tunamimvt1,sinsuisoutei1,kikenkeiryuu1,kyuukeisyakikenkasyo1,keikan_1,
         sikiriTest,
                     //anno1,
                     okugainobeoka_1,
                     nobeoka19521,
-                    totiriyou1,
                     bingroad1,
                     kikenkeiryuuAll1,kyuukeisyakikenkasyoAll1,
                     fukuiRindou1,
-                    tunamimiyazakimvt1,
+                    mvt.tunamimiyazakimvt1,
                     tunamiWakkanaimvt1,
                     osmmvt1
     ];
@@ -111,14 +111,14 @@ $(function(){
                     jpnfukuoka012,jpnnoboribetu012,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    tositiiki2,youtotiiki2,suiro2,douro2,kaigansen_2,tondabayasit2,
+                    mvt.tositiiki2,mvt.youtotiiki2,mvt.suiro2,mvt.douro2,kaigansen_2,tondabayasit2,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
-                    syougakkouku2,tyuugakkouku2,iryouken2,fukushi_2,
+                    mvt.syougakkouku2,mvt.tyuugakkouku2,mvt.iryouken2,fukushi_2,
         //人口と経済
         sikiriZinkouKeizai,
-                    syoutiikiH17_2,syoutiikiH22_2,syoutiiki2,
-                    mesh500_2,keizaiCensus_2,cityGeneki_2,cityZaisei_2,syougyou500m_2,syougyou1000m_s_2,syougyou1000m_g_2,syougyou1000m_k_2, suikei1000m_2,did2,
+                    mvt.syoutiikiH17_2,mvt.syoutiikiH22_2,mvt.syoutiiki2,
+                    mesh500_2,keizaiCensus_2,mvt.cityGeneki_2,mvt.cityZaisei_2,syougyou500m_2,syougyou1000m_s_2,syougyou1000m_g_2,syougyou1000m_k_2, suikei1000m_2,did2,
         //九州北部豪雨
         sikiriKyuusyuuHokubuGouu,
                     ooameasahi02,
@@ -136,7 +136,7 @@ $(function(){
                     rekisitekikantou2,zinsokugazou2,rekisitekitoukyou2,rekisitekihukuyama2,
         //遺跡文化財
         sikiriIsekibunkazai,
-                    bunkatyoudb2,zenkokuHakubutukan2,bunkazai2,zenkokuIseki2,yayoi2,kumamotoIseki2,
+                    mvt.bunkatyoudb2,mvt.zenkokuHakubutukan2,mvt.bunkazai2,mvt.zenkokuIseki2,mvt.yayoi2,kumamotoIseki2,
         //ユネスコ
         sikiriUnesco,
                     aya2,sobo2,soboZ2,
@@ -154,19 +154,18 @@ $(function(){
         sikiriTisititikei,
                     kawadake2,ryuuiki2,ecoris2,sekiz2,seamlessArr2,
                     nihonCs2,csArr2,sizuokaCs2,
-                    syokusei2,dozyouzu2,
+                    mvt.syokusei2,mvt.dozyouzu2,
         //ハザード
         sikiriHazard,
-                    tunami2,tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
+                    tunami2,mvt.tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
         sikiriTest,
                     //anno1,
                     okugainobeoka_1,
                     nobeoka19521,
-                    totiriyou1,
                     bingroad2,
                     kikenkeiryuuAll2,kyuukeisyakikenkasyoAll2,
                     fukuiRindou1,
-                    tunamimiyazakimvt1,
+                    mvt.tunamimiyazakimvt1,
                     tunamiWakkanaimvt1
     ];
     $("body").on("click",".secret",function() {
