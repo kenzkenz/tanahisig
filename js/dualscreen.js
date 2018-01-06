@@ -18,6 +18,7 @@ $(function(){
             return;
         }
         if($(this).text()==="2画面"){//起動時はこっち
+            H_COMMON.setHush("d",2);
             //$("#map2 .cesium-btn-div").show();
             if($(window).width()>1000){//横幅が大きいときは横に分割
                 $("#map1").animate({"width":"50%"},500,function(){map1.updateSize();});
@@ -49,8 +50,12 @@ $(function(){
             //同期非同期ボタン
             $("#sync-btn").show();
             $(".dualscreen-btn").text("1画面");
-        }else{
-
+            //ハッシュから２画面にするときなぜか効かないので
+            var map1View = map1.getView();
+            map2.setView(map1View);
+            //---------------------------------------
+        }else{//2画面にするとき
+            H_COMMON.setHush("d",1);
             if($(window).width()>1000){//横幅が大きいときは横に分割
                 $("#map1").animate({"width":"100%"},500,function(){map1.updateSize();});
                 $("#map2").animate({"height":"1px"},0,function(){

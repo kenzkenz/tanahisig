@@ -641,6 +641,7 @@ label:hover{
     z-index:3;
     width:240px;
     font-size: 10px;
+    cursor: move;
 }
 #drawContextmenuOverlay-div div{
     margin:1px 0;
@@ -790,6 +791,9 @@ label:hover{
     line-height:1.5;
     border-radius:3px;
 }
+.dropdown-menu{
+    cursor:pointer;
+}
 .dropdown-menu2{
     padding: 3px!important;
     width:110%;
@@ -873,4 +877,7 @@ label:hover{
 }
 .close:focus, .close:hover{
     color: red;
+}
+.ol-overlay-container{
+    z-index:9999;
 }

@@ -1,6 +1,7 @@
 var seamlessG1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"seamlessv2",
     title:"シームレス地質図V2",
     origin:"<a href='https://gbank.gsj.jp/seamless/seamless2015/2d/' target='_blank'>日本シームレス地質図</a><br>" +
     "<a href='https://gbank.gsj.jp/geonavi/' target='_blank'>地質図Navi</a>",
@@ -17,6 +18,7 @@ var seamlessG1 = new ol.layer.Tile({
 var seamlessG2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"seamlessv2",
     title:"シームレス地質図V2",
     origin:"<a href='https://gbank.gsj.jp/seamless/seamless2015/2d/' target='_blank'>日本シームレス地質図</a><br>" +
     "<a href='https://gbank.gsj.jp/geonavi/' target='_blank'>地質図Navi</a>",

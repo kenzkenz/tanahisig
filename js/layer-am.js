@@ -3,6 +3,7 @@
 var am1_1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyazakikensenzen",
     title:"宮崎県戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"",
@@ -19,6 +20,7 @@ var am1_1 = new ol.layer.Tile({
 var am1_2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyazakikensenzen",
     title:"宮崎県戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"",

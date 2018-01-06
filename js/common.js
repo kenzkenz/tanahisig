@@ -1,3 +1,6 @@
+if (typeof H_COMMON === 'undefined') {
+    var H_COMMON = {};
+}
 //---------------------------------------------------------------------------------
 var ajaxStartFlg = true;
 $(document).ajaxStart(function (){
@@ -10,6 +13,200 @@ $(document).ajaxStop(function (){
         $("#loading-fa").hide(500);
     }
 });
+//----------------------------------------------------------
+//ハッシュをセット
+H_COMMON.setHush = function(key,parameter){
+    var href = location["href"].split("#")[0];
+    var urlHash = location.hash;
+    var hashAr = urlHash.split("&");
+    var hashObj= {};
+    for(var i = 1; i <hashAr.length; i++){
+        var kvAr = hashAr[i].split("=");
+        hashObj[kvAr[0]]=kvAr[1]
+    }
+    var parameters = "";
+    var flg = false;
+    for(hashObjKey in hashObj){
+        if(hashObjKey===key) {
+            parameters += "&" + key + "=" + parameter;
+            flg = true;
+        }else{
+            parameters += "&" + hashObjKey + "=" + hashObj[hashObjKey];
+        }
+    }
+    var zxy;
+    if(key==="zxy") {
+        zxy = parameter;
+    }else{
+        zxy = hashAr[0];
+        if(!flg) parameters += "&" + key + "=" + parameter;
+    }
+    var newUrl = href + zxy + parameters;
+    localStorage.setItem("href",newUrl);//URLも記憶
+    history.replaceState(null, null, newUrl);
+    return newUrl;
+};
+//----------------------------------------------------------
+//ハッシュからいろいろ復元
+H_COMMON.getHush = function() {
+    var urlHash = location.hash;
+    var hashAr = urlHash.split("&");
+    var hashObj= {};
+    for(var i = 1; i <hashAr.length; i++){
+        var kvAr = hashAr[i].split("=");
+        hashObj[kvAr[0]]=kvAr[1]
+    }
+    //gist--------------------------------------------------
+    var gist = hashObj["g"];
+    if(gist) {
+        $.ajax({
+            type: "get",
+            url: "https://api.github.com/gists/" + gist,
+            dataType: "json"
+        }).done(function (json) {
+            console.log(json);
+            var truncated = json["files"]["hinatagis.geojson"]["truncated"];
+            var gistGeojson;
+            if(!truncated) {//falseのときが通常。APIで普通に取得
+                gistGeojson = JSON.parse(json["files"]["hinatagis.geojson"]["content"]);
+                if(gistGeojson){
+                    var targetGeojson = new ol.format.GeoJSON().readFeatures(gistGeojson, {featureProjection: 'EPSG:3857'});
+                    drawLayer.getSource().addFeatures(targetGeojson);
+                }
+            }else{//trueのときは別の取得方法を
+                var rawUrl = json["files"]["hinatagis.geojson"]["raw_url"];
+                $.ajax({
+                    type: "get",
+                    url: rawUrl ,
+                    dataType: "json"
+                }).done(function (json) {
+                    console.log(json);
+                    gistGeojson = json;
+                    if(gistGeojson){
+                        var targetGeojson = new ol.format.GeoJSON().readFeatures(gistGeojson, {featureProjection: 'EPSG:3857'});
+                        drawLayer.getSource().addFeatures(targetGeojson);
+                    }
+                }).fail(function () {
+                    console.log("失敗!");
+                });
+            }
+        }).fail(function () {
+            console.log("失敗!");
+        });
+    }
+    //2画面---------------------------------------------------
+    var dual = hashObj["d"];
+    if(dual){
+        if(dual==="2"){
+            $("#map1 .dualscreen-btn").click();
+        }
+    }
+    //レイヤー順----------------------------------------------
+    var layerJson = hashObj["l"];
+    if(layerJson) {
+        layerJson = decodeURI(layerJson);
+        layerJson = JSON.parse(layerJson);
+        var maps = [map1,map2];
+        for(var i = 0; i <maps.length; i++) {
+            if(maps[i]===map1) {
+                useLayersArr = useLayersArr1;
+                element =  $("#map1");
+            }else{
+                useLayersArr = useLayersArr2;
+                element =  $("#map2");
+            }
+            element.find("input:checkbox[name='haikei-check'][value='0']").iCheck("uncheck");
+            for(var j = 0; j <layerJson[i].length; j++) {
+                var obj = layerJson[i][j];
+                var name_J = obj["n"];
+                var opacity_J = Number(obj["o"]);
+                //var zIndex_J = Number(obj["z"]);
+                var useLayersArr;
+                var element;
+                for(var k = 0; k <useLayersArr.length; k++){
+                    var layer = useLayersArr[k];
+                    var name;
+                    if(!Array.isArray(layer)){
+                        name = layer.getProperties()["name"];
+                        if (name) {
+                            if (name === name_J) {
+                                var heikeiCheck = element.find("input:checkbox[name='haikei-check'][value='" + k + "']");
+                                heikeiCheck.iCheck("check");
+                                layer.setOpacity(opacity_J);
+                                var tgtTr = heikeiCheck.parents("tr");
+                                tgtTr.find(".ui-slider-handle").css({
+                                    left:String(opacity_J*100) + "%"
+                                });
+                                tgtTr.show();
+                                //layer.setZIndex(zIndex_J);
+                            }
+                        }
+                    }else{//配列のとき
+                        name = layer[0].getProperties()["name"];
+                        if (name) {
+                            if (name === name_J) {
+                                var heikeiCheck = element.find("input:checkbox[name='haikei-check'][value='" + k + "']");
+                                heikeiCheck.iCheck("check");
+                                for(var l = 0; l <layer.length; l++){
+                                    layer[l].setOpacity(opacity_J);
+                                }
+                                var tgtTr = heikeiCheck.parents("tr");
+                                tgtTr.find(".ui-slider-handle").css({
+                                    left:String(opacity_J*100) + "%"
+                                });
+                                tgtTr.show();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    //レイヤー順ここまで
+    //最後に座標とズームをセット
+    var zxy = hashAr[0];
+    if(zxy){
+        var zxyAr = zxy.replace("#","").split("/")
+        var zoom = Number(zxyAr[0]);
+        var lat = Number(zxyAr[1]);
+        var lon = Number(zxyAr[2]);
+        map1.getView().setZoom(zoom)
+        var lonlat = ol.proj.fromLonLat([lon,lat]);
+        map1.getView().setCenter(lonlat);
+    }
+};
+//----------------------------------------------------------
+//ハッシュ用のレイヤーの並び等のjsonをつくる
+H_COMMON.getHushJson = function(){
+    var maps = [map1,map2];
+    var arr0 = [];
+    for(var i = 0; i <maps.length; i++){
+        var layers = maps[i].getLayers().getArray();
+        var arr1 = [];
+        for(var j = 0; j <layers.length; j++){
+            if(layers[j].getProperties()["title"]){
+                var prop = layers[j].getProperties();
+                var name = prop["name"];
+                var opacity = prop["opacity"];
+                var zIndex = prop["zIndex"];
+                var obj = {"n":name,"o":opacity,"z":zIndex};
+                arr1.push(obj)
+            }
+        }
+        arr1.sort(function(a,b){//念のためzIndexで昇順ソート
+            if(a["z"]<b["z"]) return -1;
+            if(a["z"]>b["z"]) return 1;
+            return 0;
+        });
+        arr0.push(arr1)
+    }
+    var parametor = encodeURI(JSON.stringify(arr0));
+    return parametor;
+};
+//----------------------------------------------------------
+
+
+
 
 //---------------------------------------------------------------------------------
 //rgbaをrgbに変換

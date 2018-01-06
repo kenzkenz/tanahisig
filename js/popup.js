@@ -1010,11 +1010,11 @@ $(function(){
         var landFormName="";
         var naritachi="";
         var risk="";
-        for(var i=0;i<codeList_sizen2.length;i++){
-            if(codeList_sizen2[i][0]==code){
-                landFormName = codeList_sizen2[i][1];
-                naritachi = codeList_sizen2[i][2];
-                risk = codeList_sizen2[i][3];
+        for(var i=0;i<vt.codeList_sizen2.length;i++){
+            if(vt.codeList_sizen2[i][0]==code){
+                landFormName = vt.codeList_sizen2[i][1];
+                naritachi = vt.codeList_sizen2[i][2];
+                risk = vt.codeList_sizen2[i][3];
                 break;
             }
         }

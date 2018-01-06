@@ -1,4 +1,5 @@
 $(function() {
+    var source = drawLayer.getSource();
     //ドラッグアンドドロップのインタラクション-----------------------------
     var dragAndDrop = new ol.interaction.DragAndDrop({
         formatConstructors: [ol.format.GeoJSON]
@@ -39,7 +40,7 @@ $(function() {
                 alert("作成中！")
         }
         /*
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
         var selectedFeatures = featureSelect.getFeatures();
         var features;
         if(selectedFeatures.getLength()===0) {
@@ -142,11 +143,12 @@ $(function() {
                         var newFeature = new ol.Feature({
                             geometry: geometry,
                             "_fillColor": "blue",
-                            "取得住所":feature["properties"]["title"]
+                            //"取得住所":feature["properties"]["title"]
                         });
                         for (var j = 0; j < topRow.length; j++) {
                             if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i + 1][j].replace(/"/gi, "");
                         }
+                        newFeature["D"]["取得住所"] = feature["properties"]["title"];
                         drawLayer.getSource().addFeature(newFeature);
                     }else{
                         var msg = "<i class='fa fa-exclamation-triangle fa-fw' style='color:rgba(0,0,0,1.0);'></i>";
@@ -197,7 +199,7 @@ $(function() {
             "download": fileName
         });
         $(".save-a")[0].click();
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
     }
     //------------------------------------------------------------------------------------------------------------------
     //geojson保存
@@ -210,28 +212,8 @@ $(function() {
         blobSave(drawnGeojson,"draw.geojson")
     }
     //------------------------------------------------------------------------------------------------------------------
-    //csv
+    //csvエクスポート
     function exportcsv(content) {
-        /*
-        var finalVal = '';
-        for (var i = 0; i < content.length; i++) {
-            var value = content[i];
-            console.log(value)
-            for (var j = 0; j < value.length; j++) {
-                console.log(value[j])
-                var innerValue = value[j] === null ? '' : value[j].toString();
-                var result = innerValue.replace(/"/g, '""');
-                if (result.search(/("|,|\n)/g) >= 0)
-                    result = '"' + result + '"';
-                if (j > 0)
-                    finalVal += ',';
-                finalVal += result;
-            }
-            finalVal += '\n';
-        }
-        */
-
-
         var finalVal = '';
         for (var i = 0; i < content.length; i++) {
             var value = content[i];
@@ -243,8 +225,6 @@ $(function() {
             }
             finalVal += '\n';
         }
-
-
         return finalVal;
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -257,40 +237,38 @@ $(function() {
             alert("データがありません。");
             return;
         }
-        var headerAr = [];
-        var header = "";
-        var content = "";
-        var contentAr = [];
+        var headerAr = [],contentAr0 = [],contentAr1 = [];
+        var prop;
+        //ヘッダー配列------------------------------------------------------------
         for(var i = 0; i <features.length; i++) {
-            var prop = features[i].getProperties();
+            prop = features[i].getProperties();
             for(key in prop){
-                console.log(key);
                 if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="移動") {
-                    PushArray(headerAr, key)
+                    PushArray(headerAr, key)//キー名を全行分重複のないように配列に格納
                 }
             }
         }
-        //console.log(headerAr);
-        /*
+        //2行目以下（先頭行は含まない）を作成----------------------------------------
         for(var i = 0; i <features.length; i++) {
             var coord = features[i].getGeometry().getCoordinates();
             console.log(coord);
             var lonlat = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
-            content += lonlat + "\n"
-        }
-        */
-        for(var i = 0; i <features.length; i++) {
-            var coord = features[i].getGeometry().getCoordinates();
-            console.log(coord);
-            var lonlat = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+            var lon = lonlat[0];
+            var lat = lonlat[1];
             //contentAr.push(JSON.stringify(lonlat).replace(/,/gi,"zzz"));
-            contentAr.push("aaaaaa");
+            prop = features[i].getProperties();
+            contentAr0 = [];
+            for(var j = 0; j <headerAr.length; j++) {//全行分重複無しで取得したキー名でループ
+                var header = headerAr[j];
+                contentAr0.push(prop[header])
+            }
+            contentAr0.push(lon);contentAr0.push(lat);
+            contentAr1.push(contentAr0);
         }
-        console.log(contentAr);
-        var csv = exportcsv([contentAr]);
-        console.log(csv);
-
-
+        //----------------------------------------------------------------
+        headerAr.push("取得経度");headerAr.push("取得緯度");//ヘッダー配列に追加
+        contentAr1.unshift(headerAr);//先頭にヘッダー配列を追加
+        var csv = exportcsv(contentAr1);
         //----------------------------------------------------------
         // Unicodeコードポイントの配列に変換する
         var unicode_array = str_to_unicode_array(csv);
@@ -337,6 +315,10 @@ $(function() {
                 "href": gistUrl,
                 "target":"_blank"
             });
+
+            var gistId = gistUrl.split("/")[gistUrl.split("/").length-1];
+            H_COMMON.setHush("g",gistId);
+            /*
             var href = location["href"].split("#")[0];
             var urlHash = location.hash;
             var hashAr = urlHash.split("&");
@@ -346,6 +328,7 @@ $(function() {
             var newUrl = href + zxy + "&g=" + gistId;
             console.log(newUrl);
             history.replaceState(null, null, newUrl);
+            */
             var msg = "<i class='fa fa-github-alt fa-fw' style='color:rgba(0,0,0,1.0);'></i>gistに保存しました。";
             msg += "<br>gistを削除するときはgist画面の右上のDeleteで！";
             $.notify({//options
@@ -367,6 +350,15 @@ $(function() {
             $("#loading-fa2").hide(500);
         };
         xhr.send(JSON.stringify(data));
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
     }
+    //------------------------------------------------------------------------------------------------------------------
+    //最後の設定
+
+    //history.replaceState(null, null,localStorage.getItem("href"));
+    //H_COMMON.getHush();
+
+    //------------------------------------------------------------------------------------------------------------------
+
+
 });

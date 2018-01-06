@@ -18,25 +18,6 @@ $(function(){
             });
             funcHaikeiTableCreate(mapObj["element"], mapObj["name"]);//ファンクションはlayer-00.js
         }else {
-            /*
-            if(haikeiMsgFlg) {
-                $.notify({//options
-                    message: "<div style='text-align:center;'><i class='fa fa-exclamation fa-fw'></i>背景は順次追加していく予定です。</div>"
-                }, {//settings
-                    type: "info",
-                    z_index: 999999,
-                    placement: {
-                        from: "bottom",
-                        align: "center"
-                    },
-                    animate: {
-                        enter: "animated fadeInDown",
-                        exit: "animated fadeOutUp"
-                    }
-                });
-                haikeiMsgFlg = false;
-            }
-            */
             funcHaikeiTblDivHeight();//common.jsにある関数
             var mapWidth = $(this).parents(".maps").width();
             var dialogLeft = Number($("#mydialog-haikei-dialog-" + mapObj["name"]).css("left").replace("px",""));

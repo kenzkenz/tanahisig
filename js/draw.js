@@ -1,5 +1,8 @@
+if (typeof H_DRAW === 'undefined') {
+    var H_DRAW = {};
+}
 var drawLayer = null;
-var drawSourceChangeFlg = false;
+H_DRAW.drawSourceChangeFlg = false;
 var rangeLayer = null;
 var drawContextmenuOverlay = null;
 var rightClickedFeatyure = null;
@@ -12,7 +15,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     $(window).on('beforeunload', function () {
         //if($("#mydialog-draw-dialog").css("display")==="block") return "";
-        if (drawSourceChangeFlg) return "";
+        if (H_DRAW.drawSourceChangeFlg) return "";
     });
     //------------------------------------------------------------------------------------------------------------------
     //キーボード操作　キーダウン時　ctrl+zで戻す　同時押しはこちらに描く
@@ -192,10 +195,10 @@ $(function() {
     $("#map1").append('<div id="drawContextmenuOverlay-div" class="drawContextmenuOverlay-div">' + menu + '</div>');
     $('[data-toggle="tooltip"]').tooltip({html: true, container: 'body'});
     $(".bs-toggle").bootstrapToggle();
+    var drawTypeMsDropDown = $("#drawType").msDropDown().data("dd");
     var drawContextmenuDrawColorDD = $("#drawContextmenu-drawColor").msDropDown().data("dd");
     var drawContextmenuDrawColorWakuDD = $("#drawContextmenu-drawColor-waku").msDropDown().data("dd");
     var drawContextmenuDrawColorHabaDD = $("#drawContextmenu-drawColor-haba").msDropDown().data("dd");
-    var drawTypeMsDropDown = $("#drawType").msDropDown().data("dd");
     drawContextmenuDrawColorDD.set("disabled",true);
     drawContextmenuDrawColorWakuDD.set("disabled",true);
     drawContextmenuDrawColorHabaDD.set("disabled",true);
@@ -217,14 +220,13 @@ $(function() {
             $("#drawContextmenu-opacity-div3").html(ui.value);
         }
     });
-
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイをマップに設定
     drawContextmenuOverlay = new ol.Overlay({
         element:$("#drawContextmenuOverlay-div")[0],
         //autoPan:true,
         //autoPanAnimation:{duration:200},
-        offset:[0,0]//横、縦
+        offset:[10,10]//横、縦
     });
     map1.addOverlay(drawContextmenuOverlay);
     //------------------------------------------------------------------------------------------------------------------
@@ -237,12 +239,10 @@ $(function() {
         addInteractions();
         //人口５００メッシュと共存するときは下記を復活
         //if($("#mydialog-draw-dialog").css("display")!=="block") return;
-        var top = evt.clientY;
-        var left = evt.clientX;
+        var top = evt.clientY,left = evt.clientX;
         var coord = map1.getCoordinateFromPixel([left, top]);
         var pixel = [left, top];
-        var features = [];
-        var layers = [];
+        var features = [],layers = [];
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
@@ -252,9 +252,9 @@ $(function() {
                 }
             }
         });
-        var feature,pointFeature,lineStringFeature,otherFeature;
+        var feature,geomType,pointFeature,lineStringFeature,otherFeature;
         for(var i = 0; i <features.length; i++){
-            var geomType = features[i].getGeometry().getType();
+            geomType = features[i].getGeometry().getType();
             console.log(geomType);
             switch (geomType) {
                 case "Point":
@@ -267,15 +267,13 @@ $(function() {
                     otherFeature = features[i]
             }
         }
+        //同じ座標に複数の地物があるときに点→線→他の順で一つに限定する。
         if(pointFeature) {
             feature = pointFeature;
-            console.log("点")
         }else if(lineStringFeature) {
             feature = lineStringFeature;
-            console.log("線")
         }else{
             feature = otherFeature;
-            console.log("他")
         }
         drawContextmenuOverlay.setPosition(coord);
         drawContextmenuCreate(feature);
@@ -295,24 +293,6 @@ $(function() {
         $(".prop-input-text-name").val("");
         $(".prop-input-text-val").val("");
         if(feature) {//地物があるとき
-            /*
-            //地物を選択地物としてセット--------------------------
-            rightClickedFeatyure = feature;
-            drawLayer.getSource().changed();
-            //モディファイと移動　インタラクション-----------------
-            map1.removeInteraction(snap);
-            map1.removeInteraction(modify);
-            modify = new ol.interaction.Modify({
-                features:new ol.Collection([rightClickedFeatyure]),
-                deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにした
-            });
-            map1.addInteraction(modify);
-            map1.addInteraction(snap);
-            transform2.select(rightClickedFeatyure);
-            transform2.setVisible(true);
-            console.log(rightClickedFeatyure)
-            //------------------------------------------------
-            */
             var prop,geomType;
             if(!Array.isArray(feature)) {//配列でないとき　つまり一つだけ選択しているとき
                 //地物を選択地物としてセット--------------------------
@@ -425,9 +405,6 @@ $(function() {
                 switch (geomType) {
                     case "Point":
                         $("#drawContextmenu-msg-div").html("(点)色を変えます。iconで形状変更します。");
-                        var pointCoord = feature.getGeometry().getCoordinates();
-                        drawContextmenuOverlay.setPosition(pointCoord);
-                        drawContextmenuOverlay.setOffset([10, 10]);
                         $("#drawContextmenu-drawColor-div").show();
                         //$("#drawContextmenu-icon-btn").show();
                         $("#currentIcon").show();
@@ -442,6 +419,10 @@ $(function() {
                         $("#drawContextmenu-opacity-div").show();
                         $("#drawContextmenu-height-div").show();
                         $("#drawContextmenu-prop-btn").prop("disabled",false);
+                        //オーバーレイの貼り付け場所調整
+                        var extent = feature.getGeometry().getExtent();
+                        var mapExtent = map1.getView().calculateExtent(map1.getSize());
+                        if(extent[2]<mapExtent[2]) drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
                         break;
                     case "LineString":
                         $("#drawContextmenu-msg-div").html("線の色と幅を変えます。");
@@ -461,8 +442,6 @@ $(function() {
                 drawContextmenuDrawColorHabaDD.set("disabled", false);
             }else{//配列のとき　つまり複数選択の時
                 console.log("配列");
-
-
                 //色
                 var rgb = "rgb(192,192,192)";//銀色
                 drawContextmenuDrawColorDD.setIndexByValue(rgb);
@@ -500,7 +479,9 @@ $(function() {
             console.log("最初または地物なしのとき");
             map1.removeInteraction(modify);
             rightClickedFeatyure = null;
+            var aaa = H_DRAW.drawSourceChangeFlg;
             drawLayer.getSource().changed();
+            H_DRAW.drawSourceChangeFlg = aaa;
             $("#drawContextmenu-msg-div").html("点、面、線等を作ります。");
             $("#drawContextmenu-step1-div").show();
             $("#drawContextmenu-layeropacity-div").show();
@@ -560,7 +541,6 @@ $(function() {
                     break;
                 default:
             }
-
             var verticesFlg = false;
             for(var i = 0; i <coordAr.length; i++){
                 var verticesPixel = map1.getPixelFromCoordinate(coordAr[i]);
@@ -625,7 +605,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
     drawLayer.getSource().on("change", function(e) {
-        drawSourceChangeFlg = true;
+        console.log("変更");
+        H_DRAW.drawSourceChangeFlg = true;
         geojsonText();
     });
     //範囲指定用レイヤー
@@ -1168,7 +1149,8 @@ $(function() {
     //ここから各コントロール
     //オーバーレイをドラッグ可能にする。
     $(".ol-overlay-container").draggable({
-        handle:"#drawContextmenu-msg-div,#second-div-msg-div",
+        //handle:"#drawContextmenu-msg-div,#second-div-msg-div",
+        handle:"#drawContextmenuOverlay-div",
         drag:function(event,ui){
             var pixel = [ui.position["left"],ui.position["top"]];
             var coord = map1.getCoordinateFromPixel(pixel);
@@ -1210,9 +1192,11 @@ $(function() {
     });
     //画面をクリックしたら非表示にする。
     $("body,.ol-overlay-container").click(function(){
-        console.log(333);
         $(".my-toggle-ul").hide(500);
-        $(".ddChild").hide();
+        drawTypeMsDropDown.close();
+        drawContextmenuDrawColorDD.close();
+        drawContextmenuDrawColorWakuDD.close();
+        drawContextmenuDrawColorHabaDD.close();
     });
     //------------------------------------------------------------------------------------------------------------------
     //操作

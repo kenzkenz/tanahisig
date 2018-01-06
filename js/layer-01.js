@@ -138,6 +138,7 @@ var sikiriDrTashiro = new ol.layer.Tile({
 //国土地理院（災害以外）---------------------------------------------------------------------------------------------------
 //国土地理院淡色地図のレイヤー
 function pale(){
+    this.name = "pale";
     this.title = "地理院_淡色地図";
     this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
     this.detail = "";
@@ -154,6 +155,7 @@ var pale1 = new ol.layer.Tile(new pale());
 var pale2 = new ol.layer.Tile(new pale());
 //国土地理院_白地図
 function blank_(){
+    this.name = "blank";
     this.title = "地理院_白地図";
     this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
     this.detail = "";
@@ -169,6 +171,7 @@ var blank1 = new ol.layer.Tile(new blank_());
 var blank2 = new ol.layer.Tile(new blank_());
 //国土地理院_色別標高図
 function relief_(){
+    this.name = "relief";
     this.title = "地理院_色別標高図";
     this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
     this.detail = "海域部は会場保安庁海洋情報部の資料を使用して作成";
@@ -184,6 +187,7 @@ var relief1 = new ol.layer.Tile(new relief_());
 var relief2 = new ol.layer.Tile(new relief_());
 //国土地理院_治水地形分類図
 function lcmfc2_(){
+    this.name = "lcmfc2";
     this.title = "地理院_治水地形分類図";
     this.origin = "<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>";
     this.detail = "治水地形分類図 更新版（2007～2014年）";
@@ -205,6 +209,7 @@ var lcmfc2_2 = new ol.layer.Tile(new lcmfc2_());
 //国土地理院（災害以外）ここまで--------------------------------------------------------------------------------------------
 //オープンストリートマップ
 function osm_(){
+    this.name = "osm";
     this.title = "OpenStreetMap";
     this.origin = "<a href='https://openstreetmap.jp' target='_blank'>OpenStreetMap</a>";
     this.detail = "OpenStreetMapは、道路地図などの地理情報データを誰でも利用できるよう、フリーの地理情報データを作成することを目的としたプロジェクトです。";
@@ -220,6 +225,7 @@ var osm2 = new ol.layer.Tile(new osm_());
 function mieruneNormal_(){
     //this.folder = "child";
     //this.category = "mierune";
+    this.name = "mieruneNormal";
     this.title = "MIERUNE地図Normal(デモ)";
     this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
     this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.<br>" +
@@ -238,6 +244,7 @@ var mieruneNormal2 = new ol.layer.Tile(new mieruneNormal_());
 function mierune_(){
     this.folder = "child";
     this.category = "mierune";
+    this.name = "mieruneBlue";
     this.title = "MIERUNE地図";
     this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
     this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.";
@@ -255,6 +262,7 @@ var mierune2 = new ol.layer.Tile(new mierune_());
 function mieruneMono_(){
     this.folder = "child";
     this.category = "mierune";
+    this.name = "mieruneMono";
     this.title = "MIERUNE地図モノクロ";
     this.origin = "<a href='http://www.mierune.co.jp/tile.html' target='_blank'><label>MIERUNE,LLC.</label></a>";
     this.detail = "Maptiles by MIERUNE, under CC BY. Data by OpenStreetMap contributors, under ODbL.";
@@ -273,6 +281,7 @@ var mieruneMono2 = new ol.layer.Tile(new mieruneMono_());
 function tunami_(){
     this.folder = "child";
     this.category = "hazard";
+    this.name = "tunami"
     this.title = "津波浸水想定区域(宮崎県)";
     this.origin = "";
     this.detail = "";
@@ -292,6 +301,7 @@ var tunami2 = new ol.layer.Tile(new tunami_());
 function sinsuisoutei_(){
     this.folder = "child";
     this.category = "hazard";
+    this.name = "sonsui";
     this.title = "洪水浸水想定(宮崎県)";
     this.origin = "";
     this.detail = "";
@@ -311,6 +321,7 @@ var sinsuisoutei2 = new ol.layer.Tile(new sinsuisoutei_());
 function kikenkeiryuu_(){
     this.folder = "child";
     this.category = "hazard";
+    this.name = "doseki-m";
     this.title = "土石流危険渓流(宮崎県)";
     this.origin = "";
     this.detail = "";
@@ -330,6 +341,7 @@ var kikenkeiryuu2 = new ol.layer.Tile(new kikenkeiryuu_());
 function kyuukeisyakikenkasyo_(){
     this.folder = "child";
     this.category = "hazard";
+    this.name = "kyuu-m"
     this.title = "急傾斜地崩壊危険箇所(宮崎県)";
     this.origin = "";
     this.detail = "";
@@ -347,38 +359,25 @@ var kyuukeisyakikenkasyo1 = new ol.layer.Tile(new kyuukeisyakikenkasyo_());
 var kyuukeisyakikenkasyo2 = new ol.layer.Tile(new kyuukeisyakikenkasyo_());
 //------------------------------------------------------------------------------
 //飫肥城
-var obi1 = new ol.layer.Tile({
-    folder:"child",
-    category:"kotizu",
-    title:"飫肥歴史まちあるきマップ",
-    origin:"",
-    detail:"",
-    coord:[131.3502,31.6289],
-    zoom:16,
-    icon:"<i class='fa fa-file-image-o fa-fw' style='color:dimgrey;'></i>",
-	extent:transformE([131.33600171544876,31.61837899707213,131.37244226230908,31.63995077971333]),
-	source: new ol.source.XYZ({
-		url:"https://mtile.pref.miyazaki.lg.jp/tile/obi/{z}/{x}/{-y}.png",
+function obi_(){
+    this.folder = "child";
+    this.category = "kotizu";
+    this.name = "obimap";
+    this.title = "飫肥歴史まちあるきマップ";
+    this.origin = "";
+    this.detail = "";
+    this.coord = [131.3502,31.6289];
+    this.zoom = 16;
+    this,icon = "<i class='fa fa-file-image-o fa-fw' style='color:dimgrey;'></i>";
+    this.extent = transformE([131.33600171544876,31.61837899707213,131.37244226230908,31.63995077971333]);
+    this.source = new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/obi/{z}/{x}/{-y}.png",
         crossOrigin:"anonymous",
-		maxZoom:19
-	})
-});
-var obi2 = new ol.layer.Tile({
-    folder:"child",
-    category:"kotizu",
-    title:"飫肥歴史まちあるきマップ",
-    origin:"",
-    detail:"",
-    coord:[131.3502,31.6289],
-    zoom:16,
-    icon:"<i class='fa fa-file-image-o fa-fw' style='color:dimgrey;'></i>",
-	extent:transformE([131.33600171544876,31.61837899707213,131.37244226230908,31.63995077971333]),
-	source: new ol.source.XYZ({
-		url:"https://mtile.pref.miyazaki.lg.jp/tile/obi/{z}/{x}/{-y}.png",
-        crossOrigin:"anonymous",
-		maxZoom:19
-	})
-});
+        maxZoom:19
+    })
+}
+var obi1 = new ol.layer.Tile(new obi_());
+var obi2 = new ol.layer.Tile(new obi_());
 
 //千葉県管内全図(大正14年)
 var mrtiba1 = new ol.layer.Tile({
@@ -529,7 +528,7 @@ var bingroad2 = new ol.layer.Tile({
 var t0707dol1 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame1",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害<span style='font-size:8px;'>(朝倉市桂川、日田市鶴河内鶴城・小野付近7/7ﾍﾘ撮影)</span>",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -546,7 +545,7 @@ var t0707dol1 =  new ol.layer.Tile({
 var t0707dol2 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame1",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害<span style='font-size:8px;'>(朝倉市桂川、日田市鶴河内鶴城・小野付近7/7ﾍﾘ撮影)</span>",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -564,7 +563,7 @@ var t0707dol2 =  new ol.layer.Tile({
 var t0707dol31 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame2",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉市山田奈良ヶ谷付近7/7ﾄﾞﾛｰﾝ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -581,7 +580,7 @@ var t0707dol31 =  new ol.layer.Tile({
 var t0707dol32 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame2",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉市山田奈良ヶ谷付近7/7ﾄﾞﾛｰﾝ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -599,7 +598,7 @@ var t0707dol32 =  new ol.layer.Tile({
 var t0708dol11 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame3",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉市、日田市の複数地域7/8ﾍﾘ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -616,7 +615,7 @@ var t0708dol11 =  new ol.layer.Tile({
 var t0708dol12 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame3",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉市、日田市の複数地域7/8ﾍﾘ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -635,7 +634,7 @@ var t0708dol12 =  new ol.layer.Tile({
 var t0710dol1 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame4",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(日田市小野川周辺7/10ﾍﾘ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -652,7 +651,7 @@ var t0710dol1 =  new ol.layer.Tile({
 var t0710dol2 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame4",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(日田市小野川周辺7/10ﾍﾘ撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -670,7 +669,7 @@ var t0710dol2 =  new ol.layer.Tile({
 var t0713dol11 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame5",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉地区7/13空中写真)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -687,7 +686,7 @@ var t0713dol11 =  new ol.layer.Tile({
 var t0713dol12 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame5",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝倉地区7/13空中写真)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -705,7 +704,7 @@ var t0713dol12 =  new ol.layer.Tile({
 var t0713dol21 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame6",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(東峰地区7/13空中写真)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -722,7 +721,7 @@ var t0713dol21 =  new ol.layer.Tile({
 var t0713dol22 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame6",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(東峰地区7/13空中写真)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -740,7 +739,7 @@ var t0713dol22 =  new ol.layer.Tile({
 var t0802dol1 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame7",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(東峰地区7/30,31撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -757,7 +756,7 @@ var t0802dol1 =  new ol.layer.Tile({
 var t0802dol2 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame7",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(東峰地区7/30,31撮影)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -774,7 +773,7 @@ var t0802dol2 =  new ol.layer.Tile({
 var ooameasia07181 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame8",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(アジア航測7/8撮影)",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/aas-disaster-20170708' target='_blank'>平成29年7月九州北部豪雨災害画像データ（7月8日撮影）</a>",
@@ -791,7 +790,7 @@ var ooameasia07181 =  new ol.layer.Tile({
 var ooameasia07182 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame8",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(アジア航測7/8撮影)",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/aas-disaster-20170708' target='_blank'>平成29年7月九州北部豪雨災害画像データ（7月8日撮影）</a>",
@@ -808,7 +807,7 @@ var ooameasia07182 =  new ol.layer.Tile({
 var ooameasia07201 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame9",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(アジア航測7/9撮影)",
     origin:"<a href='https://www.geospatial.jp/gp_front/content/1b7345a0-41a1-414d-94e8-378b69d5c4c1' target='_blank'>平成29年7月九州北部豪雨災害画像データ（7月9日撮影）</a>",
@@ -825,7 +824,7 @@ var ooameasia07201 =  new ol.layer.Tile({
 var ooameasia07202 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame9",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(アジア航測7/9撮影)",
     origin:"<a href='https://www.geospatial.jp/gp_front/content/1b7345a0-41a1-414d-94e8-378b69d5c4c1' target='_blank'>平成29年7月九州北部豪雨災害画像データ（7月9日撮影）</a>",
@@ -842,7 +841,7 @@ var ooameasia07202 =  new ol.layer.Tile({
 var ooameasahi01 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame10",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝日航洋7/13,14撮影)",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/2017-7-kyusyuhokubu-new' target='_blank'>平成29年九州北部豪雨災害地区空中写真（7月13-14, 30日撮影）</a>",
@@ -860,7 +859,7 @@ var ooameasahi01 =  new ol.layer.Tile({
 var ooameasahi02 =  new ol.layer.Tile({
     folder:"child",
     category:"kyuusyuuHokubuGouu",
-    name:"ooame",
+    name:"ooame10",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:blue;'></i>",
     title:"豪雨被害(朝日航洋7/13,14撮影)",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/2017-7-kyusyuhokubu-new' target='_blank'>平成29年九州北部豪雨災害地区空中写真（7月13-14, 30日撮影）</a>",
@@ -879,6 +878,7 @@ var ooameasahi02 =  new ol.layer.Tile({
 var kumamoto0724_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin1",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本2地区正射画像H28/7/5～24撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -895,6 +895,7 @@ var kumamoto0724_1 =  new ol.layer.Tile({
 var kumamoto0724_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin1",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本2地区正射画像H28/7/5～24撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -911,6 +912,7 @@ var kumamoto0724_2 =  new ol.layer.Tile({
 var kumamoto_0705_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin2",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇3地区正射画像H28/7/5撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -927,6 +929,7 @@ var kumamoto_0705_1 =  new ol.layer.Tile({
 var kumamoto_0705_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin2",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇3地区正射画像H28/7/5撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -943,6 +946,7 @@ var kumamoto_0705_2 =  new ol.layer.Tile({
 var kumamoto_0531_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin3",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇河陽地区正射画像H28/5/31撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -959,6 +963,7 @@ var kumamoto_0531_1 =  new ol.layer.Tile({
 var kumamoto_0531_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin3",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇河陽地区正射画像H28/5/31撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -975,6 +980,7 @@ var kumamoto_0531_2 =  new ol.layer.Tile({
 var kumamoto_0530_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin4",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"益城・西原地区正射画像H28/5/30撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -991,6 +997,7 @@ var kumamoto_0530_1 =  new ol.layer.Tile({
 var kumamoto_0530_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin4",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"益城・西原地区正射画像H28/5/30撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1007,6 +1014,7 @@ var kumamoto_0530_2 =  new ol.layer.Tile({
 var kumamoto_0429A_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin5",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本断層地区A正射画像H28/4/29撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1023,6 +1031,7 @@ var kumamoto_0429A_1 =  new ol.layer.Tile({
 var kumamoto_0429A_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin5",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本断層地区A正射画像H28/4/29撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1039,6 +1048,7 @@ var kumamoto_0429A_2 =  new ol.layer.Tile({
 var kumamoto_0429B_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin6",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本断層地区B正射画像H28/4/29撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1055,6 +1065,7 @@ var kumamoto_0429B_1 =  new ol.layer.Tile({
 var kumamoto_0429B_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin6",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本断層地区B正射画像H28/4/29撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1071,6 +1082,7 @@ var kumamoto_0429B_2 =  new ol.layer.Tile({
 var kumamoto_04201_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin7",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"西原2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1087,6 +1099,7 @@ var kumamoto_04201_1 =  new ol.layer.Tile({
 var kumamoto_04201_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin7",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"西原2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1103,6 +1116,7 @@ var kumamoto_04201_2 =  new ol.layer.Tile({
 var kumamoto_04202_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin8",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1119,6 +1133,7 @@ var kumamoto_04202_1 =  new ol.layer.Tile({
 var kumamoto_04202_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin8",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1135,6 +1150,7 @@ var kumamoto_04202_2 =  new ol.layer.Tile({
 var kumamoto_04203_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin9",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1151,6 +1167,7 @@ var kumamoto_04203_1 =  new ol.layer.Tile({
 var kumamoto_04203_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin9",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇2地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1167,6 +1184,7 @@ var kumamoto_04203_2 =  new ol.layer.Tile({
 var kumamoto_04204_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin10",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"御船地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1183,6 +1201,7 @@ var kumamoto_04204_1 =  new ol.layer.Tile({
 var kumamoto_04204_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin10",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"御船地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1199,6 +1218,7 @@ var kumamoto_04204_2 =  new ol.layer.Tile({
 var kumamoto_04205_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin11",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"八代地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1215,6 +1235,7 @@ var kumamoto_04205_1 =  new ol.layer.Tile({
 var kumamoto_04205_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin11",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"八代地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1231,6 +1252,7 @@ var kumamoto_04205_2 =  new ol.layer.Tile({
 var kumamoto_04206_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin12",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"天草地区正射画像H28/4/19,20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1247,6 +1269,7 @@ var kumamoto_04206_1 =  new ol.layer.Tile({
 var kumamoto_04206_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin12",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"天草地区正射画像H28/4/19,20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1263,6 +1286,7 @@ var kumamoto_04206_2 =  new ol.layer.Tile({
 var kumamoto_04207_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin13",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"玉名地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1279,6 +1303,7 @@ var kumamoto_04207_1 =  new ol.layer.Tile({
 var kumamoto_04207_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin13",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"玉名地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1295,6 +1320,7 @@ var kumamoto_04207_2 =  new ol.layer.Tile({
 var kumamoto_04208_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin14",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"山鹿地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1311,6 +1337,7 @@ var kumamoto_04208_1 =  new ol.layer.Tile({
 var kumamoto_04208_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin14",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"山鹿地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1327,6 +1354,7 @@ var kumamoto_04208_2 =  new ol.layer.Tile({
 var kumamoto_04209_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin15",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"菊池地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1343,6 +1371,7 @@ var kumamoto_04209_1 =  new ol.layer.Tile({
 var kumamoto_04209_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin15",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"菊池地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1359,6 +1388,7 @@ var kumamoto_04209_2 =  new ol.layer.Tile({
 var kumamoto_042010_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin16",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"竹田地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1375,6 +1405,7 @@ var kumamoto_042010_1 =  new ol.layer.Tile({
 var kumamoto_042010_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin16",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"竹田地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1391,6 +1422,7 @@ var kumamoto_042010_2 =  new ol.layer.Tile({
 var kumamoto_042011_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin17",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"湯布院地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1407,6 +1439,7 @@ var kumamoto_042011_1 =  new ol.layer.Tile({
 var kumamoto_042011_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin17",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"湯布院地区正射画像H28/4/20撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1423,6 +1456,7 @@ var kumamoto_042011_2 =  new ol.layer.Tile({
 var kumamoto_0419dol2_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin18",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇2地区正射画像H28/4/19撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1439,6 +1473,7 @@ var kumamoto_0419dol2_1 =  new ol.layer.Tile({
 var kumamoto_0419dol2_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin18",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇2地区正射画像H28/4/19撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1455,6 +1490,7 @@ var kumamoto_0419dol2_2 =  new ol.layer.Tile({
 var kumamoto_0419dol6_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin19",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"小国地区正射画像H28/4/19撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1471,6 +1507,7 @@ var kumamoto_0419dol6_1 =  new ol.layer.Tile({
 var kumamoto_0419dol6_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin19",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"小国地区正射画像H28/4/19撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1487,6 +1524,7 @@ var kumamoto_0419dol6_2 =  new ol.layer.Tile({
 var kumamoto_0416dol1_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin20",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1503,6 +1541,7 @@ var kumamoto_0416dol1_1 =  new ol.layer.Tile({
 var kumamoto_0416dol1_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin20",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1519,6 +1558,7 @@ var kumamoto_0416dol1_2 =  new ol.layer.Tile({
 var kumamoto_0416dol2_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin21",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"宇土地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1535,6 +1575,7 @@ var kumamoto_0416dol2_1 =  new ol.layer.Tile({
 var kumamoto_0416dol2_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin21",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"宇土地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1551,6 +1592,7 @@ var kumamoto_0416dol2_2 =  new ol.layer.Tile({
 var kumamoto_0416dol3_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin22",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"合志地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1567,6 +1609,7 @@ var kumamoto_0416dol3_1 =  new ol.layer.Tile({
 var kumamoto_0416dol3_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin22",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"合志地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1583,6 +1626,7 @@ var kumamoto_0416dol3_2 =  new ol.layer.Tile({
 var kumamoto_0416dol4_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin23",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"西原地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1599,6 +1643,7 @@ var kumamoto_0416dol4_1 =  new ol.layer.Tile({
 var kumamoto_0416dol4_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin23",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"西原地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1615,6 +1660,7 @@ var kumamoto_0416dol4_2 =  new ol.layer.Tile({
 var kumamoto_0416dol5_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin24",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1631,6 +1677,7 @@ var kumamoto_0416dol5_1 =  new ol.layer.Tile({
 var kumamoto_0416dol5_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin24",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"阿蘇地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1647,6 +1694,7 @@ var kumamoto_0416dol5_2 =  new ol.layer.Tile({
 var kumamoto_0416dol6_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin25",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1663,6 +1711,7 @@ var kumamoto_0416dol6_1 =  new ol.layer.Tile({
 var kumamoto_0416dol6_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin25",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"南阿蘇地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1679,6 +1728,7 @@ var kumamoto_0416dol6_2 =  new ol.layer.Tile({
 var kumamoto_0416dol7_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin26",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"別府地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1695,6 +1745,7 @@ var kumamoto_0416dol7_1 =  new ol.layer.Tile({
 var kumamoto_0416dol7_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin26",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"別府地区正射画像H28/4/16撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1711,6 +1762,7 @@ var kumamoto_0416dol7_2 =  new ol.layer.Tile({
 var kumamoto_0415dol1_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin27",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"益城地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1727,6 +1779,7 @@ var kumamoto_0415dol1_1 =  new ol.layer.Tile({
 var kumamoto_0415dol1_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin27",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"益城地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1743,6 +1796,7 @@ var kumamoto_0415dol1_2 =  new ol.layer.Tile({
 var kumamoto_0415dol2_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin28",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本南地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1759,6 +1813,7 @@ var kumamoto_0415dol2_1 =  new ol.layer.Tile({
 var kumamoto_0415dol2_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin28",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"熊本南地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1775,6 +1830,7 @@ var kumamoto_0415dol2_2 =  new ol.layer.Tile({
 var kumamoto_0415dol3_1 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin29",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"宇城地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1791,6 +1847,7 @@ var kumamoto_0415dol3_1 =  new ol.layer.Tile({
 var kumamoto_0415dol3_2 =  new ol.layer.Tile({
     folder:"child",
     category:"kumamotoJisin",
+    name:"kumamotojisin29",
     icon:"<i class='fa fa-exclamation-triangle fa-fw' style='color:darkred;'></i>",
     title:"宇城地区正射画像H28/4/15撮影",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
@@ -1830,6 +1887,7 @@ var kumamoto_0415dol3_2 =  new ol.layer.Tile({
 var kikenkeiryuuAll1 = new ol.layer.Tile({
     folder:"child",
     category:"test",
+    name:"dosekizenkoku",
     title:"★土石流危険渓流",
     origin:"",
     detail:"土石流の発生の危険性があり、人家等に被害を与えるおそれがある渓流",
@@ -1845,6 +1903,7 @@ var kikenkeiryuuAll1 = new ol.layer.Tile({
 var kikenkeiryuuAll2 = new ol.layer.Tile({
     folder:"child",
     category:"test",
+    name:"dosekizenkoku",
     title:"★土石流危険渓流",
     origin:"",
     detail:"土石流の発生の危険性があり、人家等に被害を与えるおそれがある渓流",
@@ -1861,6 +1920,7 @@ var kikenkeiryuuAll2 = new ol.layer.Tile({
 var kyuukeisyakikenkasyoAll1 = new ol.layer.Tile({
     folder:"child",
     category:"test",
+    name:"kyuukeizenkoku",
     title:"★急傾斜地崩壊危険箇所",
     origin:"",
     detail:"傾斜度30°かつ高さ5m以上の急傾斜地で人家等に被害を与えるおそれのある箇所",
@@ -1876,6 +1936,7 @@ var kyuukeisyakikenkasyoAll1 = new ol.layer.Tile({
 var kyuukeisyakikenkasyoAll2 = new ol.layer.Tile({
     folder:"child",
     category:"test",
+    name:"kyuukeizenkoku",
     title:"★急傾斜地崩壊危険箇所",
     origin:"",
     detail:"傾斜度30°かつ高さ5m以上の急傾斜地で人家等に被害を与えるおそれのある箇所",
@@ -1893,6 +1954,7 @@ var kyuukeisyakikenkasyoAll2 = new ol.layer.Tile({
 //浪江町ドローン撮影
 var namie1 = new ol.layer.Tile({
     //secret:true,
+    name:"namie",
     title:"浪江町ドローン撮影",
     origin:"<a href='https://github.com/dronebird/oam_fukushima20170602namie' target='_blank'>github</a>",
     detail:"",
@@ -1909,6 +1971,7 @@ var namie1 = new ol.layer.Tile({
 
 var namie2 = new ol.layer.Tile({
     //secret:true,
+    name:"namie",
     title:"浪江町ドローン撮影",
     origin:"<a href='https://github.com/dronebird/oam_fukushima20170602namie' target='_blank'>github</a>",
     detail:"",
@@ -1929,6 +1992,7 @@ var namie2 = new ol.layer.Tile({
 var tondabayasit1 = new ol.layer.Tile({
     folder:"child",
     category:"ToshiDouroKasen",
+    name:"tondachikei",
     title:"富田林市地形図",
     origin:"<a href='https://www.city.tondabayashi.osaka.jp/map/1050/download.html' target='_blank'>公開データの利用について（地図等）</a>",
     detail:"",
@@ -1946,6 +2010,7 @@ var tondabayasit1 = new ol.layer.Tile({
 var tondabayasit2 = new ol.layer.Tile({
     folder:"child",
     category:"ToshiDouroKasen",
+    name:"tondachikei",
     title:"富田林市地形図",
     origin:"<a href='https://www.city.tondabayashi.osaka.jp/map/1050/download.html' target='_blank'>公開データの利用について（地図等）</a>",
     detail:"",
@@ -1966,6 +2031,7 @@ var tondabayasit2 = new ol.layer.Tile({
 var did1 = new ol.layer.Tile({
     folder:"child",
     category:"ZinkouKeizai",
+    name:"did",
     title:"人口集中地区(DID地区)",
     origin:"総務省統計局",
     detail:"平成２７年",
@@ -1981,6 +2047,7 @@ var did1 = new ol.layer.Tile({
 var did2 = new ol.layer.Tile({
     folder:"child",
     category:"ZinkouKeizai",
+    name:"did",
     title:"人口集中地区(DID地区)",
     origin:"総務省統計局",
     detail:"平成２７年",
@@ -2142,6 +2209,7 @@ function testFunction(feature, resolution) {
 var nobeoka19521 = new ol.layer.Tile({
     folder:"child",
     category:"test",
+    name:"nobeoka1952",
     title:"延岡市1952年古地図test",
     origin:"",
     detail:"" ,
@@ -2161,6 +2229,7 @@ var nobeoka19521 = new ol.layer.Tile({
 var ort1 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"miyazakiort",
     title:"宮崎県航空写真",
     origin:"宮崎県県土整備部砂防課",
     detail:"砂防課が平成25年度に撮影した航空写真をオルソ補正したもの",
@@ -2177,6 +2246,7 @@ var ort1 = new ol.layer.Tile({
 var ort2 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"miyazakiort",
     title:"宮崎県航空写真",
     origin:"宮崎県県土整備部砂防課",
     detail:"砂防課が平成25年度に撮影した航空写真をオルソ補正したもの",
@@ -2194,6 +2264,7 @@ var ort2 = new ol.layer.Tile({
 var seamlessphoto1 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"kuutyuusyashin",
     title:"国土地理院_空中写真",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -2209,6 +2280,7 @@ var seamlessphoto1 = new ol.layer.Tile({
 var seamlessphoto2 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"kuutyuusyashin",
     title:"国土地理院_空中写真",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"国土画像情報（第一期1974～1978年撮影）",
@@ -2225,6 +2297,7 @@ var seamlessphoto2 = new ol.layer.Tile({
 var gazo11 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"chiriin74",
     title:"国土地理院_74〜78年",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"国土画像情報（第一期1974～1978年撮影）",
@@ -2241,6 +2314,7 @@ var gazo11 = new ol.layer.Tile({
 var gazo12 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"chiriin74",
     title:"国土地理院_74〜78年",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -2258,6 +2332,7 @@ var gazo12 = new ol.layer.Tile({
 var old10_1 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"chiriin61",
     title:"国土地理院_61〜64年",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -2273,6 +2348,7 @@ var old10_1 = new ol.layer.Tile({
 var old10_2 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"chiriin61",
     title:"国土地理院_61〜64年",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -2297,6 +2373,7 @@ var old10_2 = new ol.layer.Tile({
 var muro1 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"muroran28",
     title:"室蘭市航空写真",
     origin:"<a href='http://www.city.muroran.lg.jp/main/org2260/odlib.php' target='_blank'>むろらんオープンデータライブラリ</a>",
     detail:"平成28年度撮影",
@@ -2314,6 +2391,7 @@ var muro2;
 muro2 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"muroran28",
     title: "室蘭市航空写真",
     origin:"<a href='http://www.city.muroran.lg.jp/main/org2260/odlib.php' target='_blank'>むろらんオープンデータライブラリ</a>",
     detail:"平成28年度撮影",
@@ -2361,6 +2439,7 @@ var muroQ2 = new ol.layer.Tile({
 var tondabayasik1 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"tondasyashin",
     title:"富田林市航空写真",
     origin:"<a href='https://www.city.tondabayashi.osaka.jp/map/1050/download.html' target='_blank'>公開データの利用について（地図等）</a>",
     detail:"",
@@ -2378,6 +2457,7 @@ var tondabayasik1 = new ol.layer.Tile({
 var tondabayasik2 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"tondasyashin",
     title:"富田林市航空写真",
     origin:"<a href='https://www.city.tondabayashi.osaka.jp/map/1050/download.html' target='_blank'>公開データの利用について（地図等）</a>",
     detail:"",
@@ -2396,6 +2476,7 @@ var tondabayasik2 = new ol.layer.Tile({
 var kago1 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"kagoshimasyashin",
     title:"鹿児島市航空写真",
     //origin:"<a href='https://kagolug.org/kagoshima-city-opendata/mapdata/tile/airphoto/' target='_blank'>地図タイル配信サイト</a>",
     //detail:"鹿児島市よりクリエィティブ・コモンズ表示4.0国際ライセンスの下に提供されているデータを元にmatoken氏が作成された地図タイルです。",
@@ -2413,6 +2494,7 @@ var kago1 = new ol.layer.Tile({
 var kago2 = new ol.layer.Tile({
     folder:"child",
     category:"genzaisyasin",
+    name:"kagoshimasyashin",
     title:"鹿児島市航空写真",
     //origin:"<a href='https://kagolug.org/kagoshima-city-opendata/mapdata/tile/airphoto/' target='_blank'>地図タイル配信サイト</a>",
     //detail:"鹿児島市よりクリエィティブ・コモンズ表示4.0国際ライセンスの下に提供されているデータを元にmatoken氏が作成された地図タイルです。",
@@ -2433,6 +2515,7 @@ var kago2 = new ol.layer.Tile({
 var aya1 = new ol.layer.Tile({
     folder:"child",
     category:"unesco",
+    name:"ayaeco",
     title:"綾ユネスコエコパーク",
     origin:"<a href='http://www.town.aya.miyazaki.jp/ayatown/index.html' target='_blank'>綾町役場</a> 綾ユネスコエコパーク推進室",
     detail:"<a href='http://ayahpm.miyazaki-nw.or.jp/tempimg/150623164126201506231657430f.pdf' target='_blank'>パンフレット</a>",
@@ -2450,6 +2533,7 @@ var aya1 = new ol.layer.Tile({
 var aya2 = new ol.layer.Tile({
     folder:"child",
     category:"unesco",
+    name:"ayaeco",
     title:"綾ユネスコエコパーク",
     origin:"<a href='http://www.town.aya.miyazaki.jp/ayatown/index.html' target='_blank'>綾町役場</a> 綾ユネスコエコパーク推進室",
     detail:"<a href='http://ayahpm.miyazaki-nw.or.jp/tempimg/150623164126201506231657430f.pdf' target='_blank'>パンフレット</a>",
@@ -2468,7 +2552,7 @@ var aya2 = new ol.layer.Tile({
 var sobo1 = new ol.layer.Tile({
     folder:"child",
     category:"unesco",
-    name:"sobo",
+    name:"soboeco",
     title:"祖母･傾･大崩ﾕﾈｽｺｴｺﾊﾟｰｸ",
     origin:"<a href='http://sobokatamuki-br-council.org/' target='_blank'>祖母･傾･大崩ユネスコエコパーク</a>",
     detail:"",
@@ -2486,7 +2570,7 @@ var sobo1 = new ol.layer.Tile({
 var sobo2 = new ol.layer.Tile({
     folder:"child",
     category:"unesco",
-    name:"sobo",
+    name:"soboeco",
     title:"祖母･傾･大崩ﾕﾈｽｺｴｺﾊﾟｰｸ",
     origin:"<a href='http://sobokatamuki-br-council.org/' target='_blank'>祖母･傾･大崩ユネスコエコパーク</a>",
     detail:"",
@@ -2505,6 +2589,7 @@ var sobo2 = new ol.layer.Tile({
 var soboZ1 = new ol.layer.Vector({
     folder:"child",
     category:"unesco",
+    name:"soboecozone",
     title:"祖母･傾･大崩ﾕﾈｽｺｴｺﾊﾟｰｸｿﾞｰﾆﾝｸﾞ",
     origin:"",
     detail:"赤：核心地域<br>黄：緩衝地域<br>青：移行地域",
@@ -2518,6 +2603,7 @@ var soboZ1 = new ol.layer.Vector({
 var soboZ2 = new ol.layer.Vector({
     folder:"child",
     category:"unesco",
+    name:"soboecozone",
     title:"祖母･傾･大崩ﾕﾈｽｺｴｺﾊﾟｰｸｿﾞｰﾆﾝｸﾞ",
     origin:"",
     detail:"赤：核心地域<br>黄：緩衝地域<br>青：移行地域",
@@ -2533,6 +2619,7 @@ var soboZ2 = new ol.layer.Vector({
 var murosenzen1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"muroransenzen",
     title:"室蘭市戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"" ,
@@ -2550,6 +2637,7 @@ var murosenzen1 = new ol.layer.Tile({
 var murosenzen2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"muroransenzen",
     title:"室蘭市戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"" ,
@@ -2568,6 +2656,7 @@ var murosenzen2 = new ol.layer.Tile({
 var sengomiya1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyazakisengobeigun",
     title:"宮崎市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2584,6 +2673,7 @@ var sengomiya1 = new ol.layer.Tile({
 var sengomiya2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyazakisengobeigun",
     title:"宮崎市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2601,6 +2691,7 @@ var sengomiya2 = new ol.layer.Tile({
 var sengonobe1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"nobeokasengobeigun",
     title:"延岡市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2617,6 +2708,7 @@ var sengonobe1 = new ol.layer.Tile({
 var sengonobe2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"nobeokasengobeigun",
     title:"延岡市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2634,6 +2726,7 @@ var sengonobe2 = new ol.layer.Tile({
 var sengomiyako1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyakonozyouosengobeigun",
     title:"都城市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2651,6 +2744,7 @@ var sengomiyako1 = new ol.layer.Tile({
 var sengomiyako2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"miyakonozyouosengobeigun",
     title:"都城市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2669,6 +2763,7 @@ var sengomiyako2 = new ol.layer.Tile({
 var murous1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"muroransengobeigun",
     title:"室蘭市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2686,6 +2781,7 @@ var murous1 = new ol.layer.Tile({
 var murous2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"muroransengobeigun",
     title:"室蘭市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！",
@@ -2704,6 +2800,7 @@ var murous2 = new ol.layer.Tile({
 var hukuokasisenzen1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"hukuokashisenzen",
     title:"福岡市戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"" ,
@@ -2721,6 +2818,7 @@ var hukuokasisenzen1 = new ol.layer.Tile({
 var hukuokasisenzen2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"hukuokashisenzen",
     title:"福岡市戦前地図",
     origin:"<a href='http://stanford.maps.arcgis.com/apps/SimpleViewer/index.html?appid=733446cc5a314ddf85c59ecc10321b41' target='_blank'>スタンフォード大学</a>",
     detail:"" ,
@@ -2739,6 +2837,7 @@ var hukuokasisenzen2 = new ol.layer.Tile({
 var sengokago1 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"kagoshimashisengobeigun",
     title:"鹿児島市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2755,6 +2854,7 @@ var sengokago1 = new ol.layer.Tile({
 var sengokago2 = new ol.layer.Tile({
     folder:"child",
     category:"senzensengo",
+    name:"kagoshimashisengobeigun",
     title:"鹿児島市戦後米軍地図",
     origin:"<a href='https://github.com/code4nara/jcp_maps/wiki' target='_blank' >テキサス大学図書館Japan City PlansのTMS化プロジェクト</a>",
     detail:"戦後の米軍作成地図をみんなで地図タイル化するプロジェクトです。面白くて大変ためになるプロジェクトなので是非参加しましょう！" ,
@@ -2775,7 +2875,7 @@ var sengokago2 = new ol.layer.Tile({
 var kotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"45miyazakikotizu",
     title:"45宮崎県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/miyazakiKen.jpg' target='_blank'>jpg</a>",
@@ -2795,7 +2895,7 @@ var kotizu1 = new ol.layer.Tile({
 var kotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"45miyazakikotizu",
     title:"45宮崎県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/miyazakiKen.jpg' target='_blank'>jpg</a>",
@@ -2816,7 +2916,7 @@ var kotizu2 = new ol.layer.Tile({
 var koutikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"koutikotizu1",
+    name:"39kochikotizu",
     title:"39高知県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a type='button' class='btn btn-xs btn-primary btn-block' href='oldmap/koutiken.jpg' target='_blank'>jpg取得</a>" +
@@ -2837,7 +2937,7 @@ var koutikotizu1 = new ol.layer.Tile({
 var koutikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"koutikotizu2",
+    name:"39kochikotizu",
     title:"39高知県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/koutiken.jpg' target='_blank'>jpg</a>",
@@ -2858,7 +2958,7 @@ var koutikotizu2 = new ol.layer.Tile({
 var kumamotokotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"43kumamotokotizu",
     title:"43熊本県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/kumamotoken.jpg' target='_blank'>jpg</a>",
@@ -2878,7 +2978,7 @@ var kumamotokotizu1 = new ol.layer.Tile({
 var kumamotokotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"43kumamotokotizu",
     title:"43熊本県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/kumamotoken.jpg' target='_blank'>jpg</a>",
@@ -2899,7 +2999,7 @@ var kumamotokotizu2 = new ol.layer.Tile({
 var sagakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"41sagakotizu",
     title:"41佐賀県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/sagaken.jpg' target='_blank'>jpg</a>",
@@ -2919,7 +3019,7 @@ var sagakotizu1 = new ol.layer.Tile({
 var sagakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"41sagakotizu",
     title:"41佐賀県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/sagaken.jpg' target='_blank'>jpg</a>",
@@ -2940,7 +3040,7 @@ var sagakotizu2 = new ol.layer.Tile({
 var hukuokakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"40fukuokakotizu",
     title:"40福岡県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -2960,7 +3060,7 @@ var hukuokakotizu1 = new ol.layer.Tile({
 var hukuokakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"40fukuokakotizu",
     title:"40福岡県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -2981,7 +3081,7 @@ var hukuokakotizu2 = new ol.layer.Tile({
 var ooitakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"44oitakotizu",
     title:"44大分県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3001,7 +3101,7 @@ var ooitakotizu1 = new ol.layer.Tile({
 var ooitakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"44oitakotizu",
     title:"44大分県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3022,7 +3122,7 @@ var ooitakotizu2 = new ol.layer.Tile({
 var nagasakikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"42nagasakikotizu",
     title:"42長崎県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3042,7 +3142,7 @@ var nagasakikotizu1 = new ol.layer.Tile({
 var nagasakikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"42nagasakikotizu",
     title:"42長崎県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3063,7 +3163,7 @@ var nagasakikotizu2 = new ol.layer.Tile({
 var kagosimakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"46kagoshimakotizu",
     title:"46鹿児島県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3083,7 +3183,7 @@ var kagosimakotizu1 = new ol.layer.Tile({
 var kagosimakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"46kagoshimakotizu",
     title:"46鹿児島県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"",
@@ -3104,7 +3204,7 @@ var kagosimakotizu2 = new ol.layer.Tile({
 var miyagikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"04miyagikotizu",
     title:"04宮城県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/miyagiken.jpg' target='_blank'>jpg</a>",
@@ -3124,7 +3224,7 @@ var miyagikotizu1 = new ol.layer.Tile({
 var miyagikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"04miyagikotizu",
     title:"04宮城県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/miyagiken.jpg' target='_blank'>jpg</a>",
@@ -3145,7 +3245,7 @@ var miyagikotizu2 = new ol.layer.Tile({
 var aichikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"23aichikotizu",
     title:"23愛知県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>",
@@ -3165,7 +3265,7 @@ var aichikotizu1 = new ol.layer.Tile({
 var aichikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"23aichikotizu",
     title:"23愛知県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>",
@@ -3182,11 +3282,11 @@ var aichikotizu2 = new ol.layer.Tile({
         maxZoom:13
     })
 });
-//兵庫県古地図
+//大阪府古地図
 function osakakotizu() {
     this.folder = "child";
     this.category = "kotizu";
-    this.name = "kotizu";
+    this.name = "27osakakotizu";
     this.title = "27大阪府古地図(大正14年)";
     this.origin = "<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より";
     this.detail = "<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>";
@@ -3203,7 +3303,7 @@ var osakakotizu2 = new ol.layer.Tile(new osakakotizu());
 function hyogokotizu() {
     this.folder = "child";
     this.category = "kotizu";
-    this.name = "kotizu";
+    this.name = "28hyogokotizu";
     this.title = "28兵庫県古地図(大正13年)";
     this.origin = "<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より";
     this.detail = "<a href='oldmap/aichiken.jpg' target='_blank'>jpg</a>";
@@ -3220,7 +3320,7 @@ var hyogokotizu2 = new ol.layer.Tile(new hyogokotizu());
 var okayamakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"33okayamakotizu",
     title:"33岡山県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/okayamaken.jpg' target='_blank'>jpg</a>",
@@ -3240,7 +3340,7 @@ var okayamakotizu1 = new ol.layer.Tile({
 var okayamakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"33okayamakotizu",
     title:"33岡山県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/okayamaken.jpg' target='_blank'>jpg</a>",
@@ -3262,7 +3362,7 @@ var okayamakotizu2 = new ol.layer.Tile({
 var hiroshimakotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"34hiroshimakotizu",
     title:"34広島県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/hiroshimaken.jpg' target='_blank'>jpg</a>",
@@ -3282,7 +3382,7 @@ var hiroshimakotizu1 = new ol.layer.Tile({
 var hiroshimakotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"34hiroshimakotizu",
     title:"34広島県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/hiroshimaken.jpg' target='_blank'>jpg</a>",
@@ -3305,7 +3405,7 @@ var hiroshimakotizu2 = new ol.layer.Tile({
 var yamagutikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"35yamaguchikotizu",
     title:"35山口県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/yamagutiken.jpg' target='_blank'>jpg</a>",
@@ -3325,7 +3425,7 @@ var yamagutikotizu1 = new ol.layer.Tile({
 var yamagutikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"35yamaguchikotizu",
     title:"35山口県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/yamagutiken.jpg' target='_blank'>jpg</a>",
@@ -3346,7 +3446,7 @@ var yamagutikotizu2 = new ol.layer.Tile({
 var toukyoukotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"13tokyokotizu",
     title:"13東京都古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/toukyou.jpg' target='_blank'>jpg</a>",
@@ -3366,7 +3466,7 @@ var toukyoukotizu1 = new ol.layer.Tile({
 var toukyoukotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"13tokyokotizu",
     title:"13東京都古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/toukyou.jpg' target='_blank'>jpg</a>",
@@ -3387,7 +3487,7 @@ var toukyoukotizu2 = new ol.layer.Tile({
 var simanekotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"32shimanekotizu",
     title:"32島根県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/toukyou.jpg' target='_blank'>jpg</a>",
@@ -3407,7 +3507,7 @@ var simanekotizu1 = new ol.layer.Tile({
 var simanekotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"32shimanekotizu",
     title:"32島根県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/toukyou.jpg' target='_blank'>jpg</a>",
@@ -3428,7 +3528,7 @@ var simanekotizu2 = new ol.layer.Tile({
 var hukuikotizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"18fukuikotizu",
     title:"18福井県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/hukuiken.jpg' target='_blank'>jpg</a>",
@@ -3448,7 +3548,7 @@ var hukuikotizu1 = new ol.layer.Tile({
 var hukuikotizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
-    name:"kotizu",
+    name:"18fukuikotizu",
     title:"18福井県古地図(大正14年)",
     origin:"<a href='http://dl.ndl.go.jp/' target='_blank'>国立国会図書館デジタルコレクション</a>より",
     detail:"<a href='oldmap/hukuiken.jpg' target='_blank'>jpg</a>",
@@ -3469,6 +3569,7 @@ var hukuikotizu2 = new ol.layer.Tile({
 var obikoyizu1 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
+    name:"obizyoukazu",
     title:"飫肥城（古地図）",
     origin:"承応年間飫肥城下図",
     detail:"",
@@ -3486,6 +3587,7 @@ var obikoyizu1 = new ol.layer.Tile({
 var obikoyizu2 = new ol.layer.Tile({
     folder:"child",
     category:"kotizu",
+    name:"obizyoukazu",
     title:"飫肥城（古地図）",
     origin:"承応年間飫肥城下図",
     detail:"",
@@ -3507,6 +3609,7 @@ var obikoyizu2 = new ol.layer.Tile({
 var kawadake1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"kawadakechikei",
     title:"川だけ地形地図",
     origin:"<a href='http://www.gridscapes.net/#AllRiversAllLakesTopography' target='_blank'>川だけ地形地図</a>",
     detail:"",
@@ -3522,6 +3625,7 @@ var kawadake1 = new ol.layer.Tile({
 var kawadake2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"kawadakechikei",
     title:"川だけ地形地図",
     origin:"<a href='http://www.gridscapes.net/#AllRiversAllLakesTopography' target='_blank'>川だけ地形地図</a>",
     detail:"",
@@ -3539,6 +3643,7 @@ var kawadake2 = new ol.layer.Tile({
 var ryuuiki1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"kawaryuuiki",
     title:"川と流域地図",
     origin:"<a href='http://tiles.dammaps.jp/ryuiki/' target='_blank'>川と流域地図</a>",
     detail:"<small>本図は国土交通省 国土数値情報「河川」「流域メッシュ」「湖沼」（第2.1版）および国土地理院 地球地図日本「行政界」（第２版）をもとに高根たかね様が作成したものです。国土数値情報は国土計画関連業務のために作成されたデータが副次的に公開されたものであり、国土計画関連業務に差しさわりがない範囲で時間的、位置的精度において現況と誤差が含まれています。本地図を利用される場合はその点に十分ご留意の上ご利用ください。また、国土数値情報 利用約款を遵守しご利用ください。</small>",
@@ -3554,6 +3659,7 @@ var ryuuiki1 = new ol.layer.Tile({
 var ryuuiki2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"kawaryuuiki",
     title:"川と流域地図",
     origin:"<a href='http://tiles.dammaps.jp/ryuiki/' target='_blank'>川と流域地図</a>",
     detail:"<small>本図は国土交通省 国土数値情報「河川」「流域メッシュ」「湖沼」（第2.1版）および国土地理院 地球地図日本「行政界」（第２版）をもとに高根たかね様が作成したものです。国土数値情報は国土計画関連業務のために作成されたデータが副次的に公開されたものであり、国土計画関連業務に差しさわりがない範囲で時間的、位置的精度において現況と誤差が含まれています。本地図を利用される場合はその点に十分ご留意の上ご利用ください。また、国土数値情報 利用約款を遵守しご利用ください。</small>",
@@ -3570,6 +3676,7 @@ var ryuuiki2 = new ol.layer.Tile({
 var ecoris1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"ecorisraster",
     title:"エコリス植生図(ラスタ)",
     origin:"<a href='http://map.ecoris.info/' target='_blank'><img src='icon/ecorischan.png' title='エコリスちゃん'><br>エコリス地図タイル</a>",
     detail:"第5回 自然環境保全基礎調査 植生調査結果を着色し、国土地理院 基盤地図情報 数値標高データ10mメッシュから作成した陰影起伏図に重ねたものです。",
@@ -3585,6 +3692,7 @@ var ecoris1 = new ol.layer.Tile({
 var ecoris2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"ecorisraster",
     title:"エコリス植生図(ラスタ)",
     origin:"<a href='http://map.ecoris.info/' target='_blank'><img src='icon/ecorischan.png' title='エコリスちゃん'><br>エコリス地図タイル</a>",
     detail:"第5回 自然環境保全基礎調査 植生調査結果を着色し、国土地理院 基盤地図情報 数値標高データ10mメッシュから作成した陰影起伏図に重ねたものです。",
@@ -3603,6 +3711,7 @@ var ecoris2 = new ol.layer.Tile({
 var tisitu1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"seamless",
     title:"シームレス地質図",
     origin:"<a href='https://gbank.gsj.jp/seamless/seamless2015/2d/' target='_blank'>日本シームレス地質図</a><br>" +
     "<a href='https://gbank.gsj.jp/geonavi/' target='_blank'>地質図Navi</a>",
@@ -3621,6 +3730,7 @@ var tisitu1 = new ol.layer.Tile({
 var tisitu2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"seamless",
     title:"シームレス地質図",
     origin:"<a href='https://gbank.gsj.jp/seamless/seamless2015/2d/' target='_blank'>日本シームレス地質図</a><br>" +
     "<a href='https://gbank.gsj.jp/geonavi/' target='_blank'>地質図Navi</a>",
@@ -3639,6 +3749,7 @@ var tisitu2 = new ol.layer.Tile({
 var nihonCs1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"japancs",
     title:"日本CS立体図",
     origin:"<a href='http://kouapp.main.jp/csmap/japan/csjapan.html' target='_blank'>日本CS立体図</a>",
     detail:"CS立体図（国土地理院承認番号　平29情使、 第77号）",
@@ -3653,6 +3764,7 @@ var nihonCs1 = new ol.layer.Tile({
 var nihonCs2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"japancs",
     title:"日本CS立体図",
     origin:"<a href='http://kouapp.main.jp/csmap/japan/csjapan.html' target='_blank'>日本CS立体図</a>",
     detail:"CS立体図（国土地理院承認番号　平29情使、 第77号）",
@@ -3667,6 +3779,7 @@ var nihonCs2 = new ol.layer.Tile({
 var sekiz1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"sekisyoku",
     title:"全国赤色立体地図",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図<br><br>赤色立体地図©アジア航測株式会社</a>",
     detail:"アジア航測株式会社が作成した立体地図です。<span style='color:red;'>アジア航測株式会社の許可を得て掲載しています。</span>" +
@@ -3685,6 +3798,7 @@ var sekiz1 = new ol.layer.Tile({
 var sekiz2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"sekisyoku",
     title:"全国赤色立体地図",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図<br><br>赤色立体地図©アジア航測株式会社</a>",
     detail:"アジア航測株式会社が作成した立体地図です。<span style='color:red;'>アジア航測株式会社の許可を得て掲載しています。</span>" +
@@ -3703,6 +3817,7 @@ var sekiz2 = new ol.layer.Tile({
 var sizuokaCs1 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"sizuokakencs",
     title:"静岡県CS立体図",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/shizuokakencsmap2' target='_blank'>静岡県CS立体図</a>",
     detail:"",
@@ -3718,6 +3833,7 @@ var sizuokaCs1 = new ol.layer.Tile({
 var sizuokaCs2 = new ol.layer.Tile({
     folder:"child",
     category:"tisitutikei",
+    name:"sizuokakencs",
     title:"静岡県CS立体図",
     origin:"<a href='https://www.geospatial.jp/ckan/dataset/shizuokakencsmap2' target='_blank'>静岡県CS立体図</a>",
     detail:"",
@@ -3736,6 +3852,7 @@ var sizuokaCs2 = new ol.layer.Tile({
 var rekisitekikantou1 = new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"jinsoku",
     title:"迅速測図 (関東)",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3749,6 +3866,7 @@ var rekisitekikantou1 = new ol.layer.Tile({
 var rekisitekikantou2= new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"jinsoku",
     title:"迅速測図 (関東)",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3761,6 +3879,7 @@ var rekisitekikantou2= new ol.layer.Tile({
 var rekisitekitoukyou1 = new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"tokyosokuryou",
     title:"五千分一東京図測量原図",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3773,6 +3892,7 @@ var rekisitekitoukyou1 = new ol.layer.Tile({
 var rekisitekitoukyou2 = new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"tokyosokuryou",
     title:"五千分一東京図測量原図",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3785,6 +3905,7 @@ var rekisitekitoukyou2 = new ol.layer.Tile({
 var rekisitekihukuyama1 = new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"kyuubanfukuyamashi",
     title:"旧版地形図 (福山市)",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3797,6 +3918,7 @@ var rekisitekihukuyama1 = new ol.layer.Tile({
 var rekisitekihukuyama2 = new ol.layer.Tile({
     folder:"child",
     category:"jinsokutou",
+    name:"kyuubanfukuyamashi",
     title:"旧版地形図 (福山市)",
     origin:"<a href='http://www.finds.jp/tmc/layers.html.ja' target='_blank'>農研機構</a>",
     detail:"",
@@ -3841,6 +3963,7 @@ var zinsokugazou2 = new ol.layer.Vector({
 var usamiyazaki011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"miyazakishibeigunsyashin22",
     title:"宮崎市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3856,6 +3979,7 @@ var usamiyazaki011 = new ol.layer.Tile({
 var usamiyazaki012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"miyazakishibeigunsyashin22",
     title:"宮崎市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3871,6 +3995,7 @@ var usamiyazaki012 = new ol.layer.Tile({
 var usanobeoka011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"nobeokashibeigunsyashin23",
     title:"延岡市米軍航空写真(昭和23年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3886,6 +4011,7 @@ var usanobeoka011 = new ol.layer.Tile({
 var usanobeoka012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"nobeokashibeigunsyashin23",
     title:"延岡市米軍航空写真(昭和23年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3901,6 +4027,7 @@ var usanobeoka012 = new ol.layer.Tile({
 var usamiyakonozyou011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"miyakonozyoushibeigunsyashin23",
     title:"都城市米軍航空写真(昭和23年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3916,6 +4043,7 @@ var usamiyakonozyou011 = new ol.layer.Tile({
 var usamiyakonozyou012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"miyakonozyoushibeigunsyashin23",
     title:"都城市米軍航空写真(昭和23年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3931,6 +4059,7 @@ var usamiyakonozyou012 = new ol.layer.Tile({
 var usakobayasi011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"kobayashishibeigunsyashin22",
     title:"小林市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3946,6 +4075,7 @@ var usakobayasi011 = new ol.layer.Tile({
 var usakobayasi012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"kobayashishibeigunsyashin22",
     title:"小林市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3961,6 +4091,7 @@ var usakobayasi012 = new ol.layer.Tile({
 var usakumamoto011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"kumamotoshibeigunsyashin22",
     title:"熊本市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3976,6 +4107,7 @@ var usakumamoto011 = new ol.layer.Tile({
 var usakumamoto012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"kumamotoshibeigunsyashin22",
     title:"熊本市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -3991,6 +4123,7 @@ var usakumamoto012 = new ol.layer.Tile({
 var usamuroran011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"muroranshibeigunsyashin22",
     title:"室蘭市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4006,6 +4139,7 @@ var usamuroran011 = new ol.layer.Tile({
 var usamuroran012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"muroranshibeigunsyashin22",
     title:"室蘭市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4021,6 +4155,7 @@ var usamuroran012 = new ol.layer.Tile({
 var usanatori011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"natorishibeigunsyashin22",
     title:"名取市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4036,6 +4171,7 @@ var usanatori011 = new ol.layer.Tile({
 var usanatori012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"natorishibeigunsyashin22",
     title:"名取市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4051,6 +4187,7 @@ var usanatori012 = new ol.layer.Tile({
 var usasendai011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"sendaishibeigunsyashin22",
     title:"仙台市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4066,6 +4203,7 @@ var usasendai011 = new ol.layer.Tile({
 var usasendai012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"sendaishibeigunsyashin22",
     title:"仙台市米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4084,6 +4222,7 @@ var usaokayama011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
     title:"岡山市米軍航空写真(昭和22年)",
+    name:"okayamashibeigunsyashin22",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
     //coord:[135.11447,34.70677],
@@ -4099,6 +4238,7 @@ var usaokayama012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
     title:"岡山市米軍航空写真(昭和22年)",
+    name:"okayamashibeigunsyashin22",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
     //coord:[135.11447,34.70677],
@@ -4116,6 +4256,7 @@ var usaokayama012 = new ol.layer.Tile({
 var usasiawase011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"siawasebeigunsyashin22",
     title:"しあわせの村米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4131,6 +4272,7 @@ var usasiawase011 = new ol.layer.Tile({
 var usasiawase012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"siawasebeigunsyashin22",
     title:"しあわせの村米軍航空写真(昭和22年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4150,6 +4292,7 @@ var usasiawase012 = new ol.layer.Tile({
 var jpn23ku011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"tokyo23kurikugunsyashin11",
     title:"東京都23区日本陸軍航空写真(昭和11年頃)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -4165,6 +4308,7 @@ var jpn23ku011 = new ol.layer.Tile({
 var jpn23ku012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"tokyo23kurikugunsyashin11",
     title:"東京都23区日本陸軍航空写真(昭和11年頃)",
     origin:"<a href='http://maps.gsi.go.jp/development/ichiran.html' target='_blank'>国土地理院</a>",
     detail:"",
@@ -4183,6 +4327,7 @@ var jpn23ku012 = new ol.layer.Tile({
 var jpnfukuoka011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"yosidukaekirikugunsyashin14",
     title:"福岡市吉塚駅付近日本陸軍航空写真(昭和14年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4198,6 +4343,7 @@ var jpnfukuoka011 = new ol.layer.Tile({
 var jpnfukuoka012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"yosidukaekirikugunsyashin14",
     title:"福岡市吉塚駅付近日本陸軍航空写真(昭和14年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4221,6 +4367,7 @@ var sikiriKakoSyasin = new ol.layer.Tile({
 var jpnnoboribetu011 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"washibetuaekirikugunsyashin19",
     title:"登別市鷲別駅付近日本陸軍航空写真(昭和19年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4236,6 +4383,7 @@ var jpnnoboribetu011 = new ol.layer.Tile({
 var jpnnoboribetu012 = new ol.layer.Tile({
     folder:"child",
     category:"kakosyasin",
+    name:"washibetuaekirikugunsyashin19",
     title:"登別市鷲別駅付近日本陸軍航空写真(昭和19年)",
     origin:"<a href='http://mapps.gsi.go.jp/article2.html' target='_blank'>地図・空中写真閲覧サービス</a>",
     detail:"国土地理院のサービスです。" ,
@@ -4340,14 +4488,12 @@ var drTashiroS22syasin2 = new ol.layer.Tile({
         maxZoom:16
     })
 });
-
-
-
 //水路（イベント）のレイヤー
 var eventSuiro1 = new ol.layer.Vector({
     //folder:"child",
     //category:"unesco",
     title:"イベント_県庁の幻の水路",
+    name:"maboroshisuiro",
     origin:"",
     detail:"",
     icon:"<i class='fa fa-etsy fa-fw' style='color:darkgreen;'></i>",
@@ -4360,6 +4506,7 @@ var eventSuiro1 = new ol.layer.Vector({
 var eventSuiro2 = new ol.layer.Vector({
     //folder:"child",
     //category:"unesco",
+    name:"maboroshisuiro",
     title:"イベント_県庁の幻の水路",
     origin:"",
     detail:"",
@@ -4375,7 +4522,6 @@ function evevtSuirostyleFunction(feature, resolution) {
     var geoType = feature.getGeometry().getType();
     var fillColor = "red";
     var pointRadius = 12;
-
     switch (geoType) {
         case "LineString":
             var lineDash = eval(prop["_lineDash"]);
@@ -4405,13 +4551,7 @@ function evevtSuirostyleFunction(feature, resolution) {
                     fill: new ol.style.Fill({
                         color:"white"
                     }),
-                    offsetY:0,
-                    /*
-                    stroke: new ol.style.Stroke({
-                        color: "white",
-                        width: 3
-                    })
-                    */
+                    offsetY:0
                 })
             });
             break;
@@ -4423,6 +4563,7 @@ function evevtSuirostyleFunction(feature, resolution) {
 function okugainobeoka_(){
     this.folder = "child";
     this.category = "test";
+    this.name = "maboroshisuiro";
     this.title = "延岡市規制概要図";
     this.origin = "";
     this.detail = "";
@@ -4435,4 +4576,4 @@ function okugainobeoka_(){
     });
 }
 var okugainobeoka_1 = new ol.layer.Tile(new okugainobeoka_());
-var okugainobeoka2 = new ol.layer.Tile(new okugainobeoka_());
+var okugainobeoka_2 = new ol.layer.Tile(new okugainobeoka_());

@@ -7,7 +7,7 @@ $(function() {
     var hoverSource = null;
     var hoverLayer = null;
     var drawLayerHeatmap = null;
-    var drawSourceChangeFlg = true;
+    var H_DRAW.drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
     var copiedFeature = null//地物コピペ用
     var geojsonSaveAr = [];//取り消し用にgeojsonを保存する
@@ -176,7 +176,7 @@ $(function() {
         });
         $(window).on('beforeunload', function() {
             //if($("#mydialog-draw-dialog").css("display")==="block") return "";
-            if(drawSourceChangeFlg) return "";
+            if(H_DRAW.drawSourceChangeFlg) return "";
         });
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -891,14 +891,14 @@ $(function() {
         var focusId = $(":focus").attr("id");
         if(focusId==="geojson-text"){
             featureSelect.getFeatures().clear();
-            drawSourceChangeFlg = false;
+            H_DRAW.drawSourceChangeFlg = false;
             var geojsonObject = JSON.parse($("#geojson-text").val());
             if(geojsonObject){
                 var targetGeojson = new ol.format.GeoJSON().readFeatures(geojsonObject, {featureProjection: 'EPSG:3857'});
                 drawSource.clear();
                 drawSource.addFeatures(targetGeojson);
             }
-            drawSourceChangeFlg = true;
+            H_DRAW.drawSourceChangeFlg = true;
         }
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -978,8 +978,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
     drawSource.on("change", function(e) {
-        if(drawSourceChangeFlg) geojsonText();
-        //drawSourceChangeFlg = true;
+        if(H_DRAW.drawSourceChangeFlg) geojsonText();
+        //H_DRAW.drawSourceChangeFlg = true;
     });
     //------------------------------------------------------------------------------------------------------------------
     //geojsonの文字を書き出し 同時に元に戻す用に保存する。
@@ -2645,7 +2645,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //geojsonで保存
     $("body").on("click","#drawGeojson-btn",function(){
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
         var selectedFeatures = featureSelect.getFeatures();
         var features;
         if(selectedFeatures.getLength()===0) {
@@ -2678,7 +2678,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //gistで保存
     $("body").on("click","#drawGist-btn",function(){
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
         var selectedFeatures = featureSelect.getFeatures();
         var features;
         if(selectedFeatures.getLength()===0) {
@@ -2770,7 +2770,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //csvで保存
     $("body").on("click","#drawCsv-btn",function(){
-        drawSourceChangeFlg = false;
+        H_DRAW.drawSourceChangeFlg = false;
         //$("#drawGeojson-btn").click(function(){
         var features = drawSource.getFeatures();
         console.log(features);
@@ -2927,8 +2927,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //csv読み込み
     var csvRead = function(file){
-        console.log(drawSourceChangeFlg);
-        drawSourceChangeFlg = false;
+        console.log(H_DRAW.drawSourceChangeFlg);
+        H_DRAW.drawSourceChangeFlg = false;
         //drawSource = new ol.source.Vector();
         console.log(file);
         csvarr = [];
@@ -3155,7 +3155,7 @@ $(function() {
                 }
             }
         };
-        drawSourceChangeFlg = true;
+        H_DRAW.drawSourceChangeFlg = true;
     };
     //------------------------------------------------------------------------------------------------------------------
     //gist読み込み

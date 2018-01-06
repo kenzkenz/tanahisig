@@ -34,63 +34,17 @@ $(function(){
     //bootstrapのtooltip スマホタッチでタッチが二回必要になるので見送り
     //$('[data-toggle="tooltip"]').tooltip({html:true,container:"body"});
     //--------------------------------------------------------------------------
+    /*
     if ($("body").width() > 400) {
         var msg = "";
-        //msg += "<i class='fa fa-exclamation fa-fw'></i>";
         msg += "<div style='text-align:center;margin-bottom:10px;'><span class='label label-default label-danger'>New</span></div>";
-        //msg += "★iphoneのsafariで画面移動ができない現象があるようです。その場合はブラウザをクローム等に変えてみてください。<br>";
-        //msg += "★背景が多くなりすぎたのでカテゴリわけしています。<br>";
-        //msg += "★<a href='http://www.gsi.go.jp/bousaichiri/bousaichiri61013.html' target='_blank'>宮崎県立佐土原高校情報技術部 防災アプリ大賞受賞!！</a><br>";
         msg += "★背景のうち(MVT/VT)とついているものは3D化できません！<br>";
         msg += "★詳しい追加情報等は<a href='https://www.facebook.com/hinatagis' target='_blank'><i class='fa fa-facebook-square fa-fw' style='color:navy;'></i>FBへ</a><br>";
-        //msg += "<canvas id='canvas1'></canvas>";
         msg += "1 背景に全国海岸線(MVT)を追加しました。<br>";
         msg += "2 背景に大阪府の古地図を追加しました。<br>";
         msg += "3 背景に岡山県、広島県、愛知県、兵庫県の古地図を追加しました。<br>";
         //msg += "4 ドロー機能大幅強化中。「図形」ボタンから<br>";
         //msg += "5 シームレス地質図V2でクリックすると凡例を表示します。<br>";
-        //msg += "4 背景に将来推計人口メッシュ(MVT)を追加しました。<br>";
-        //msg += "5 背景にH26商業統計(MVT)を追加しました。<br>";
-        //msg += "6 背景に市町村現役世代率(MVT)を追加しました。<br>";
-        //msg += "5 背景にH26経済センサス(MVT)を追加しました。<br>";
-        //msg += "5 背景に500Mメッシュ人口(MVT)を追加しました。<br>";
-        //msg += "4 背景に二次医療圏(MVT)を追加しました。<br>";
-        //msg += "4 背景に地理院_地形分類(自然地形)(VT)を追加しました。<br>";
-        //msg += "4 背景に全国中学校区(MVT)を追加しました。<br>";
-        //msg += "5 背景に全国小学校区(MVT)を追加しました。<br>";
-        //msg += "5 背景に全国縄文・弥生集落遺跡(MVT)を追加しました。<br>";
-        //msg += "5 背景に静岡県CS立体図を追加しました。<br>";
-        //msg += "6 背景に地理院_治水地形分類図を追加しました。<br>";
-        //msg += "5 背景に国指定文化財等データベース(MVT)を追加しました。<br>";
-        //msg += "6 背景に全国旧石器時代遺跡(MVT)を追加しました。<br>";
-        //msg += "4 背景に迅速測図を追加しました。<br>";
-        //msg += "5 背景に全国の用途地域を追加しました。<br>";
-        //msg += "6 背景に東峰地区(7/30,31撮影)を追加しました。<br>";
-        //msg += "7 小地域人口等(MVT)から人口ピラミッドを作成します。<br>";
-        //msg += "6 背景に道路中心線・河川中心線を追加しました。<br>";
-        //msg += "6 背景に福井県の古地図を追加しました。<br>";
-        //msg += "7 背景にアジア航測株式会社撮影航空写真追加しました。<br>";
-        //msg += "8 背景に島根県の古地図を追加しました。<br>";
-        //msg += "8 背景に東峰地区の航空写真を追加しました。<br>";
-        //msg += "5 背景に小地域人口等を追加しました。<br>";
-       // msg += "6 背景に朝倉地区の航空写真を追加しました。<br>";
-        //msg += "6 背景に東京都、山口県の古地図を追加しました。<br>";
-        //msg += "6 背景に福岡県、大分県の大雨被害を追加しました。<br>";
-        //msg += "7 背景に宮城県・高知県の古地図を追加しました。<br>";
-        //msg += "6 背景に九州7県の古地図を追加しました。<br>";
-        //msg += "5 データを複数追加しました。<br>";
-        //msg += "5 <span style='color:red;'>全国赤色立体地図を追加しました。</span><br>";
-        //msg += "5 RESAS機能に人口推移を追加。市町村をクリック<br>";
-        //msg += "6 RESAS機能に人口ピラミッドを追加。市町村をクリック<br>";
-        //msg += "6 背景に九州１Kメッシュ人口を追加<br>";
-       // msg += "7 estatに10万人あたりの列を追加<br>";
-        //msg += "10 右クリックで人口機能完成 スマホは長押し<br>";
-        //msg += "10 CSV機能追加。<a href='dl.html' target='_blank'>サンプル</a><br>";
-       // msg += "11 GPX機能追加。<a href='dl.html' target='_blank'>サンプル</a><br>";
-        //msg += "10 パノラマ写真表示機能実験中。写真8枚追加。<br>";
-        //msg += "10 綾ユネスコエコパークを追加しました。<br>";
-        //msg += "10 宮崎県(九州)赤色立体地図を追加しました。<br>";
-        //msg += "10 画面左下に標高表示機能を追加しました。<br>";
         msg += "<div style='text-align:center;'>";
         msg += "宮崎県情報政策課<br>最終更新:2017/12/25</div>";
         msg += "<div style='position:absolute;bottom:0px;right:0px;'><a href='https://www.osgeo.jp/' target='_blank'><img src='icon/osgeo.png' style='width:80px;background:'></a></div>";
@@ -110,6 +64,7 @@ $(function(){
             timer: 0
         });
     }
+    */
     //webストレージから中陣地座標、ズーム率を取得
     /*
     var urlHash = location.hash;
@@ -222,8 +177,11 @@ $(function(){
     //マップイベント関係
     //ムーブエンド時にwevストレージに中心座標とズーム率を記憶
     map1.on("moveend",function(evt){
+        /*
         localStorage.setItem("lonlat",JSON.stringify(map1.getView().getCenter()));
         localStorage.setItem("zoom",map1.getView().getZoom());
+        localStorage.setItem("href",location["href"]);//URLも記憶
+        */
         $("#map1 .zoom-div .zoom-span").text("zoom=" + Math.floor(map1.getView().getZoom()));
     });
     map2.on("moveend",function(evt){
@@ -347,6 +305,7 @@ $(function(){
     ol.hash(map1);
     ol.hash(map2);
     //------------------------------------------------------------------------
+
     /*
     $(document).snowfall({
         flakeCount : 100,
