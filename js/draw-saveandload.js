@@ -94,86 +94,137 @@ $(function() {
             var uniArray = Encoding.convert(sjisArray, 'UNICODE', 'SJIS');
             result = Encoding.codeToString(uniArray);
             //-----------------------------
+            //csvを配列化
+            result = result.replace(/\r\n?/g,"\n");//改行コードを\nに変換
             var csvAr = $.csv()(result);
-            //先頭行------------------------
+            console.log(csvAr);
+            //-----------------------------
+            //先頭行
             var topRow = csvAr[0];
             var geocodingColumun;
             for(var i = 0; i <topRow.length; i++){
-                console.log(topRow[i]);
                 if(topRow[i]==="変換元住所") {
                     geocodingColumun = i;
                     break;
                 }
             }
-            //----------------------------
-            var geocodPromise = [];
-            for (var i=1; i < csvAr.length; i++) {//行頭を飛ばすので１から
-                var target = csvAr[i][geocodingColumun];
-                if(!target) break;
-                geocodPromise[i-1] =//行頭を飛ばしたので１引いて調整
-                    new Promise(function(resolve){
-                        $.ajax({
-                            type: "get",
-                            url: "https://msearch.gsi.go.jp/address-search/AddressSearch",
-                            dataType: "json",
-                            data:{
-                                "q":target
-                            }
-                        }).done(function (json) {
-                            if(json.length) {
-                                resolve(json);
-                            }else{
-                                resolve("nomatch");
-                            }
-                        }).fail(function () {
-                            resolve("fail");
-                        });
-                    });
+            if(geocodingColumun) {
+                console.log("ジオコーディングする場合");
+                geocoding();
+            }else{
+                console.log("座標がある場合");
+                coordAvailable();
             }
-            //-----------------------
-            //プロミスオール
-            Promise.all(geocodPromise).then(function(result) {
-                for(var i = 0; i < result.length; i++){
-                    var getCoord = result[i];
-                    if(getCoord!=="nomatch" && getCoord!=="fail") {
-                        var feature = result[i][0];
-                        var coord = feature["geometry"]["coordinates"];
-                        coord = ol.proj.transform(coord, "EPSG:4326", "EPSG:3857");
-                        var geometry = new ol.geom.Point(coord);
-                        var newFeature = new ol.Feature({
-                            geometry: geometry,
-                            "_fillColor": "blue",
-                            //"取得住所":feature["properties"]["title"]
-                        });
-                        for (var j = 0; j < topRow.length; j++) {
-                            if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i + 1][j].replace(/"/gi, "");
-                        }
-                        newFeature["D"]["取得住所"] = feature["properties"]["title"];
-                        drawLayer.getSource().addFeature(newFeature);
-                    }else{
-                        var msg = "<i class='fa fa-exclamation-triangle fa-fw' style='color:rgba(0,0,0,1.0);'></i>";
-                        msg += (i + 2) + "行目の座標を取得できませんでした。";
-                        msg +=  topRow[0] + "/" + csvAr[i + 1][0];
-                        $.notify({//options
-                            message: msg
-                        }, {//settings
-                            type: "danger",
-                            z_index: 999999,
-                            placement: {
-                                from: "bottom",
-                                align: "center"
-                            },
-                            animate: {
-                                enter: "animated fadeInDown",
-                                exit: "animated fadeOutUp"
-                            },
-                            timer: 0,
-                            offset:$(window).height()/2
-                        });
+            //-------------------------------------------------------------------------------------
+            //座標がある場合
+            function coordAvailable(){
+                var lonColumns = ["画面経度","経度"];
+                var latColumns = ["画面緯度","緯度"];
+                var lonColumn,latColumn,lon,lat,coord;
+                for(var i = 0; i <topRow.length; i++){//先頭行を全てループするので最後に現れた緯度経度が対象になる
+                    if(lonColumns.indexOf(topRow[i])!==-1) {
+                        console.log(topRow[i]);
+                        lonColumn = i;
+                    }
+                    if(latColumns.indexOf(topRow[i])!==-1) {
+                        console.log(topRow[i]);
+                        latColumn = i;
                     }
                 }
-                map1.getView().fit(drawLayer.getSource().getExtent());
-            });
+                console.log(lonColumn,latColumn);
+                //2行目以降の処理
+                for (var i = 1; i < csvAr.length-1; i++) {//行頭を飛ばすので１から
+                    lon = Number(csvAr[i][lonColumn]);
+                    lat = Number(csvAr[i][latColumn]);
+                    console.log(lon,lat);
+                    coord = ol.proj.transform([lon,lat], "EPSG:4326", "EPSG:3857");
+                    var geometry = new ol.geom.Point(coord);
+                    var newFeature = new ol.Feature({
+                        geometry: geometry,
+                        "_fillColor": "blue",
+                        "_h_addtime":$.now()
+                    });
+                    for (var j = 0; j < topRow.length; j++) {
+                        if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i][j];
+                    }
+                    drawLayer.getSource().addFeature(newFeature);
+                }
+            }
+            //座標がある場合　ここまで
+            //--------------------------------------------------------------------------------------
+            //ジオコーディング　座標がない場合
+            function geocoding() {
+                var geocodPromise = [];
+                for (var i = 1; i < csvAr.length; i++) {//行頭を飛ばすので１から
+                    var target = csvAr[i][geocodingColumun];
+                    if (!target) break;
+                    geocodPromise[i - 1] =//行頭を飛ばしたので１引いて調整
+                        new Promise(function (resolve) {
+                            $.ajax({
+                                type: "get",
+                                url: "https://msearch.gsi.go.jp/address-search/AddressSearch",
+                                dataType: "json",
+                                data: {
+                                    "q": target
+                                }
+                            }).done(function (json) {
+                                if (json.length) {
+                                    resolve(json);
+                                } else {
+                                    resolve("nomatch");
+                                }
+                            }).fail(function () {
+                                resolve("fail");
+                            });
+                        });
+                }
+                //-----------------------
+                //プロミスオール
+                Promise.all(geocodPromise).then(function (result) {
+                    for (var i = 0; i < result.length; i++) {
+                        var getCoord = result[i];
+                        if (getCoord !== "nomatch" && getCoord !== "fail") {
+                            var feature = result[i][0];
+                            var coord = feature["geometry"]["coordinates"];
+                            coord = ol.proj.transform(coord, "EPSG:4326", "EPSG:3857");
+                            var geometry = new ol.geom.Point(coord);
+                            var newFeature = new ol.Feature({
+                                geometry: geometry,
+                                "_fillColor": "blue",
+                                "_h_addtime":$.now()
+                            });
+                            for (var j = 0; j < topRow.length; j++) {
+                                if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i + 1][j].replace(/"/gi, "");
+                            }
+                            newFeature["D"]["取得住所"] = feature["properties"]["title"];
+                            drawLayer.getSource().addFeature(newFeature);
+                        } else {
+                            var msg = "<i class='fa fa-exclamation-triangle fa-fw' style='color:rgba(0,0,0,1.0);'></i>";
+                            msg += (i + 2) + "行目の座標を取得できませんでした。";
+                            msg += topRow[0] + "/" + csvAr[i + 1][0];
+                            $.notify({//options
+                                message: msg
+                            }, {//settings
+                                type: "danger",
+                                z_index: 999999,
+                                placement: {
+                                    from: "bottom",
+                                    align: "center"
+                                },
+                                animate: {
+                                    enter: "animated fadeInDown",
+                                    exit: "animated fadeOutUp"
+                                },
+                                timer: 0,
+                                offset: $(window).height() / 2
+                            });
+                        }
+                    }
+                    map1.getView().fit(drawLayer.getSource().getExtent());
+                });
+            }
+            //ジオコーディングここまで
+            //--------------------------------------------------------------------------------------
         };
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -230,7 +281,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //csv保存
     function csvSave(){
-        alert("作成中！！！！")
+        alert("作成中！！！！");
+        var ignoreColumn = ["画面経度","画面緯度"];
         var features = drawLayer.getSource().getFeatures();
         console.log(features);
         if(!features.length) {
@@ -243,31 +295,46 @@ $(function() {
         for(var i = 0; i <features.length; i++) {
             prop = features[i].getProperties();
             for(key in prop){
-                if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="移動") {
-                    PushArray(headerAr, key)//キー名を全行分重複のないように配列に格納
+                if(key!=="geometry" && key.substr(0,1)!=="_") {
+                    if(ignoreColumn.indexOf(key)===-1) {
+                        PushArray(headerAr, key)//キー名を全行分重複のないように配列に格納
+                    }
                 }
             }
         }
         //2行目以下（先頭行は含まない）を作成----------------------------------------
         for(var i = 0; i <features.length; i++) {
+            var geomType = features[i].getGeometry().getType();
+            if(geomType!=="Point") break;
             var coord = features[i].getGeometry().getCoordinates();
-            console.log(coord);
             var lonlat = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
             var lon = lonlat[0];
             var lat = lonlat[1];
-            //contentAr.push(JSON.stringify(lonlat).replace(/,/gi,"zzz"));
             prop = features[i].getProperties();
             contentAr0 = [];
             for(var j = 0; j <headerAr.length; j++) {//全行分重複無しで取得したキー名でループ
                 var header = headerAr[j];
                 contentAr0.push(prop[header])
             }
-            contentAr0.push(lon);contentAr0.push(lat);
+            contentAr0.push(lon);contentAr0.push(lat);//lonとlatを追加
+            contentAr0.push(prop["_h_addtime"]);//ソート用に仮追加
             contentAr1.push(contentAr0);
         }
-        //----------------------------------------------------------------
-        headerAr.push("取得経度");headerAr.push("取得緯度");//ヘッダー配列に追加
+        //ソート処理------------------------------------------------
+        var lastColumn = contentAr0.length - 1;//ソート用カラムの連番
+        contentAr1.sort(function(a,b){
+            if(a[lastColumn]<b[lastColumn]) return -1;
+            if(a[lastColumn]>b[lastColumn]) return 1;
+            return 0;
+        });
+        for(var i = 0; i <contentAr1.length; i++){
+            contentAr1[i].splice(lastColumn,1);//ソート用カラムを削除
+        }
+        //ソート処理ここまで
+        //----------------------------------------------------------
+        headerAr.push("画面経度");headerAr.push("画面緯度");//ヘッダー配列に追加
         contentAr1.unshift(headerAr);//先頭にヘッダー配列を追加
+        console.log(contentAr1);
         var csv = exportcsv(contentAr1);
         //----------------------------------------------------------
         // Unicodeコードポイントの配列に変換する
@@ -318,17 +385,7 @@ $(function() {
 
             var gistId = gistUrl.split("/")[gistUrl.split("/").length-1];
             H_COMMON.setHush("g",gistId);
-            /*
-            var href = location["href"].split("#")[0];
-            var urlHash = location.hash;
-            var hashAr = urlHash.split("&");
-            var zxy = hashAr[0];
-            var gistId = gistUrl.split("/")[gistUrl.split("/").length-1];
-            console.log(gistId);
-            var newUrl = href + zxy + "&g=" + gistId;
-            console.log(newUrl);
-            history.replaceState(null, null, newUrl);
-            */
+
             var msg = "<i class='fa fa-github-alt fa-fw' style='color:rgba(0,0,0,1.0);'></i>gistに保存しました。";
             msg += "<br>gistを削除するときはgist画面の右上のDeleteで！";
             $.notify({//options
@@ -353,12 +410,4 @@ $(function() {
         H_DRAW.drawSourceChangeFlg = false;
     }
     //------------------------------------------------------------------------------------------------------------------
-    //最後の設定
-
-    //history.replaceState(null, null,localStorage.getItem("href"));
-    //H_COMMON.getHush();
-
-    //------------------------------------------------------------------------------------------------------------------
-
-
 });

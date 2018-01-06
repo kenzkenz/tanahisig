@@ -88,18 +88,21 @@ $(function(){
     //var center = null;
     //var zoom = null;
 
-    var center = JSON.parse(localStorage.getItem("lonlat"));
-    var zoom = localStorage.getItem("zoom");
-
+    //var center = JSON.parse(localStorage.getItem("lonlat"));
+    //var zoom = localStorage.getItem("zoom");
+/*
     if(center==undefined){
-        center = ol.proj.fromLonLat([131.423860,31.911069]);//中心地を宮崎市に
+        //center = ol.proj.fromLonLat([131.423860,31.911069]);//中心地を宮崎市に
+        center = ol.proj.fromLonLat([140.097,37.856]);//中心地を宮崎市に
     }
     if(zoom==undefined){
-        zoom = 14;
+        //zoom = 14;
+        zoom = 6;
     }
+    */
     var view1 = new ol.View({
-        center:center,
-        zoom:zoom
+        center:ol.proj.fromLonLat([140.097,37.856]),
+        zoom:6
     });
     var DragRotateAndZoom = new ol.interaction.DragRotateAndZoom();//shift+ドラッグで回転可能に
     //id map1に起動時に表示されるレイヤーをセット

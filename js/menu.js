@@ -46,8 +46,8 @@ $(function(){
         content += "<input type='checkbox' data-toggle='toggle' class='rotate-toggle bs-toggle' checked>：<a class='hidden-div-open'>スマホ2D時回転ロック</a>";
         content += "<div class='hidden-div'>";
         content += "onにするとスマホ、タブレットのタッチ操作での回転を止めます。</div>";
-        content += "<hr class='my-hr'>動作がおかしいときにリセットします。";
-        content += "<button type='button' class='reset-btn btn btn-primary btn-block'>座標リセット</button>";
+        content += "<hr class='my-hr'>初期状態に戻します。";
+        content += "<button type='button' class='reset-btn btn btn-primary btn-block'>リセット</button>";
         content += "<hr class='my-hr'>PNG形式で保存します。";
         content += "<a type='button' class='png-btn btn btn-primary btn-block'>PNG保存</a>";
         mydialog({
@@ -88,7 +88,6 @@ $(function(){
     //リセットボタン
     $("body").on("click",".reset-btn",function() {
         var url = location.href.split("#")[0];
-        //alert(url);
         history.pushState(null, null,url);
         location.reload(true);
         localStorage.clear();
@@ -114,7 +113,6 @@ $(function(){
                 exit:"animated fadeOutUp"
             }
         });
-
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
         if($("#" + mapName + " .d3d2-btn").html()=="3D"){//表示が３Ｄのときは２Ｄ

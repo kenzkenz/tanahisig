@@ -161,11 +161,11 @@ $(function() {
     menu += "<div class='dropdown-div' id='drawContextmenu-file-div'>";
     menu += "<button id='drawContextmenu-file-btn' class='btn btn-xxs btn-primary dropdown-toggle my-toggle-btn' type='button' data-toggle='dropdown'>ﾌｧｲﾙ<span class='caret'></span></button>";
     menu += "<ul id='drawContextmenu-file-ul' class='dropdown-menu my-toggle-ul'>";
-    menu += "<li><a>ファイル読込</a></li>";
+    menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">csvの場合、「変換元住所」<br>の列があると座標を取得</span>'>ファイル読込</a></li>";
     menu += "<hr class='my-hr'>";
-    menu += "<li><a>geojson保存</a></li>";
-    menu += "<li><a>csv保存</a></li>";
-    menu += "<li><a>gist保存</a></li>";
+    menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">描画した全てをローカルに保存</span>'>geojson保存</a></li>";
+    menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">点だけをローカルに保存</span>'>csv保存</a></li>";
+    menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">描画した全てをネット上に保存</span>'>gist保存</a></li>";
     menu += "</ul>";
     menu += "</div>";
     //ファイルトグルここまで
@@ -632,9 +632,12 @@ $(function() {
         $("#geojson-text").val(geojsonT).change();//チェンジイベント強制発火
     }
     //------------------------------------------------------------------------------------------------------------------
-    //★★★★ソースに地物が追加されたときの処理 今の所同じ座標にポイントを打とうとしたときだけに使っている。
+    //★★★★ソースに地物が追加されたときの処理
     drawLayer.getSource().on("addfeature", function(e) {
         var feature = e["feature"];
+        feature.setProperties({
+           "_h_addtime":$.now()
+        });
         if(drawCancelFlg){
             drawLayer.getSource().removeFeature(feature);
         }

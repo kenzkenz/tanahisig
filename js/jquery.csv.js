@@ -4,13 +4,13 @@
  *  jQuery.csv("\t", "'")(tsvtext)      uses a single quote as the quote character instead of double quotes
  *  jQuery.csv("\t", "'\"")(tsvtext)    uses single & double quotes as the quote character
  */
-;
 jQuery.extend({
-    csv: function(delim, quote, linedelim) {
+    //csv: function(delim, quote, linedelim) {
+    csv: function(delim, quote, lined) {
         delim = typeof delim == "string" ? new RegExp( "[" + (delim || ","   ) + "]" ) : typeof delim == "undefined" ? ","    : delim;
         quote = typeof quote == "string" ? new RegExp("^[" + (quote || '"'   ) + "]" ) : typeof quote == "undefined" ? '"'    : quote;
-        lined = typeof lined == "string" ? new RegExp( "[" + (lined || "\r\n") + "]+") : typeof lined == "undefined" ? "\r\n" : lined;
-
+        //lined = typeof lined == "string" ? new RegExp( "[" + (lined || "\r\n") + "]+") : typeof lined == "undefined" ? "\r\n" : lined;
+        lined = typeof lined == "string" ? new RegExp( "[" + (lined || "\n") + "]+") : typeof lined == "undefined" ? "\n" : lined;
         function splitline (v) {
             // Split the line using the delimitor
             var arr  = v.split(delim),
@@ -26,10 +26,8 @@ jQuery.extend({
                 }
                 else { out.push(arr[i]); }
             }
-
             return out;
         }
-
         return function(text) {
             var lines = text.split(lined);
             for (var i=0, l=lines.length; i<l; i++) {
