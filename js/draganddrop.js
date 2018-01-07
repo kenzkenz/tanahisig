@@ -762,7 +762,7 @@ $(function(){
                                 _fillColor:"red",
                                 //name: "newFeature",
                                 /*
-                                _polygonHeight: (Number(zinkou)) / 20,
+                                _h_height: (Number(zinkou)) / 20,
                                 _fillColor: fillColor,
                                 _zindex:zindex,
                                 コード: cityObj["citycode"],
@@ -998,7 +998,7 @@ $(function(){
                                 value = 20000;
                             }
 
-                            features[j]["D"]["_polygonHeight"] = value;
+                            features[j]["D"]["_h_height"] = value;
                         }
                     }
                 }
@@ -1261,9 +1261,9 @@ $(function(){
                                 var targetFillColor = d3ColorM(c100);
                             }
                             if (value > 0) {
-                                features[i]["D"]["_polygonHeight"] = (c100 * 50000) + 1000;
+                                features[i]["D"]["_h_height"] = (c100 * 50000) + 1000;
                             } else {
-                                features[i]["D"]["_polygonHeight"] = 1000;
+                                features[i]["D"]["_h_height"] = 1000;
                             }
                             $("#" + mapName + " .csv-tbl tbody").find(".tr-" + features[i]["D"]["コード"] + " td").css({"background":rgb});
                         }else{//色のとき
@@ -1272,9 +1272,9 @@ $(function(){
                             var rgba = "rgba(" + color.r + "," + color.g + "," + color.b + "," + "0.7)";
                             if (value > 0) {
                                 var c100 = (value - min) / color100 / 100;
-                                features[i]["D"]["_polygonHeight"] = (c100 * 50000) + 1000;
+                                features[i]["D"]["_h_height"] = (c100 * 50000) + 1000;
                             } else {
-                                features[i]["D"]["_polygonHeight"] = 1000;
+                                features[i]["D"]["_h_height"] = 1000;
                             }
                         }
                         features[i]["D"]["_fillColor"] = rgba;

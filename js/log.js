@@ -25,7 +25,7 @@ $(function(){
 		var ua = navigator.userAgent;
 		var idandclass = idName + "/" + className;
 		var myurl = location.href;
-        ajaxStartFlg = false;
+        H_COMMON.ajaxStartFlg = false;
 		$.ajax({
 			type:"GET",
 			url:"./php/log.php",
@@ -36,9 +36,9 @@ $(function(){
 				myurl:myurl
 			}
 		}).done(function(){
-            ajaxStartFlg = true;
+            H_COMMON.ajaxStartFlg = true;
 		}).fail(function(){
-			ajaxStartFlg = true;
+			H_COMMON.ajaxStartFlg = true;
 			console.log("ログ失敗!");
 		});
 	});

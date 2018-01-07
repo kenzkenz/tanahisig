@@ -15,21 +15,25 @@ $(function(){
     });
     funcResize();
     function funcResize() {
-        if ($("body").width() < 475) {
-            $(".osm-dropdown-div").hide();
-            $(".draw-btn").hide();
-        }else if($("body").width() < 400) {
+        if ($("body").width() < 400) {
             $(".data-btn").text("d");
             $(".dropdown-div").hide();
             $(".osm-dropdown-div").hide();
             $(".draw-btn").hide();
+            $(".top-left-div button,.top-div button,#sync-btn").addClass("btn-sm");
+        }else if($("body").width() < 475) {
+            $(".osm-dropdown-div").hide();
+            $(".draw-btn").hide();
+            $(".top-left-div button,.top-div button,#sync-btn").addClass("btn-sm");
         } else {
             $(".data-btn").text("data").show();
             $(".dropdown-div").show();
             $(".osm-dropdown-div").show();
             $(".draw-btn").show();
+            $(".top-left-div button,.top-div button,#sync-btn").removeClass("btn-sm");
         }
     }
+
     //--------------------------------------------------------------------------
     //bootstrapのtooltip スマホタッチでタッチが二回必要になるので見送り
     //$('[data-toggle="tooltip"]').tooltip({html:true,container:"body"});

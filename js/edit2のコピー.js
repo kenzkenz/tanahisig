@@ -3480,7 +3480,7 @@ $(function() {
                     drawContextmenuDrawColorHabaDD.setIndexByValue(weight);
                 }
                 //--------------------------------
-                var height = prop["_polygonHeight"];
+                var height = prop["_h_height"];
                 if(height) {
                     $("#height-input-text").val(height);
                 }else{
@@ -3759,12 +3759,12 @@ $(function() {
     //右クリック　高さ　設定
     $("#height-input-text").change(function() {
         var val = $(this).val();
-        val = zen2han(val);
+        val = H_COMMON.zen2han(val);
         $(this).val(val);
         if(val){
             if(rightClickedFatyure) {
                 rightClickedFatyure.setProperties({
-                    "_polygonHeight":val
+                    "_h_height":val
                 });
             }else{
                 var features = featureSelect.getFeatures().getArray();
@@ -3773,7 +3773,7 @@ $(function() {
                         var silentBool = true;
                         if (i === features.length - 1) silentBool = false;
                         features[i].setProperties({
-                            "_polygonHeight":val
+                            "_h_height":val
                         }, silentBool);
                     }
                 }

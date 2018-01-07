@@ -302,7 +302,7 @@ $(function(){
                                         features[i]["D"]["zigyousyo"] = zigyousyo;
                                     }
                                     features[i]["D"]["zinkou"] = zinkou;
-                                    //features[i]["D"]["_polygonHeight"] = zinkou + coordHyoukou;
+                                    //features[i]["D"]["_h_height"] = zinkou + coordHyoukou;
                                     resultCopy.splice(ii,1);
                                     break;
                                 }
@@ -349,9 +349,9 @@ $(function(){
                     var rgba = "rgba(" + color0.r + "," + color0.g + "," + color0.b + "," + "0.8)";
                     if (zinkou == 0) {
                         rgba = "rgba(0,0,255,0.3)";
-                        features[i]["D"]["_polygonHeight"] = 0;
+                        features[i]["D"]["_h_height"] = 0;
                     }else{
-                        features[i]["D"]["_polygonHeight"] = Number(zinkou) + coordHyoukou;
+                        features[i]["D"]["_h_height"] = Number(zinkou) + coordHyoukou;
                     }
                     if (zinkou == max) {
                         var top = "TOP\n";
@@ -360,7 +360,7 @@ $(function(){
                     }
                     features[i]["D"]["zinkou"] = zinkou;
                     features[i]["D"]["_fillColor"] = rgba;
-                    //features[i]["D"]["_polygonHeight"] = Number(zinkou) + coordHyoukou;
+                    //features[i]["D"]["_h_height"] = Number(zinkou) + coordHyoukou;
                     features[i]["D"]["_top"] = top;
 
                     souzinkou += Number(zinkou);

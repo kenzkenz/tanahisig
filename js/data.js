@@ -451,7 +451,7 @@ $(function(){
                     var targetFillColor = d3Color(c100);
                     //var fillColor = d3Color(features[i]["D"]["75歳以上比率"]);
                     features[i]["D"]["_fillColor"] = rgba;
-                    features[i]["D"]["_polygonHeight"] = c100*c100*100000;
+                    features[i]["D"]["_h_height"] = c100*c100*100000;
                 }
             }
         }).fail(function(XMLHttpRequest, textStatus, errorThrown){

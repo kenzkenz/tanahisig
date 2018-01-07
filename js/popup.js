@@ -144,7 +144,9 @@ $(function(){
             case "mobakuu":
                 funcMobakuuPopup(feature,map,evt);
                 break;
-            case "chome":
+            case "chomeH27":
+            case "chomeH22":
+            case "chomeH17":
                 funcChomePopup(layer,feature,map,evt);
                 break;
             case "douro":

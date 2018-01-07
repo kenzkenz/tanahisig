@@ -67,7 +67,6 @@ $(function(){
                 d3Flg = false;
             }
             if(ol3d1==null){
-                console.log(9999)
                 ol3d1 = new olcs.OLCesium({
                     map:map1
                 });
@@ -179,6 +178,8 @@ $(function(){
                 czmlCreate(features,$(this));
             }
             */
+
+            /*右クリック人口用　しばらく退場
             //mesh500
             if(mapName==="map1") {
                 var mesh500Layer = mesh500Layer1;
@@ -190,14 +191,17 @@ $(function(){
                 console.log(features);
                 czmlCreate(features,$(this));
             }
+            */
+
+
             //ドロー関係
             if(drawLayer){
-                rightClickedFeatyure = null;
-                drawLayer.getSource().changed();
+                //rightClickedFeatyure = null;
+                //drawLayer.getSource().changed();
                 var features = drawLayer.getSource().getFeatures();
-                console.log(features);
                 drawContextmenuOverlay.setPosition(null);
-                czmlCreate(features,$(this));
+
+                if(features.length) czmlCreate(features,$(this));
             }
             //選挙区
             if(dataLayer["map1-senkyoku"]){
@@ -206,11 +210,9 @@ $(function(){
                 czmlCreate(features,$(this));
             }
         }else{//2Dになるとき
-
             $("#" + mapName + " .cesium-btn-up").hide(500);
             $("#" + mapName + " .cesium-btn-down").hide(500);
             $("#" + mapName + " .elevMag").hide(500);
-
             var ol3d = eval(mapObj["ol3d"]);
             //ol3d.setEnabled(false);
             mapObj["element"].find(".cesium-btn-div").hide(500);
@@ -359,6 +361,7 @@ $(function(){
 
 //------------------------------------------------------------------------------
 function czmlCreate(features,element){
+    console.log(features[0].getProperties());
     var mapObj = funcMaps(element);
     var ol3d = eval(mapObj["ol3d"]);
     ol3d.getDataSources().removeAll();
@@ -369,7 +372,7 @@ function czmlCreate(features,element){
     var czmlId = 1;
     for (i=0; i<features.length; i++){
         var multiLength = features[i].getGeometry().getCoordinates().length;
-        console.log(multiLength);//マルチポリゴンのときと穴あきポリゴンのときに１以上になる。
+        //console.log(multiLength);//マルチポリゴンのときと穴あきポリゴンのときに１以上になる。
         //czmlは穴あきポリゴンに対応していないらしいので苦肉の作
         var geomType = features[i].getGeometry().getType();
         //if(geomType==="Polygon") multiLength = 1;
@@ -399,7 +402,7 @@ function czmlCreate(features,element){
                 } else {
                     rgba = [Number(color0.r), Number(color0.g), Number(color0.b), 150];
                 }
-                var polygonHeight = features[i].getProperties()["_polygonHeight"];
+                var polygonHeight = features[i].getProperties()["_h_height"];
                 var description = features[i].getProperties()["hover"];
                 if (geomType === "Polygon" && j > 0) {
                     rgba = [0, 0, 0, 0];

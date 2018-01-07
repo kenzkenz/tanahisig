@@ -223,7 +223,6 @@ function funcHaikeiTableCreate(mapElement,mapName){
             H_COMMON.setHush("l",H_COMMON.getHushJson());
         }
     });
-
     mapElement.find(".haikei-tbl tbody").sortable({
         handle:".td-sort",
         update:function(event,ui){
@@ -258,24 +257,6 @@ function funcHaikeiTableCreate(mapElement,mapName){
             }
             return;
         }
-
-        /*
-        if(layer.getProperties()["folder"]==="parent"){
-            console.log(layer.getProperties()["folder"]);
-            console.log(layer.getProperties()["category"]);
-            var trErement = $(".tr-" + layer.getProperties()["category"]);
-            trErement.toggle();
-            if($(this).prop("checked")) {
-                trErement.children().animate({
-                    "background-color": "rgba(51,122,183,1.0)"
-                }, 1000).animate({
-                    "background-color": "white"
-                }, 1000);
-            }
-            return;
-        }
-        */
-
         try {
             if (layer.get("name") === "sobo") {
                 if ($(this).prop("checked")) {
@@ -400,6 +381,7 @@ function funcHaikeiTableCreate(mapElement,mapName){
 //------------------------------------------------------------------------------
 //背景レイヤーの重なり順をtr順に変更する。
 function funcHaikeiLayerSort(mapElement,mapName){
+    //H_COMMON.setHush("l",H_COMMON.getHushJson());
     //--------------------------------------
     //swipeのため
     if(mapName=="map1"){
@@ -415,7 +397,6 @@ function funcHaikeiLayerSort(mapElement,mapName){
     //縦分割か横分割か
     swipeCtr.set("orientation",$("input:radio[name='swipe-radio-" + mapName + "']:checked").val());
     //-------------------------------------
-
     mapElement.find(".haikei-tbl tbody tr").each(function(e){
         if(mapName=="map1"){
             var layer = useLayersArr1[Number($(this).find("input:checkbox").val())];
@@ -472,6 +453,7 @@ function funcHaikeiLayerSort(mapElement,mapName){
 
         }
     });
+    H_COMMON.setHush("l",H_COMMON.getHushJson());
 }
 //------------------------------------------------------------------------------
 $(function(){

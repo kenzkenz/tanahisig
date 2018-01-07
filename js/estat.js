@@ -10,7 +10,7 @@ $(function(){
     var cityTableAjax = function(){
         return new Promise(function(resolve,reject){
             //estatの表情報を取得してセレクトボックスのオプションを作る。市町村用
-            ajaxStartFlg = false;
+            H_COMMON.ajaxStartFlg = false;
             var tgtUrl = "http://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo?";
             $.ajax({
                 type:"get",
@@ -39,7 +39,7 @@ $(function(){
     var prefTableAjax = function(){
         return new Promise(function(resolve,reject){
             //estatの表情報を取得して統計表セレクトボックスのオプションを作る。全国用（都道府県）
-            ajaxStartFlg = false;
+            H_COMMON.ajaxStartFlg = false;
             var tgtUrl = "http://api.e-stat.go.jp/rest/2.1/app/json/getMetaInfo?";
             $.ajax({
                 type:"get",
@@ -111,7 +111,7 @@ $(function(){
     //prefTableAjax();
 
     Promise.all([cityTableAjax(), prefTableAjax()]).then(function (results) {
-        ajaxStartFlg = true;
+        H_COMMON.ajaxStartFlg = true;
         console.log("セレクトボックスデータ取得完了")
     });
 
@@ -625,11 +625,11 @@ $(function(){
                     features[i]["D"]["_prevFillColor"] = prevFillColor;
                     features[i]["D"]["_targetFillColor"] = targetFillColor;
                     features[i]["D"]["_fillColor"] = rgba;
-                    //features[i]["D"]["_polygonHeight"] = Math.floor(c100*50000) + 1000;
+                    //features[i]["D"]["_h_height"] = Math.floor(c100*50000) + 1000;
                     if(value>0) {
-                        features[i]["D"]["_polygonHeight"] = (c100 * 50000) + 1000;
+                        features[i]["D"]["_h_height"] = (c100 * 50000) + 1000;
                     }else{
-                        features[i]["D"]["_polygonHeight"] = 1000;
+                        features[i]["D"]["_h_height"] = 1000;
                     }
                     //features[i]["D"]["value"] = $(this).find(".estat-value-td").text() + $(this).find(".estat-unit-td").text();
                     features[i]["D"]["value"] = $(this).find(".estat-value-td").text() + $(this).parents("table").find(".estat-unit-th").text().split(":")[1];

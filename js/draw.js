@@ -213,7 +213,7 @@ $(function() {
         min:0,max:1,value:1,step:0.01,
         slide: function(event,ui){
             var fillColor = rightClickedFeatyure.getProperties()["_fillColor"];
-            var rgba = setRgbaOpacity(fillColor,ui.value);
+            var rgba = H_COMMON.setRgbaOpacity(fillColor,ui.value);
             rightClickedFeatyure.setProperties({
                 "_fillColor":rgba
             });
@@ -319,7 +319,7 @@ $(function() {
                 var fillColor = prop["_fillColor"];
                 var rgb;
                 if(fillColor) {
-                    rgb = rgba2rgb(fillColor);
+                    rgb = H_COMMON.rgba2rgb(fillColor);
                     drawContextmenuDrawColorDD.setIndexByValue(rgb);
                     $("#fillcolor-color-span").css({
                         "background": rgb,
@@ -329,7 +329,7 @@ $(function() {
                 }
                 //透過度-------------------------------
                 if(fillColor) {
-                    var opacity = getRgbaOpacity(fillColor);
+                    var opacity = H_COMMON.getRgbaOpacity(fillColor);
                     console.log(String(opacity*100) + "%");
                     $("#drawContextmenu-opacity-div2 .ui-slider-handle").css({
                         left:String(opacity*100) + "%"
@@ -340,7 +340,7 @@ $(function() {
                 var color = prop["_color"];
                 console.log(color);
                 if(color){
-                    rgb = rgba2rgb(color);
+                    rgb = H_COMMON.rgba2rgb(color);
                     drawContextmenuDrawColorWakuDD.setIndexByValue(rgb);
                 }
                 $("#color-color-span").css({
@@ -352,7 +352,7 @@ $(function() {
                 var weight = String(prop["_weight"]);
                 if(weight) drawContextmenuDrawColorHabaDD.setIndexByValue(weight);
                 //３D時高さ-----------------------------
-                var height = prop["_polygonHeight"];
+                var height = prop["_h_height"];
                 if(height) {
                     $("#height-input-text").val(height);
                 }else{
@@ -1396,12 +1396,12 @@ $(function() {
     //高さ　設定
     $("#height-input-text").change(function() {
         var val = $(this).val();
-        val = zen2han(val);
+        val = H_COMMON.zen2han(val);
         $(this).val(val);
         if(val){
             if(rightClickedFeatyure) {
                 rightClickedFeatyure.setProperties({
-                    "_polygonHeight":val
+                    "_h_height":val
                 });
             }else{
                 var features = rangeFeatures;
@@ -1410,7 +1410,7 @@ $(function() {
                         var silentBool = true;
                         if (i === features.length - 1) silentBool = false;
                         features[i].setProperties({
-                            "_polygonHeight":val
+                            "_h_height":val
                         }, silentBool);
                     }
                 }

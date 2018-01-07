@@ -115,7 +115,7 @@ $(function() {
         })
     });
     $("#buffer-input-text").change(function(){
-        bufferCreate(Number(zen2han($(this).val())));
+        bufferCreate(Number(H_COMMON.zen2han($(this).val())));
     });
     $("#buffer-input-text").spinner({
         max:50000, min:0, step:10,

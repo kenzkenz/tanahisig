@@ -2,14 +2,14 @@ if (typeof H_COMMON === 'undefined') {
     var H_COMMON = {};
 }
 //---------------------------------------------------------------------------------
-var ajaxStartFlg = true;
+H_COMMON.ajaxStartFlg = true;
 $(document).ajaxStart(function (){
-    if(ajaxStartFlg) {//フラグでの制御はうまくいかないようだ。念の為残しておく。
+    if(H_COMMON.ajaxStartFlg) {//フラグでの制御はうまくいかないようだ。念の為残しておく。
         $("#loading-fa").show(500);
     }
 });
 $(document).ajaxStop(function (){
-    if(ajaxStartFlg) {
+    if(H_COMMON.ajaxStartFlg) {
         $("#loading-fa").hide(500);
     }
 });
@@ -132,13 +132,14 @@ H_COMMON.getHush = function() {
                             if (name === name_J) {
                                 var heikeiCheck = element.find("input:checkbox[name='haikei-check'][value='" + k + "']");
                                 heikeiCheck.iCheck("check");
-                                layer.setOpacity(opacity_J);
                                 var tgtTr = heikeiCheck.parents("tr");
                                 tgtTr.find(".ui-slider-handle").css({
                                     left:String(opacity_J*100) + "%"
                                 });
                                 tgtTr.show();
-                                //layer.setZIndex(zIndex_J);
+
+                                layer.setOpacity(opacity_J);
+                                tgtTr.removeClass("tr-" + layer.getProperties()["category"]);
                             }
                         }
                     }else{//配列のとき
@@ -147,14 +148,16 @@ H_COMMON.getHush = function() {
                             if (name === name_J) {
                                 var heikeiCheck = element.find("input:checkbox[name='haikei-check'][value='" + k + "']");
                                 heikeiCheck.iCheck("check");
-                                for(var l = 0; l <layer.length; l++){
-                                    layer[l].setOpacity(opacity_J);
-                                }
                                 var tgtTr = heikeiCheck.parents("tr");
                                 tgtTr.find(".ui-slider-handle").css({
                                     left:String(opacity_J*100) + "%"
                                 });
                                 tgtTr.show();
+
+                                for(var l = 0; l <layer.length; l++){
+                                    layer[l].setOpacity(opacity_J);
+                                }
+                                tgtTr.removeClass("tr-" + layer[0].getProperties()["category"]);
                             }
                         }
                     }
@@ -206,11 +209,9 @@ H_COMMON.getHushJson = function(){
 //----------------------------------------------------------
 
 
-
-
 //---------------------------------------------------------------------------------
 //rgbaをrgbに変換
-var rgba2rgb = function(rgba) {
+H_COMMON.rgba2rgb = function(rgba) {
     var rgb;
     if(rgba.indexOf("rgba")!==-1) {
         rgb = rgba.substr(0, rgba.lastIndexOf(",")).replace("rgba", "rgb") + ")";//rgbaをrgbに変換
@@ -221,7 +222,7 @@ var rgba2rgb = function(rgba) {
 };
 //---------------------------------------------------------------------------------
 //rgbaの透過度を取得
-var getRgbaOpacity = function(rgba) {
+H_COMMON.getRgbaOpacity = function(rgba) {
     var opacity;
     if(rgba.indexOf("rgba")!==-1) {
         opacity = rgba.match(/([^,]+)\)/)[1];
@@ -232,7 +233,7 @@ var getRgbaOpacity = function(rgba) {
 };
 //---------------------------------------------------------------------------------
 //rgbaの透過度を設定
-var setRgbaOpacity = function(rgba,opacity) {
+H_COMMON.setRgbaOpacity = function(rgba,opacity) {
     if(rgba.indexOf("rgba")!==-1) {
         rgba = rgba.substr(0, rgba.lastIndexOf(",")) + "," + opacity + ")";
     }else{//実はもとからrgbだったとき
@@ -242,7 +243,7 @@ var setRgbaOpacity = function(rgba,opacity) {
 };
 //---------------------------------------------------------------------------------
 //全角数字を半角数字に変換
-var zen2han = function(str) {
+H_COMMON.zen2han = function(str) {
     str = str.replace(/[０-９]/g, function (s) {
         return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
     });

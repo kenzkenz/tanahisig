@@ -304,9 +304,9 @@ $(function(){
                         features[i]["D"]["_targetFillColor"] = targetFillColor;
                         features[i]["D"]["_fillColor"] = rgba;
                         if(value>0) {
-                            features[i]["D"]["_polygonHeight"] = (c100 * 50000) + 1000;
+                            features[i]["D"]["_h_height"] = (c100 * 50000) + 1000;
                         }else{
-                            features[i]["D"]["_polygonHeight"] = 1000;
+                            features[i]["D"]["_h_height"] = 1000;
                         }
                         //features[i]["D"]["value"] = $(this).find(".estat-value-td").text() + $(this).find(".estat-unit-td").text();
                         features[i]["D"]["lank"] = $(this).find(".estat-lank-td").text();

@@ -786,7 +786,7 @@ if (typeof mvt === 'undefined') {
         this.category = "ZinkouKeizai";
         this.icon = "<i class='fa fa-th fa-fw' style='color:red;'></i>";
         this.title = "H17全国小地域人口等(MVT)";
-        this.name = "chome";
+        this.name = "chomeH17";
         this.origin = "<a href='http://e-stat.go.jp/SG2/eStatGIS/page/download.html' target='_blank'>e-stat</a>";
         this.detail = "1haあたりの人口が上限値を越えると色が最大に濃くなる。それ以上は同じ。";
         this.detail2 = "<div class='detail2-div'>人口/1haの上限：<input type='text' class='syoutiikitext' value='100' style='width:30px;'>人" +
@@ -814,7 +814,7 @@ if (typeof mvt === 'undefined') {
         this.category = "ZinkouKeizai";
         this.icon = "<i class='fa fa-th fa-fw' style='color:red;'></i>";
         this.title = "H22全国小地域人口等(MVT)";
-        this.name = "chome";
+        this.name = "chomeH22";
         this.origin = "<a href='http://e-stat.go.jp/SG2/eStatGIS/page/download.html' target='_blank'>e-stat</a>";
         this.detail = "1haあたりの人口が上限値を越えると色が最大に濃くなる。それ以上は同じ。";
         this.detail2 = "<div class='detail2-div'>人口/1haの上限：<input type='text' class='syoutiikitext' value='100' style='width:30px;'>人" +
@@ -842,7 +842,7 @@ if (typeof mvt === 'undefined') {
         this.category = "ZinkouKeizai";
         this.icon = "<i class='fa fa-th fa-fw' style='color:red;'></i>";
         this.title = "H27全国小地域人口等(MVT)";
-        this.name = "chome";
+        this.name = "chomeH27";
         this.origin = "<a href='http://e-stat.go.jp/SG2/eStatGIS/page/download.html' target='_blank'>e-stat</a>";
         this.detail = "1haあたりの人口が上限値を越えると色が最大に濃くなる。それ以上は同じ。";
         this.detail2 = "<div class='detail2-div'>人口/1haの上限：<input type='text' class='syoutiikitext' value='100' style='width:30px;'>人" +

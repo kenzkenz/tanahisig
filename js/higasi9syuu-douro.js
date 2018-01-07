@@ -172,7 +172,7 @@ var higasi9Source1 = null;
                 var newFeature = new ol.Feature({
                     geometry: geometry,
                     //name: "newFeature",
-                    _polygonHeight: (Number(zinkou)) / 20,
+                    _h_height: (Number(zinkou)) / 20,
                     _fillColor: fillColor,
                     _zindex:zindex,
                     コード: cityObj["citycode"],
