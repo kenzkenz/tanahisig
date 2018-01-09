@@ -1,4 +1,4 @@
-var drawLayer = null;
+var H_DRAW.drawLayer = null;
 var drawContextmenuOverlay = null;
 $(function() {
     var drawSource = null;
@@ -6,7 +6,7 @@ $(function() {
     var haniLayer = null;
     var hoverSource = null;
     var hoverLayer = null;
-    var drawLayerHeatmap = null;
+    var H_DRAW.drawLayerHeatmap = null;
     var H_DRAW.drawSourceChangeFlg = true;
     var copyCoord = [];//地物コピペ用
     var copiedFeature = null//地物コピペ用
@@ -270,17 +270,17 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ドロー用（通常）のソース、レイヤーを設置
     drawSource = new ol.source.Vector();
-    drawLayer = new ol.layer.Vector({
+    H_DRAW.drawLayer = new ol.layer.Vector({
         source:drawSource,
-        name:"drawLayer",
+        name:"H_DRAW.drawLayer",
         renderOrder: ol.ordering.yOrdering(),
         style:drawStyleFunction()
         //style:getStyle
     });
-    map1.addLayer(drawLayer);
-    drawLayer.set("selectable",true);
-    drawLayer.set("altitudeMode","clampToGround");
-    drawLayer.setZIndex(9999);
+    map1.addLayer(H_DRAW.drawLayer);
+    H_DRAW.drawLayer.set("selectable",true);
+    H_DRAW.drawLayer.set("altitudeMode","clampToGround");
+    H_DRAW.drawLayer.setZIndex(9999);
     //------------------------------------------------------------------------------------------------------------------
     //範囲指定用のソース、レイヤーを設置
     haniSource = new ol.source.Vector();
@@ -295,9 +295,9 @@ $(function() {
     haniLayer.setZIndex(9999);
     //------------------------------------------------------------------------------------------------------------------
     //ドロー用（ヒートマップ）のレイヤーを設置
-    drawLayerHeatmap = new ol.layer.Heatmap({
+    H_DRAW.drawLayerHeatmap = new ol.layer.Heatmap({
         source:drawSource,
-        name:"drawLayerHeatmap",
+        name:"H_DRAW.drawLayerHeatmap",
         style:drawStyleFunction()
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -1027,7 +1027,7 @@ $(function() {
                     console.log(e);
                     var mapBrowserCoord = e["mapBrowserEvent"]["coordinate"];
                     console.log(mapBrowserCoord);
-                    drawContextmenuOverlay.setPosition(mapBrowserCoord);
+                    H_DRAW.drawContextmenuOverlay.setPosition(mapBrowserCoord);
                     drawContextmenuCreate(selectedFeature);
                     break;
                 case "LineString":
@@ -1098,7 +1098,7 @@ $(function() {
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -1243,7 +1243,7 @@ $(function() {
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -1347,7 +1347,7 @@ $(function() {
             bool = false;
         }//forここまで
         var extent = feature.getGeometry().getExtent();
-        drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
+        H_DRAW.drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
         drawContextmenuCreate(featureSelect.getFeatures().getArray());
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -1470,7 +1470,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //穴を開ける
     var drawhole  = new ol.interaction.DrawHole ({
-        layers:[drawLayer],
+        layers:[H_DRAW.drawLayer],
         condition:function(e){
             var mouseButton = e["originalEvent"]["button"];
             if(mouseButton===0){//0が左クリック。2が右クリック。
@@ -2105,7 +2105,7 @@ $(function() {
     //ドロータイプ選択
     $("body").on("change","#drawType,#drawType2",function(){
         featureSelect.getFeatures().clear();
-        drawContextmenuOverlay.setPosition(null);
+        H_DRAW.drawContextmenuOverlay.setPosition(null);
         rightClickedFatyure = null;
         if($(this).attr("id")==="drawType") {
             addInteractions();
@@ -2198,12 +2198,12 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //レイヤーをリセット
     function funcLayerReset() {
-        map1.removeLayer(drawLayerHeatmap);
-        map1.removeLayer(drawLayer);
-        map1.addLayer(drawLayer);
-        drawLayer.set("selectable",true);
-        drawLayer.set("altitudeMode","clampToGround");
-        drawLayer.setZIndex(9999);
+        map1.removeLayer(H_DRAW.drawLayerHeatmap);
+        map1.removeLayer(H_DRAW.drawLayer);
+        map1.addLayer(H_DRAW.drawLayer);
+        H_DRAW.drawLayer.set("selectable",true);
+        H_DRAW.drawLayer.set("altitudeMode","clampToGround");
+        H_DRAW.drawLayer.setZIndex(9999);
     }
     //------------------------------------------------------------------------------------------------------------------
     //エフェクトをリセット
@@ -2218,11 +2218,11 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ヒートマップ作成
     function funcHeatmap() {
-        map1.removeLayer(drawLayer);
-        map1.addLayer(drawLayerHeatmap);
-        drawLayerHeatmap.set("selectable",true);
-        drawLayerHeatmap.set("altitudeMode","clampToGround");
-        drawLayerHeatmap.setZIndex(9999);
+        map1.removeLayer(H_DRAW.drawLayer);
+        map1.addLayer(H_DRAW.drawLayerHeatmap);
+        H_DRAW.drawLayerHeatmap.set("selectable",true);
+        H_DRAW.drawLayerHeatmap.set("altitudeMode","clampToGround");
+        H_DRAW.drawLayerHeatmap.setZIndex(9999);
     }
     //------------------------------------------------------------------------------------------------------------------
     //ボロノイ図作成
@@ -3390,7 +3390,7 @@ $(function() {
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -3417,7 +3417,7 @@ $(function() {
         }else{
             feature = otherFeature;
         }
-        drawContextmenuOverlay.setPosition(coord);
+        H_DRAW.drawContextmenuOverlay.setPosition(coord);
         drawContextmenuCreate(feature);
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -3523,8 +3523,8 @@ $(function() {
                     case "Point":
                         $("#drawContextmenu-msg-div").html("(点)色を変えます。iconで形状変更します。");
                         var pointCoord = feature.getGeometry().getCoordinates();
-                        drawContextmenuOverlay.setPosition(pointCoord);
-                        drawContextmenuOverlay.setOffset([10, 10]);
+                        H_DRAW.drawContextmenuOverlay.setPosition(pointCoord);
+                        H_DRAW.drawContextmenuOverlay.setOffset([10, 10]);
                         $("#drawContextmenu-drawColor-div").show();
                         $("#drawContextmenu-icon-btn").show();
                         $("#currentIcon").show();
@@ -3543,7 +3543,7 @@ $(function() {
                         break;
                     default:
                 }
-                console.log("drawLayerの上");
+                console.log("H_DRAW.drawLayerの上");
                 map1.addInteraction(featureSelect);
                 if(drawTypeMsDropDown) {
                     prevMsddIndex = drawTypeMsDropDown.get("selectedIndex");
@@ -3588,14 +3588,14 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //右クリックオーバーレイをクローズ
     $("#drawContextmenuOverlay-close").click(function(){
-        var coord = drawContextmenuOverlay.getPosition();
+        var coord = H_DRAW.drawContextmenuOverlay.getPosition();
         var pixel = map1.getPixelFromCoordinate(coord);
         var features = [];
         var layers = [];
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -3617,7 +3617,7 @@ $(function() {
             $("#select-toggle").bootstrapToggle("off");
             addInteractions();
         }
-        drawContextmenuOverlay.setPosition(null);
+        H_DRAW.drawContextmenuOverlay.setPosition(null);
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック　コピー
@@ -3641,7 +3641,7 @@ $(function() {
             transform2.select(null);
             rightClickedFatyure = null;
             featureSelect.getFeatures().clear();
-            drawContextmenuOverlay.setPosition(null);
+            H_DRAW.drawContextmenuOverlay.setPosition(null);
         }
     });
     //------------------------------------------------------------------------------------------------------------------
@@ -3653,7 +3653,7 @@ $(function() {
                 transform2.select(null);
                 rightClickedFatyure = null;
                 featureSelect.getFeatures().clear();
-                drawContextmenuOverlay.setPosition(null);
+                H_DRAW.drawContextmenuOverlay.setPosition(null);
             }
         }else{
             var features = featureSelect.getFeatures().getArray();
@@ -3663,7 +3663,7 @@ $(function() {
                 }
                 rightClickedFatyure = null;
                 featureSelect.getFeatures().clear();
-                drawContextmenuOverlay.setPosition(null);
+                H_DRAW.drawContextmenuOverlay.setPosition(null);
             }
         }
     });
@@ -3784,7 +3784,7 @@ $(function() {
     //右クリック　アイコン
     $("#drawContextmenu-icon-btn").click(function(){
         //コンテキストメニューがアイコンダイアログに隠されないように---------
-        var overLayCoord = drawContextmenuOverlay.getPosition();
+        var overLayCoord = H_DRAW.drawContextmenuOverlay.getPosition();
         var overLayPixel = map1.getPixelFromCoordinate(overLayCoord);
         if(overLayPixel[0]> ($("#map1").width() - 300)) map1.getView().setCenter(overLayCoord);
         //-----------------------------------------------------------

@@ -116,11 +116,19 @@ $(function(){
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
         if($("#" + mapName + " .d3d2-btn").html()=="3D"){//表示が３Ｄのときは２Ｄ
-
-            map1.removeControl(centerTarget1);
-            map2.removeControl(centerTarget2);
+            map1.removeControl(H_START.centerTarget1);
+            map2.removeControl(H_START.centerTarget2);
+            /*
+            var maps = [map1,map2];
+            for(var i = 0; i <maps.length; i++) {
+                var controls = maps[i].getControls().getArray();
+                for (var j = 0; j < controls.length; j++) {
+                    var interaction = controls[j];
+                    if (interaction instanceof ol.control.Target) maps[i].removeControl(interaction);
+                }
+            }
+            */
             eval(mapName).once("postcompose",function(event){
-
                 var type = 'image/png';
                 var canvas = $("#" + mapName).find("canvas")[0];
                 var dataurl = canvas.toDataURL(type);
@@ -134,8 +142,8 @@ $(function(){
                     "href":window.URL.createObjectURL(blob),
                     "download":"map2d.png"
                 });
-                map1.addControl(centerTarget1);
-                map2.addControl(centerTarget2);
+                map1.addControl(H_START.centerTarget1);
+                map2.addControl(H_START.centerTarget2);
                 console.log("完了")
             });
             eval(mapName).renderSync();

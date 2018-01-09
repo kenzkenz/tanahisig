@@ -1,5 +1,5 @@
-if (typeof mvt === 'undefined') {
-    var mvt = {};
+if (typeof H_MVT === 'undefined') {
+    var H_MVT = {};
 }
 (function () {
     //全国河川中心線------------------------------------------------------------------------------------------------------
@@ -61,8 +61,8 @@ if (typeof mvt === 'undefined') {
             url: "https://hfu.github.io/rvrcl-vt/{z}/{x}/{y}.mvt"
         });
     }
-    mvt.suiro1 = new ol.layer.VectorTile(new suiro());
-    mvt.suiro2 = new ol.layer.VectorTile(new suiro());
+    H_MVT.suiro1 = new ol.layer.VectorTile(new suiro());
+    H_MVT.suiro2 = new ol.layer.VectorTile(new suiro());
     //全国河川中心線ここまで-----------------------------------------------------------------------------------------------
     //全国道路中心線------------------------------------------------------------------------------------------------------
     function douroStyleFunction(feature, resolution) {
@@ -124,11 +124,11 @@ if (typeof mvt === 'undefined') {
         this.maxResolution = 1222.99;
         this.style = douroStyleFunction;
     }
-    mvt.douro1 = new ol.layer.VectorTile(new douro());
-    mvt.douro2 = new ol.layer.VectorTile(new douro());
+    H_MVT.douro1 = new ol.layer.VectorTile(new douro());
+    H_MVT.douro2 = new ol.layer.VectorTile(new douro());
     //全国道路中心線ここまで-----------------------------------------------------------------------------------------------
     //全国用途地域--------------------------------------------------------------------------------------------------------
-    mvt.youtotiikiStyleFunction = function (target) {
+    H_MVT.youtotiikiStyleFunction = function (target) {
         return function (feature, resolution) {
             var prop = feature.getProperties();
             var cate = prop["A29_004"];
@@ -223,10 +223,10 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/youtotiiki/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.youtotiikiStyleFunction(0);
+        this.style = H_MVT.youtotiikiStyleFunction(0);
     }
-    mvt.youtotiiki1 = new ol.layer.VectorTile(new youtotiiki());
-    mvt.youtotiiki2 = new ol.layer.VectorTile(new youtotiiki());
+    H_MVT.youtotiiki1 = new ol.layer.VectorTile(new youtotiiki());
+    H_MVT.youtotiiki2 = new ol.layer.VectorTile(new youtotiiki());
     //全国用途地域ここまで-------------------------------------------------------------------------------------------------
     //全国都市地域-------------------------------------------------------------------------------------------------------
     function tositiiki(){
@@ -286,11 +286,11 @@ if (typeof mvt === 'undefined') {
         }
         return style;
     }
-    mvt.tositiiki1 = new ol.layer.VectorTile(new tositiiki());
-    mvt.tositiiki2 = new ol.layer.VectorTile(new tositiiki());
+    H_MVT.tositiiki1 = new ol.layer.VectorTile(new tositiiki());
+    H_MVT.tositiiki2 = new ol.layer.VectorTile(new tositiiki());
     //全国都市地域ここまで------------------------------------------------------------------------------------------------
     //全国海岸線----------------------------------------------------------------------------------------------------------
-    mvt.kaigansebStyleFunction = function (color,width) {
+    H_MVT.kaigansebStyleFunction = function (color,width) {
         return function (feature, resolution) {
             var style = new ol.style.Style({
                 stroke: new ol.style.Stroke({
@@ -326,19 +326,19 @@ if (typeof mvt === 'undefined') {
             "<option value='9'>9</option>" +
             "</select>" +
             "</div>";
-        this.style = mvt.kaigansebStyleFunction("black",1);
+        this.style = H_MVT.kaigansebStyleFunction("black",1);
         this.source = new ol.source.VectorTile({
             format: new ol.format.MVT(),
             maxZoom:14,
             url: "https://kenzkenz.github.io/kaigansen_mvt/{z}/{x}/{y}.mvt"
         });
     }
-    mvt.kaigansen_1 = new ol.layer.VectorTile(new kaigansen_());
-    mvt.kaigansen_2 = new ol.layer.VectorTile(new kaigansen_());
+    H_MVT.kaigansen_1 = new ol.layer.VectorTile(new kaigansen_());
+    H_MVT.kaigansen_2 = new ol.layer.VectorTile(new kaigansen_());
     //全国海岸線ここまで--------------------------------------------------------------------------------------------------
     //全国土壌図---------------------------------------------------------------------------------------------------------
-    mvt.dozyouzu1 = new ol.layer.VectorTile(new dozyouzu());
-    mvt.dozyouzu2 = new ol.layer.VectorTile(new dozyouzu());
+    H_MVT.dozyouzu1 = new ol.layer.VectorTile(new dozyouzu());
+    H_MVT.dozyouzu2 = new ol.layer.VectorTile(new dozyouzu());
     function dozyouzu(){
         this.folder = "child";
         this.category = "tisitutikei";
@@ -530,8 +530,8 @@ if (typeof mvt === 'undefined') {
     }
     //全国土壌図ここまで--------------------------------------------------------------------------------------------------
     //エコリス植生図-----------------------------------------------------------------------------------------------------
-    mvt.syokusei1 = new ol.layer.VectorTile(new syokusei());
-    mvt.syokusei2 = new ol.layer.VectorTile(new syokusei());
+    H_MVT.syokusei1 = new ol.layer.VectorTile(new syokusei());
+    H_MVT.syokusei2 = new ol.layer.VectorTile(new syokusei());
     function syokusei(){
         this.folder = "child";
         this.category = "tisitutikei";
@@ -746,7 +746,7 @@ if (typeof mvt === 'undefined') {
     //エコリス植生図ここまで-----------------------------------------------------------------------------------------------
     //全国小地域人口等----------------------------------------------------------------------------------------------------
     //h17
-    mvt.syoutiikiCommonStyleFunction = function (maxColor,limit) {
+    H_MVT.syoutiikiCommonStyleFunction = function (maxColor,limit) {
         var d3Color = d3.interpolateLab("white",maxColor);
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -779,8 +779,8 @@ if (typeof mvt === 'undefined') {
             return style;
         }
     };
-    mvt.syoutiikiH17_1 = new ol.layer.VectorTile(new syoutiikiH17());
-    mvt.syoutiikiH17_2 = new ol.layer.VectorTile(new syoutiikiH17());
+    H_MVT.syoutiikiH17_1 = new ol.layer.VectorTile(new syoutiikiH17());
+    H_MVT.syoutiikiH17_2 = new ol.layer.VectorTile(new syoutiikiH17());
     function syoutiikiH17(){
         this.folder = "child";
         this.category = "ZinkouKeizai";
@@ -803,12 +803,12 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/kokucyou/h17/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.syoutiikiCommonStyleFunction("indigo",100);
+        this.style = H_MVT.syoutiikiCommonStyleFunction("indigo",100);
     }
     //-------------------
     //H22
-    mvt.syoutiikiH22_1 = new ol.layer.VectorTile(new syoutiikiH22());
-    mvt.syoutiikiH22_2 = new ol.layer.VectorTile(new syoutiikiH22());
+    H_MVT.syoutiikiH22_1 = new ol.layer.VectorTile(new syoutiikiH22());
+    H_MVT.syoutiikiH22_2 = new ol.layer.VectorTile(new syoutiikiH22());
     function syoutiikiH22(){
         this.folder = "child";
         this.category = "ZinkouKeizai";
@@ -831,12 +831,12 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/kokucyou/h22/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.syoutiikiCommonStyleFunction("indigo",100);
+        this.style = H_MVT.syoutiikiCommonStyleFunction("indigo",100);
     }
     //-------------------
     //H27
-    mvt.syoutiiki1 = new ol.layer.VectorTile(new syoutiikiH27());
-    mvt.syoutiiki2 = new ol.layer.VectorTile(new syoutiikiH27());
+    H_MVT.syoutiiki1 = new ol.layer.VectorTile(new syoutiikiH27());
+    H_MVT.syoutiiki2 = new ol.layer.VectorTile(new syoutiikiH27());
     function syoutiikiH27(){
         this.folder = "child";
         this.category = "ZinkouKeizai";
@@ -859,11 +859,11 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://kenzkenz.github.io/h27syouchiiki_mvt/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.syoutiikiCommonStyleFunction("indigo",100);
+        this.style = H_MVT.syoutiikiCommonStyleFunction("indigo",100);
     }
     //全国小地域人口等ここまで---------------------------------------------------------------------------------------------
     //500Mメッシュ-------------------------------------------------------------------------------------------------------
-    mvt.mesh500CommonStyleFunction = function(maxColor,limit,year) {
+    H_MVT.mesh500CommonStyleFunction = function(maxColor,limit,year) {
         var d3Color = d3.interpolateLab("white",maxColor);
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -1023,13 +1023,13 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/500mesh_plus/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 1222.99;//ズーム7
-        this.style = mvt.mesh500CommonStyleFunction("indigo",1000,"h27");
+        this.style = H_MVT.mesh500CommonStyleFunction("indigo",1000,"h27");
     }
-    mvt.mesh500_1 = new ol.layer.VectorTile(new mesh500_());
-    mvt.mesh500_2 = new ol.layer.VectorTile(new mesh500_());
+    H_MVT.mesh500_1 = new ol.layer.VectorTile(new mesh500_());
+    H_MVT.mesh500_2 = new ol.layer.VectorTile(new mesh500_());
     //500Mメッシュここまで------------------------------------------------------------------------------------------------
     //H26経済センサス----------------------------------------------------------------------------------------------------
-    mvt.keizaiCensusStyleFunction = function(maxColor,limit,column) {
+    H_MVT.keizaiCensusStyleFunction = function(maxColor,limit,column) {
         var d3Color = d3.interpolateLab("white",maxColor);
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -1160,13 +1160,13 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/h26keizai_census_sangyoubetu_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 1222.99;//ズーム7
-        this.style = mvt.keizaiCensusStyleFunction("indigo",1000,"T000843001");
+        this.style = H_MVT.keizaiCensusStyleFunction("indigo",1000,"T000843001");
     }
-    mvt.keizaiCensus_1 = new ol.layer.VectorTile(new keizaiCensus());
-    mvt.keizaiCensus_2 = new ol.layer.VectorTile(new keizaiCensus());
+    H_MVT.keizaiCensus_1 = new ol.layer.VectorTile(new keizaiCensus());
+    H_MVT.keizaiCensus_2 = new ol.layer.VectorTile(new keizaiCensus());
     //H26経済センサスここまで----------------------------------------------------------------------------------------------
     //市町村＋現役世代率--------------------------------------------------------------------------------------------------
-    mvt.cityGenekiCommonStyleFunction = function(year,colorChart) {
+    H_MVT.cityGenekiCommonStyleFunction = function(year,colorChart) {
         var d3Color = d3.interpolateLab("white","red");
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -1266,13 +1266,13 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://kenzkenz.github.io/shicyouson_mvt/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.cityGenekiCommonStyleFunction("2015","normal");
+        this.style = H_MVT.cityGenekiCommonStyleFunction("2015","normal");
     }
-    mvt.cityGeneki_1 = new ol.layer.VectorTile(new cityGeneki());
-    mvt.cityGeneki_2 = new ol.layer.VectorTile(new cityGeneki());
+    H_MVT.cityGeneki_1 = new ol.layer.VectorTile(new cityGeneki());
+    H_MVT.cityGeneki_2 = new ol.layer.VectorTile(new cityGeneki());
     //市町村＋現役世代率ここまで-------------------------------------------------------------------------------------------
     //市町村＋財政力指数--------------------------------------------------------------------------------------------------
-    mvt.cityZaiseiCommonStyleFunction = function(year,colorChart) {
+    H_MVT.cityZaiseiCommonStyleFunction = function(year,colorChart) {
         var d3Color = d3.interpolateLab("white","navy");
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -1398,13 +1398,13 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://kenzkenz.github.io/zaiseisuii_mvt/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.cityZaiseiCommonStyleFunction("2015_1","normal");
+        this.style = H_MVT.cityZaiseiCommonStyleFunction("2015_1","normal");
     }
-    mvt.cityZaisei_1 = new ol.layer.VectorTile(new cityZaisei());
-    mvt.cityZaisei_2 = new ol.layer.VectorTile(new cityZaisei());
+    H_MVT.cityZaisei_1 = new ol.layer.VectorTile(new cityZaisei());
+    H_MVT.cityZaisei_2 = new ol.layer.VectorTile(new cityZaisei());
     //市町村＋財政力指数ここまで--------------------------------------------------------------------------------------------
     //H26商業統計_500Mメッシュ--------------------------------------------------------------------------------------------
-    mvt.syougyouMeshCommonStyleFunction = function(maxColor,limit,column) {
+    H_MVT.syougyouMeshCommonStyleFunction = function(maxColor,limit,column) {
         var d3Color = d3.interpolateLab("white",maxColor);
         return function (feature, resolution) {
             var prop = feature.getProperties();
@@ -1570,10 +1570,10 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/syougyou500m_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 1222.99;//ズーム7
-        this.style = mvt.syougyouMeshCommonStyleFunction("indigo",1,"s23");
+        this.style = H_MVT.syougyouMeshCommonStyleFunction("indigo",1,"s23");
     }
-    mvt.syougyou500m_1 = new ol.layer.VectorTile(new syougyou500m());
-    mvt.syougyou500m_2 = new ol.layer.VectorTile(new syougyou500m());
+    H_MVT.syougyou500m_1 = new ol.layer.VectorTile(new syougyou500m());
+    H_MVT.syougyou500m_2 = new ol.layer.VectorTile(new syougyou500m());
     //H26商業統計_500Mメッシュここまで-------------------------------------------------------------------------------------
     //H26商業統計_1kmメッシュ_産業別---------------------------------------------------------------------------------------
     var syougyou1000m_s_Origin = "<a href='http://www.meti.go.jp/statistics/tyo/syougyo/mesh/download.html' target='_blank'>平成26年商業統計メッシュデータ 1kmメッシュデータ 産業別</a>";
@@ -1609,10 +1609,10 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/syougyou1km_sangyou_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 2445.98;//ズーム6
-        this.style = mvt.syougyouMeshCommonStyleFunction("indigo",1,"s22");
+        this.style = H_MVT.syougyouMeshCommonStyleFunction("indigo",1,"s22");
     }
-    mvt.syougyou1000m_s_1 = new ol.layer.VectorTile(new syougyou1000m_s());
-    mvt.syougyou1000m_s_2 = new ol.layer.VectorTile(new syougyou1000m_s());
+    H_MVT.syougyou1000m_s_1 = new ol.layer.VectorTile(new syougyou1000m_s());
+    H_MVT.syougyou1000m_s_2 = new ol.layer.VectorTile(new syougyou1000m_s());
     //H26商業統計_1kmメッシュ_産業別ここまで--------------------------------------------------------------------------------
     //H26商業統計_1kmメッシュ_業態別---------------------------------------------------------------------------------------
     var syougyou1000m_g_Origin = "<a href='http://www.meti.go.jp/statistics/tyo/syougyo/mesh/download.html' target='_blank'>平成26年商業統計メッシュデータ 1kmメッシュデータ 業態別</a>";
@@ -1648,10 +1648,10 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/syougyou1km_gyoutai_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 2445.98;//ズーム6
-        this.style = mvt.syougyouMeshCommonStyleFunction("indigo",1,"g22");
+        this.style = H_MVT.syougyouMeshCommonStyleFunction("indigo",1,"g22");
     }
-    mvt.syougyou1000m_g_1 = new ol.layer.VectorTile(new syougyou1000m_g());
-    mvt.syougyou1000m_g_2 = new ol.layer.VectorTile(new syougyou1000m_g());
+    H_MVT.syougyou1000m_g_1 = new ol.layer.VectorTile(new syougyou1000m_g());
+    H_MVT.syougyou1000m_g_2 = new ol.layer.VectorTile(new syougyou1000m_g());
     //H26商業統計_1kmメッシュ_業態別ここまで--------------------------------------------------------------------------------
     //H26商業統計_1kmメッシュ_規模別---------------------------------------------------------------------------------------
     var syougyou1000m_k_Origin = "<a href='http://www.meti.go.jp/statistics/tyo/syougyo/mesh/download.html' target='_blank'>平成26年商業統計メッシュデータ 1kmメッシュデータ 規模別</a>";
@@ -1687,10 +1687,10 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/syougyou1km_kibo_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 2445.98;//ズーム6
-        this.style = mvt.syougyouMeshCommonStyleFunction("indigo",1,"k22");
+        this.style = H_MVT.syougyouMeshCommonStyleFunction("indigo",1,"k22");
     }
-    mvt.syougyou1000m_k_1 = new ol.layer.VectorTile(new syougyou1000m_k());
-    mvt.syougyou1000m_k_2 = new ol.layer.VectorTile(new syougyou1000m_k());
+    H_MVT.syougyou1000m_k_1 = new ol.layer.VectorTile(new syougyou1000m_k());
+    H_MVT.syougyou1000m_k_2 = new ol.layer.VectorTile(new syougyou1000m_k());
     //H26商業統計_1kmメッシュ_規模別ここまで--------------------------------------------------------------------------------
     //将来推計人口1kmメッシュ----------------------------------------------------------------------------------------------
     var suikei1000mOrigin = "<a href='http://nlftp.mlit.go.jp/ksj/gmlold/index.html' target='_blank'>・国土数値情報</a>";
@@ -1760,8 +1760,8 @@ if (typeof mvt === 'undefined') {
             return style;
         }
     }
-    mvt.suikei1000m_1 = new ol.layer.VectorTile(new suikei1000m());
-    mvt.suikei1000m_2 = new ol.layer.VectorTile(new suikei1000m());
+    H_MVT.suikei1000m_1 = new ol.layer.VectorTile(new suikei1000m());
+    H_MVT.suikei1000m_2 = new ol.layer.VectorTile(new suikei1000m());
     //将来推計人口1kmメッシュここまで---------------------------------------------------------------------------------------
     //国指定文化財等データベース-------------------------------------------------------------------------------------------
     function bunkatyoudb(){
@@ -1823,8 +1823,8 @@ if (typeof mvt === 'undefined') {
         });
         return style;
     }
-    mvt.bunkatyoudb1 = new ol.layer.VectorTile(new bunkatyoudb());
-    mvt.bunkatyoudb2 = new ol.layer.VectorTile(new bunkatyoudb());
+    H_MVT.bunkatyoudb1 = new ol.layer.VectorTile(new bunkatyoudb());
+    H_MVT.bunkatyoudb2 = new ol.layer.VectorTile(new bunkatyoudb());
     //国指定文化財等データベースここまで------------------------------------------------------------------------------------
     //全国博物館--------------------------------------------------------------------------------------------------------
     function zenkokuHakubutukan(){
@@ -1888,8 +1888,8 @@ if (typeof mvt === 'undefined') {
         });
         return style;
     }
-    mvt.zenkokuHakubutukan1 = new ol.layer.VectorTile(new zenkokuHakubutukan());
-    mvt.zenkokuHakubutukan2 = new ol.layer.VectorTile(new zenkokuHakubutukan());
+    H_MVT.zenkokuHakubutukan1 = new ol.layer.VectorTile(new zenkokuHakubutukan());
+    H_MVT.zenkokuHakubutukan2 = new ol.layer.VectorTile(new zenkokuHakubutukan());
     //全国博物館ここまで-------------------------------------------------------------------------------------------------
     //全国文化財---------------------------------------------------------------------------------------------------------
     function bunkazai(){
@@ -1948,12 +1948,12 @@ if (typeof mvt === 'undefined') {
         });
         return style;
     }
-    mvt.bunkazai1 = new ol.layer.VectorTile(new bunkazai());
-    mvt.bunkazai2 = new ol.layer.VectorTile(new bunkazai());
+    H_MVT.bunkazai1 = new ol.layer.VectorTile(new bunkazai());
+    H_MVT.bunkazai2 = new ol.layer.VectorTile(new bunkazai());
     //全国文化財ここまで--------------------------------------------------------------------------------------------------
     //全国旧石器時代遺跡--------------------------------------------------------------------------------------------------
     //var kyuusekkiTarget = "0";
-    mvt.zenkokuisekiStyleFunction = function(target) {
+    H_MVT.zenkokuisekiStyleFunction = function(target) {
         return function (feature, resolution) {
             var prop = feature.getProperties();
             if (resolution > 305) {
@@ -2042,10 +2042,10 @@ if (typeof mvt === 'undefined') {
             maxZoom:17,
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/iseki/zenkoku/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.zenkokuisekiStyleFunction("all")
+        this.style = H_MVT.zenkokuisekiStyleFunction("all")
     }
-    mvt.zenkokuIseki1 = new ol.layer.VectorTile(new zenkokuIseki());
-    mvt.zenkokuIseki2 = new ol.layer.VectorTile(new zenkokuIseki());
+    H_MVT.zenkokuIseki1 = new ol.layer.VectorTile(new zenkokuIseki());
+    H_MVT.zenkokuIseki2 = new ol.layer.VectorTile(new zenkokuIseki());
     //全国旧石器時代遺跡ここまで--------------------------------------------------------------------------------------------
     //全国縄文・弥生集落---------------------------------------------------------------------------------------------------
     function yayoi(){
@@ -2111,8 +2111,8 @@ if (typeof mvt === 'undefined') {
         });
         return style;
     }
-    mvt.yayoi1 = new ol.layer.VectorTile(new yayoi());
-    mvt.yayoi2 = new ol.layer.VectorTile(new yayoi());
+    H_MVT.yayoi1 = new ol.layer.VectorTile(new yayoi());
+    H_MVT.yayoi2 = new ol.layer.VectorTile(new yayoi());
     //全国縄文・弥生集落ここまで--------------------------------------------------------------------------------------------
     //熊本県遺跡---------------------------------------------------------------------------------------------------------
     function kumamotoIseki(){
@@ -2228,11 +2228,11 @@ if (typeof mvt === 'undefined') {
         }
         return style;
     }
-    mvt.kumamotoIseki1 = new ol.layer.VectorTile(new kumamotoIseki());
-    mvt.kumamotoIseki2 = new ol.layer.VectorTile(new kumamotoIseki());
+    H_MVT.kumamotoIseki1 = new ol.layer.VectorTile(new kumamotoIseki());
+    H_MVT.kumamotoIseki2 = new ol.layer.VectorTile(new kumamotoIseki());
     //熊本県遺跡ここまで---------------------------------------------------------------------------------------------------
     //福井県林道----------------------------------------------------------------------------------------------------------
-    mvt.fukuiRindou1 = new ol.layer.VectorTile({
+    H_MVT.fukuiRindou1 = new ol.layer.VectorTile({
         folder:"child",
         category:"test",
         icon:"<i class='fa fa-leaf fa-fw' style='color:darkgreen;'></i>",
@@ -2265,7 +2265,7 @@ if (typeof mvt === 'undefined') {
     }
     //福井県林道ここまで--------------------------------------------------------------------------------------------------
     //宮崎県津波浸水------------------------------------------------------------------------------------------------------
-    mvt.tunamiMiyazakiStyleFunction = function (target) {
+    H_MVT.tunamiMiyazakiStyleFunction = function (target) {
         return function (feature, resolution) {
             if(target==="ao") {
                 var sinsuiColor = d3.interpolateLab("white", "navy");
@@ -2378,7 +2378,7 @@ if (typeof mvt === 'undefined') {
         "<option value='aka'>赤色で無段階</option>" +
         "</select>" +
         "</div>";
-    mvt.tunamimiyazakimvt1 = new ol.layer.VectorTile({
+    H_MVT.tunamimiyazakimvt1 = new ol.layer.VectorTile({
         folder:"child",
         category:"test",
         title:"test(MVT)",
@@ -2394,7 +2394,7 @@ if (typeof mvt === 'undefined') {
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/tunamimiyazaki/{z}/{x}/{y}.mvt"
         }),
         crossOrigin:"anonymous",
-        style: mvt.tunamiMiyazakiStyleFunction("normal")
+        style: H_MVT.tunamiMiyazakiStyleFunction("normal")
     });
     function tunamimvt(){
         this.folder = "child";
@@ -2446,11 +2446,11 @@ if (typeof mvt === 'undefined') {
         });
         return style;
     }
-    mvt.tunamimvt1 = new ol.layer.VectorTile(new tunamimvt());
-    mvt.tunamimvt2 = new ol.layer.VectorTile(new tunamimvt());
+    H_MVT.tunamimvt1 = new ol.layer.VectorTile(new tunamimvt());
+    H_MVT.tunamimvt2 = new ol.layer.VectorTile(new tunamimvt());
     //宮崎県津波浸水ここまで----------------------------------------------------------------------------------------------
     //北海道津波浸水------------------------------------------------------------------------------------------------------
-    mvt.tunamiHokkaidouStyleFunction = function(target) {
+    H_MVT.tunamiHokkaidouStyleFunction = function(target) {
         return function (feature, resolution) {
             if(target==="ao") {
                 var sinsuiColor = d3.interpolateLab("white", "navy");
@@ -2549,7 +2549,7 @@ if (typeof mvt === 'undefined') {
         "<option value='aka'>赤色で無段階</option>" +
         "</select>" +
         "</div>";
-    mvt.tunamiWakkanaimvt1 = new ol.layer.VectorTile({
+    H_MVT.tunamiWakkanaimvt1 = new ol.layer.VectorTile({
         folder:"child",
         category:"test",
         title:"稚内市〜石狩市　津波水位(MVT)",
@@ -2567,12 +2567,12 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/01wakkanai_mvt/{z}/{x}/{y}.mvt"
         }),
         crossOrigin:"anonymous",
-        style: mvt.tunamiHokkaidouStyleFunction("normal"),
+        style: H_MVT.tunamiHokkaidouStyleFunction("normal"),
         renderMode:"vector"
     });
     //北海道津波浸水ここまで-----------------------------------------------------------------------------------------------
     //避難所-------------------------------------------------------------------------------------------------------------
-    mvt.hinanzyo = new ol.layer.VectorTile({
+    H_MVT.hinanzyo = new ol.layer.VectorTile({
         folder:"child",
         category:"hazard",
         icon:"<i class='fa fa-th fa-fw' style='color:red;'></i>",
@@ -2612,7 +2612,7 @@ if (typeof mvt === 'undefined') {
         "<option value='aqua'>水色aqua</option>" +
         "</select>" +
         "</div>";
-    mvt.osmmvt1 = new ol.layer.VectorTile({
+    H_MVT.osmmvt1 = new ol.layer.VectorTile({
         folder:"child",
         category:"test",
         icon:"<i class='fa fa-th fa-fw' style='color:red;'></i>",
@@ -2629,8 +2629,8 @@ if (typeof mvt === 'undefined') {
     });
     //OSMMVTここまで-----------------------------------------------------------------------------------------------------
     //小学校区----------------------------------------------------------------------------------------------------------
-    mvt.syougakkouku1 = new ol.layer.VectorTile(new syougakkouku());
-    mvt.syougakkouku2 = new ol.layer.VectorTile(new syougakkouku());
+    H_MVT.syougakkouku1 = new ol.layer.VectorTile(new syougakkouku());
+    H_MVT.syougakkouku2 = new ol.layer.VectorTile(new syougakkouku());
     function syougakkouku(){
         this.folder = "child";
         this.category = "KosodateFukushi";
@@ -2727,8 +2727,8 @@ if (typeof mvt === 'undefined') {
         return style;
     }
     //中学校区-----------------------------------------------------------------------------------------------------------
-    mvt.tyuugakkouku1 = new ol.layer.VectorTile(new tyuugakkouku());
-    mvt.tyuugakkouku2 = new ol.layer.VectorTile(new tyuugakkouku());
+    H_MVT.tyuugakkouku1 = new ol.layer.VectorTile(new tyuugakkouku());
+    H_MVT.tyuugakkouku2 = new ol.layer.VectorTile(new tyuugakkouku());
     function tyuugakkouku(){
         this.folder = "child";
         this.category = "KosodateFukushi";
@@ -2746,7 +2746,7 @@ if (typeof mvt === 'undefined') {
     }
     //小中学校区ここまで--------------------------------------------------------------------------------------------------
     //二次医療圏------------------------------------------------------------------------------------------------------------
-    mvt.d3StyleFunction = function(iryoukenTarget) {
+    H_MVT.d3StyleFunction = function(iryoukenTarget) {
         var d3Color = d3.scale.category20();
         var d3Color2 = d3.interpolateLab("white","red");
         var d3Color3 = d3.interpolateLab("white","blue");
@@ -2882,14 +2882,14 @@ if (typeof mvt === 'undefined') {
             maxZoom:15,
             url: "https://mtile.pref.miyazaki.lg.jp/tile/mvt/iryouken/{z}/{x}/{y}.mvt"
         });
-        this.style = mvt.d3StyleFunction(0)
+        this.style = H_MVT.d3StyleFunction(0)
     }
-    mvt.iryouken1 = new ol.layer.VectorTile(new iryouken());
-    mvt.iryouken2 = new ol.layer.VectorTile(new iryouken());
+    H_MVT.iryouken1 = new ol.layer.VectorTile(new iryouken());
+    H_MVT.iryouken2 = new ol.layer.VectorTile(new iryouken());
     //二次医療圏ここまで------------------------------------------------------------------------------------------------------
     //----------------------------------------------------------------------------------------------------------------------
     //全国福祉施設
-    mvt.fukushiStyleFunction = function(target) {
+    H_MVT.fukushiStyleFunction = function(target) {
         return function (feature, resolution) {
             var prop = feature.getProperties();
             if (resolution > 305) {
@@ -2990,8 +2990,8 @@ if (typeof mvt === 'undefined') {
             url: "https://kenzkenz.github.io/h27fukushi_mvt/{z}/{x}/{y}.mvt"
         });
         this.maxResolution = 305.75;
-        this.style = mvt.fukushiStyleFunction("all");
+        this.style = H_MVT.fukushiStyleFunction("all");
     }
-    mvt.fukushi_1 = new ol.layer.VectorTile(new fukushi_());
-    mvt.fukushi_2 = new ol.layer.VectorTile(new fukushi_());
+    H_MVT.fukushi_1 = new ol.layer.VectorTile(new fukushi_());
+    H_MVT.fukushi_2 = new ol.layer.VectorTile(new fukushi_());
 }());

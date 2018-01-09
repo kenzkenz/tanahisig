@@ -71,7 +71,7 @@ H_COMMON.getHush = function() {
                 gistGeojson = JSON.parse(json["files"]["hinatagis.geojson"]["content"]);
                 if(gistGeojson){
                     var targetGeojson = new ol.format.GeoJSON().readFeatures(gistGeojson, {featureProjection: 'EPSG:3857'});
-                    drawLayer.getSource().addFeatures(targetGeojson);
+                    H_DRAW.drawLayer.getSource().addFeatures(targetGeojson);
                 }
             }else{//trueのときは別の取得方法を
                 var rawUrl = json["files"]["hinatagis.geojson"]["raw_url"];
@@ -84,7 +84,7 @@ H_COMMON.getHush = function() {
                     gistGeojson = json;
                     if(gistGeojson){
                         var targetGeojson = new ol.format.GeoJSON().readFeatures(gistGeojson, {featureProjection: 'EPSG:3857'});
-                        drawLayer.getSource().addFeatures(targetGeojson);
+                        H_DRAW.drawLayer.getSource().addFeatures(targetGeojson);
                     }
                 }).fail(function () {
                     console.log("失敗!");
@@ -169,7 +169,7 @@ H_COMMON.getHush = function() {
     //最後に座標とズームをセット
     var zxy = hashAr[0];
     if(zxy){
-        var zxyAr = zxy.replace("#","").split("/")
+        var zxyAr = zxy.replace("#","").split("/");
         var zoom = Number(zxyAr[0]);
         var lat = Number(zxyAr[1]);
         var lon = Number(zxyAr[2]);
@@ -215,8 +215,12 @@ H_COMMON.rgba2rgb = function(rgba) {
     var rgb;
     if(rgba.indexOf("rgba")!==-1) {
         rgb = rgba.substr(0, rgba.lastIndexOf(",")).replace("rgba", "rgb") + ")";//rgbaをrgbに変換
-    }else{//実はもとからrgbだったとき
+        console.log(rgb)
+    }else if(rgba.indexOf("rgb")!==-1) {//実はもとからrgbだったとき
         rgb = rgba;
+    }else {
+        var d3rgb = d3.rgb(rgba);
+        rgb = 'rgb(' + d3rgb["r"] + ',' + d3rgb["g"] + ',' + d3rgb["b"] + ')'
     }
     return rgb;
 };

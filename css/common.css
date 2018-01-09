@@ -473,7 +473,7 @@ label:hover{
 }
 /*現在地取得ボタン---------------------------------------------------------*/
 .here-btn{
-    bottom:5.5em;
+    bottom:3em;
     right:0.5em;
 }
 /*ポップアップ関係---------------------------------------------------------*/
@@ -825,7 +825,7 @@ label:hover{
     font-size: 10px;
 }
 .draw-popup-th{
-    /*width:50px;*/
+    width:60px;
     color:white;
     background:rgba(51,122,183,1.0);
     font-weight:normal;

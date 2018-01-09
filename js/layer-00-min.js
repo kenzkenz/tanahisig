@@ -398,9 +398,9 @@ function funcHaikeiLayerSort(mapElement,mapName){
     //--------------------------------------
     //swipeのため
     if(mapName=="map1"){
-        var swipeCtr = swipeCtr1;
+        var swipeCtr = H_START.swipeCtr1;
     }else{
-        var swipeCtr = swipeCtr2;
+        var swipeCtr = H_START.swipeCtr2;
     }
     if(mapElement.find(".swipe-toggle").prop("checked")){
         eval(mapName).addControl(swipeCtr);

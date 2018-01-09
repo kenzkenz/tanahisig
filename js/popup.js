@@ -283,7 +283,7 @@ $(function(){
                 funcZaiseiryokuPopup(layer,feature,map,evt);
                 break;
                 /*
-            case "drawLayer":
+            case "H_DRAW.drawLayer":
                 funcDrawPopup(feature,map,evt);
                 break;
                 */
@@ -1008,25 +1008,23 @@ $(function(){
         var coord = evt.coordinate;
         console.log(featureProp);
         var code = featureProp["code"];
-        console.log(code);
-        var landFormName="";
-        var naritachi="";
-        var risk="";
-        for(var i=0;i<vt.codeList_sizen2.length;i++){
-            if(vt.codeList_sizen2[i][0]==code){
-                landFormName = vt.codeList_sizen2[i][1];
-                naritachi = vt.codeList_sizen2[i][2];
-                risk = vt.codeList_sizen2[i][3];
+        var landFormName="",naritachi="",risk="";
+        var list = H_VT.codeList_sizen2;
+        for(var i=0;i<list.length;i++){
+            if(H_VT.codeList_sizen2[i][0]===code){
+                landFormName = list[i][1];
+                naritachi = list[i][2];
+                risk = list[i][3];
                 break;
             }
         }
         var content = "";
         var table = "<table class='popup-tbl table table-bordered table-hover'>";
-        table += "<tr><th class='popup-th'style='width:90px;'>code</th><td class='popup-td'>" + code + "</td></tr>";
-        table += "<tr><th class='popup-th'>分類名</th><td class='popup-td'>" +　landFormName + "</td></tr>";
-        table += "<tr><th class='popup-th'>成り立ち</th><td class='popup-td'>" +　naritachi + "</td></tr>";
-        table += "<tr><th class='popup-th'>リスク</th><td class='popup-td'>" +　risk + "</td></tr>";
-        table += "</table>";
+            table += "<tr><th class='popup-th'style='width:90px;'>code</th><td class='popup-td'>" + code + "</td></tr>";
+            table += "<tr><th class='popup-th'>分類名</th><td class='popup-td'>" +　landFormName + "</td></tr>";
+            table += "<tr><th class='popup-th'>成り立ち</th><td class='popup-td'>" +　naritachi + "</td></tr>";
+            table += "<tr><th class='popup-th'>リスク</th><td class='popup-td'>" +　risk + "</td></tr>";
+            table += "</table>";
         content += table;
         if(map==="map1") {
             popup1.show(coord,content);

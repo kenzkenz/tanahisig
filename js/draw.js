@@ -1,17 +1,17 @@
 if (typeof H_DRAW === 'undefined') {
     var H_DRAW = {};
 }
-var drawLayer = null;
+H_DRAW.drawLayer = null;
 H_DRAW.drawSourceChangeFlg = false;
-var rangeLayer = null;
-var drawContextmenuOverlay = null;
-var rightClickedFeatyure = null;
-var rangeFeatures = [];
+H_DRAW.drawContextmenuOverlay = null;
+H_DRAW.rightClickedFeatyure = null;
+H_DRAW.rangeFeatures = [];
 $(function() {
+    var rangeLayer = null;
     var theGlyph = null;//アイコン用
     var drawCancelFlg = false;//ドローキャンセル用
     var modify = null;//モディファイ用。その都度作る必要があるため
-    //var rangeFeatures = [];
+    //var H_DRAW.rangeFeatures = [];
     //------------------------------------------------------------------------------------------------------------------
     $(window).on('beforeunload', function () {
         //if($("#mydialog-draw-dialog").css("display")==="block") return "";
@@ -28,8 +28,7 @@ $(function() {
                 }
                 return false;
             }
-            if(e.keyCode === 89){//y
-                //ctrl+yの処理はこっち。今は使っていない。
+            if(e.keyCode === 89){//y ctrl+yの処理はこっち。今は使っていない。
                 return false;
             }
         }
@@ -205,16 +204,16 @@ $(function() {
     $("#drawContextmenu-layeropacity-div2").slider({
         min:0,max:1,value:1,step:0.01,
         slide: function(event,ui){
-            drawLayer.setOpacity(ui.value);
+            H_DRAW.drawLayer.setOpacity(ui.value);
             $("#drawContextmenu-layeropacity-div3").html(ui.value);
         }
     });
     $("#drawContextmenu-opacity-div2").slider({
         min:0,max:1,value:1,step:0.01,
         slide: function(event,ui){
-            var fillColor = rightClickedFeatyure.getProperties()["_fillColor"];
+            var fillColor = H_DRAW.rightClickedFeatyure.getProperties()["_fillColor"];
             var rgba = H_COMMON.setRgbaOpacity(fillColor,ui.value);
-            rightClickedFeatyure.setProperties({
+            H_DRAW.rightClickedFeatyure.setProperties({
                 "_fillColor":rgba
             });
             $("#drawContextmenu-opacity-div3").html(ui.value);
@@ -222,19 +221,20 @@ $(function() {
     });
     //------------------------------------------------------------------------------------------------------------------
     //右クリック用オーバーレイをマップに設定
-    drawContextmenuOverlay = new ol.Overlay({
+    H_DRAW.drawContextmenuOverlay = new ol.Overlay({
         element:$("#drawContextmenuOverlay-div")[0],
         //autoPan:true,
         //autoPanAnimation:{duration:200},
         offset:[10,10]//横、縦
     });
-    map1.addOverlay(drawContextmenuOverlay);
+    map1.addOverlay(H_DRAW.drawContextmenuOverlay);
     //------------------------------------------------------------------------------------------------------------------
     //⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️⭐️
     //右クリック時の動作その１
     function drawContextmenu(evt){
         evt.preventDefault();
-        rightClickedFeatyure = null;
+        drawPopup.setPosition(null);
+        H_DRAW.rightClickedFeatyure = null;
         drawTypeMsDropDown.set("selectedIndex", 0);
         addInteractions();
         //人口５００メッシュと共存するときは下記を復活
@@ -246,7 +246,7 @@ $(function() {
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -275,7 +275,7 @@ $(function() {
         }else{
             feature = otherFeature;
         }
-        drawContextmenuOverlay.setPosition(coord);
+        H_DRAW.drawContextmenuOverlay.setPosition(coord);
         drawContextmenuCreate(feature);
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -296,20 +296,20 @@ $(function() {
             var prop,geomType;
             if(!Array.isArray(feature)) {//配列でないとき　つまり一つだけ選択しているとき
                 //地物を選択地物としてセット--------------------------
-                rightClickedFeatyure = feature;
-                drawLayer.getSource().changed();
+                H_DRAW.rightClickedFeatyure = feature;
+                H_DRAW.drawLayer.getSource().changed();
                 //モディファイと移動　インタラクション-----------------
                 map1.removeInteraction(snap);
                 map1.removeInteraction(modify);
                 modify = new ol.interaction.Modify({
-                    features:new ol.Collection([rightClickedFeatyure]),
+                    features:new ol.Collection([H_DRAW.rightClickedFeatyure]),
                     deleteCondition:ol.events.condition.singleClick//頂点の削除をシングルクリックのみでできるようにした
                 });
                 map1.addInteraction(modify);
                 map1.addInteraction(snap);
-                transform2.select(rightClickedFeatyure);
+                transform2.select(H_DRAW.rightClickedFeatyure);
                 transform2.setVisible(true);
-                console.log(rightClickedFeatyure)
+                console.log(H_DRAW.rightClickedFeatyure)
                 //------------------------------------------------
                 prop = feature.getProperties();
                 geomType = feature.getGeometry().getType();
@@ -320,6 +320,7 @@ $(function() {
                 var rgb;
                 if(fillColor) {
                     rgb = H_COMMON.rgba2rgb(fillColor);
+                    console.log(rgb);
                     drawContextmenuDrawColorDD.setIndexByValue(rgb);
                     $("#fillcolor-color-span").css({
                         "background": rgb,
@@ -391,15 +392,28 @@ $(function() {
                     $("#circle-radius2-input").val(null);
                 }
                 //属性---------------------------------------------------
+                //
+                var propOrder = prop["_h_propOrder"];
+                console.log(propOrder);
+                if(propOrder) {
+                    for (var i = 0; i < propOrder.length; i++) {
+                        var key = propOrder[i];
+                        var val = prop[propOrder[i]];
+                        $(".prop-input-text-name").eq(i).val(key);
+                        $(".prop-input-text-val").eq(i).val(val);
+                    }
+                }
+                /*
                 var i = 0;
                 for(key in prop){
-                    if(key!=="geometry" && key.substr(0,1)!=="_" && key!=="経度" && key!=="緯度" && key!=="経度old" && key!=="緯度old" && key!=="移動"){
+                    if(key!=="geometry" && key.substr(0,1)!=="_"){
                         console.log(key);
                         $(".prop-input-text-name").eq(i).val(key);
                         $(".prop-input-text-val").eq(i).val(prop[key]);
                         i++
                     }
                 }
+                */
                 //------------------------------------------------------
                 //メニューを地物のタイプによって書き換える
                 switch (geomType) {
@@ -422,7 +436,7 @@ $(function() {
                         //オーバーレイの貼り付け場所調整
                         var extent = feature.getGeometry().getExtent();
                         var mapExtent = map1.getView().calculateExtent(map1.getSize());
-                        if(extent[2]<mapExtent[2]) drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
+                        if(extent[2]<mapExtent[2]) H_DRAW.drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
                         break;
                     case "LineString":
                         $("#drawContextmenu-msg-div").html("線の色と幅を変えます。");
@@ -431,7 +445,7 @@ $(function() {
                         break;
                     default:
                 }
-                console.log("drawLayerの上");
+                console.log("H_DRAW.drawLayerの上");
                 //addInteractions();
 
                 //--------------------------------------------------------
@@ -478,9 +492,9 @@ $(function() {
         }else{//最初又は地物なしのとき
             console.log("最初または地物なしのとき");
             map1.removeInteraction(modify);
-            rightClickedFeatyure = null;
+            H_DRAW.rightClickedFeatyure = null;
             var aaa = H_DRAW.drawSourceChangeFlg;
-            drawLayer.getSource().changed();
+            H_DRAW.drawLayer.getSource().changed();
             H_DRAW.drawSourceChangeFlg = aaa;
             $("#drawContextmenu-msg-div").html("点、面、線等を作ります。");
             $("#drawContextmenu-step1-div").show();
@@ -497,7 +511,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //クリック時の動作　重要！！ここでユーザーの操作によって見方や機能を変化させている。！！！！！！！！！！！！！！！！！！！！！！！！
     map1.on("click",function(evt){
-        console.log(evt)
+        console.log(evt);
+        console.log(ol.proj.transform(evt.coordinate, "EPSG:3857", "EPSG:4326"));
         var interactions = map1.getInteractions().getArray();
         var drawFlg,modifyFlg;
         for(var i = 0; i <interactions.length; i++){//drawとmodifyから作られたオブジェクトの存在チェック
@@ -507,24 +522,24 @@ $(function() {
         var features = [];
         map1.forEachFeatureAtPixel(evt.pixel,function(feature,layer){
             if(layer){
-                if(layer.getProperties()["name"]==="drawLayer") features.push(feature);
+                if(layer.getProperties()["name"]==="H_DRAW.drawLayer") features.push(feature);
             }
         });
         var feature = features[0];
         transform2.setVisible(false);//まず消す
         if(modifyFlg && features.length===0) {//modifyかつ地物の外
             console.log("modifyかつ外");
-            rightClickedFeatyure = null;
-            drawLayer.getSource().changed();
-            drawContextmenuOverlay.setPosition(null);
+            H_DRAW.rightClickedFeatyure = null;
+            H_DRAW.drawLayer.getSource().changed();
+            H_DRAW.drawContextmenuOverlay.setPosition(null);
             map1.removeInteraction(modify);
             console.log("パターン1")
         }else if(!drawFlg && !modifyFlg && features.length>0){//drawとmodifyじゃなくかつ地物の内
-            drawContextmenuOverlay.setPosition(null);
+            H_DRAW.drawContextmenuOverlay.setPosition(null);
             popupShow(feature,evt);//クリック時の動作その２　ポップアップへ　すぐ下
             console.log("パターン2")
         }else if(!drawFlg && modifyFlg && features.length>0){//modifyかつ地物の内。でもdrawじゃない。
-            if(feature===rightClickedFeatyure) transform2.setVisible(true);//更に右クリック地物のときに移動を可視化
+            if(feature===H_DRAW.rightClickedFeatyure) transform2.setVisible(true);//更に右クリック地物のときに移動を可視化
             var geomType = feature.getGeometry().getType();
             console.log(geomType);
             var coordAr;
@@ -553,7 +568,7 @@ $(function() {
             if(!verticesFlg) popupShow(feature,evt);//クリック時の動作その２　ポップアップへ　すぐ下
             console.log("パターン3")
         }else if(!drawFlg){//drawじゃない
-            drawContextmenuOverlay.setPosition(null);
+            H_DRAW.drawContextmenuOverlay.setPosition(null);
             console.log("パターン5")
         }
         console.log("drawFlg=" + drawFlg,"modifyFlg=" + modifyFlg,"features.length=" + features.length);
@@ -574,6 +589,24 @@ $(function() {
         var flg = false;
         var content = "";
         var table = "<table class='draw-popup-tbl table table-bordered table-hover' style=''>";
+        var propOrder = prop["_h_propOrder"];
+        console.log(propOrder);
+        if(propOrder) {
+            for (var i = 0; i < propOrder.length; i++) {
+                var key = propOrder[i];
+                var val = prop[propOrder[i]];
+                $(".prop-input-text-name").eq(i).val(key);
+                $(".prop-input-text-val").eq(i).val(val);
+                table += "<tr>";
+                table += "<th class='draw-popup-th'>" + key + "</th><td class='draw-popup-td'>" + val + "</td>";
+                table += "</tr>";
+                flg = true;
+            }
+        }
+
+
+
+        /*
         for(key in prop){
             if(key!=="geometry" && key.substr(0,1)!=="_"){
                 table += "<tr>";
@@ -583,6 +616,7 @@ $(function() {
                 flg = true;
             }
         }
+        */
         content += table;
         if(!flg) content = "属性未設定です。";
         content = content.replace(/undefined/gi,"");
@@ -592,22 +626,63 @@ $(function() {
     //各レイヤー設定
     //ドロー用（通常）のソース、レイヤーを設置
     //drawSource = new ol.source.Vector();
-    drawLayer = new ol.layer.Vector({
+    H_DRAW.drawLayer = new ol.layer.Vector({
         source:new ol.source.Vector(),
-        name:"drawLayer",
+        name:"H_DRAW.drawLayer",
         renderOrder: ol.ordering.yOrdering(),
         //style:drawStyleFunction()
         style:zzz()
     });
-    map1.addLayer(drawLayer);
-    drawLayer.set("altitudeMode","clampToGround");
-    drawLayer.setZIndex(9999);
+    map1.addLayer(H_DRAW.drawLayer);
+    H_DRAW.drawLayer.set("altitudeMode","clampToGround");
+    H_DRAW.drawLayer.setZIndex(9999);
     //------------------------------------------------------------------------------------------------------------------
     //ソースに変更があった時に発火
-    drawLayer.getSource().on("change", function(e) {
+    H_DRAW.drawLayer.getSource().on("change", function(e) {
         console.log("変更");
         H_DRAW.drawSourceChangeFlg = true;
         geojsonText();
+        //----------------
+        //オーバーレイメニューの座標を書き換える。重要じゃない。見た目だけ。
+        var feature = H_DRAW.rightClickedFeatyure;
+        if(feature) {
+            var geomType = feature.getGeometry().getType();
+            if(geomType==="Point") {
+                var coord = feature.getGeometry().getCoordinates();
+                coord = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+                console.log(coord);
+                feature.setProperties({
+                    "画面経度": coord[0],
+                    "画面緯度": coord[1]
+                });
+                $(".prop-input-text-name").each(function () {
+                    if ($(this).val() === '画面経度') $(this).parents("tr").find(".prop-input-text-val").val(coord[0]);
+                    if ($(this).val() === '画面緯度') $(this).parents("tr").find(".prop-input-text-val").val(coord[1]);
+                });
+                $(".draw-popup-th:contains('画面経度')").parents("tr").find(".draw-popup-td").text(coord[0]);
+                $(".draw-popup-th:contains('画面緯度')").parents("tr").find(".draw-popup-td").text(coord[1]);
+            }
+        }
+
+        /*
+        var key = Object.keys(e["target"]["s"])[0];
+        if(key){
+            var feature = e["target"]["s"][key];
+            var coord = feature.getGeometry().getCoordinates();
+            coord = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
+            console.log(coord);
+            feature.setProperties({
+                "画面経度":coord[0],
+                "画面緯度":coord[1]
+            });
+            $(".prop-input-text-name").each(function(){
+                if($(this).val()==='画面経度') $(this).parents("tr").find(".prop-input-text-val").val(coord[0]);
+                if($(this).val()==='画面緯度') $(this).parents("tr").find(".prop-input-text-val").val(coord[1]);
+            });
+            $(".draw-popup-th:contains('画面経度')").parents("tr").find(".draw-popup-td").text(coord[0]);
+            $(".draw-popup-th:contains('画面緯度')").parents("tr").find(".draw-popup-td").text(coord[1]);
+        }
+        */
     });
     //範囲指定用レイヤー
     rangeLayer = new ol.layer.Vector({
@@ -618,11 +693,11 @@ $(function() {
         }
     });
     map1.addLayer(rangeLayer);
-    drawLayer.setZIndex(9999);
+    H_DRAW.drawLayer.setZIndex(9999);
     //------------------------------------------------------------------------------------------------------------------
     //geojsonの文字を書き出し
     function geojsonText(){
-        var features = drawLayer.getSource().getFeatures();
+        var features = H_DRAW.drawLayer.getSource().getFeatures();
         var drawSourceGeojson = new ol.format.GeoJSON().writeFeatures(features, {
             featureProjection: "EPSG:3857"
         });
@@ -633,13 +708,13 @@ $(function() {
     }
     //------------------------------------------------------------------------------------------------------------------
     //★★★★ソースに地物が追加されたときの処理
-    drawLayer.getSource().on("addfeature", function(e) {
+    H_DRAW.drawLayer.getSource().on("addfeature", function(e) {
         var feature = e["feature"];
         feature.setProperties({
-           "_h_addtime":$.now()
+           "_h_addTime":$.now()
         });
         if(drawCancelFlg){
-            drawLayer.getSource().removeFeature(feature);
+            H_DRAW.drawLayer.getSource().removeFeature(feature);
         }
         drawCancelFlg = false;
     });
@@ -650,14 +725,14 @@ $(function() {
     //共通的なインタラクション　スナップとモディファイ　セレクトは今の所使用していない。
     //------------------------------------------------------------------------------------------------------------------
     //スナップ　各ドローの後にaddする必要がある。
-    var snap = new ol.interaction.Snap({source:drawLayer.getSource()});
+    var snap = new ol.interaction.Snap({source:H_DRAW.drawLayer.getSource()});
     //------------------------------------------------------------------------------------------------------------------
     //モディファイ のインタラクションはファンクション「drawContextmenuCreate」の中にある
     //------------------------------------------------------------------------------------------------------------------
     //ここから専用ドロー
     //ポイント関係ここから
     var drawPoint = new ol.interaction.Draw({
-        source:drawLayer.getSource(),
+        source:H_DRAW.drawLayer.getSource(),
         type:"Point",
         condition:function(e){
             var mouseButton = e["originalEvent"]["button"];
@@ -677,7 +752,7 @@ $(function() {
         map1.forEachFeatureAtPixel(pixel,function(feature,layer){
             if(layer){
                 var layerName = layer.getProperties()["name"];
-                if(layerName==="drawLayer"){
+                if(layerName==="H_DRAW.drawLayer"){
                     features.push(feature);
                     layers.push(layer);
                 }
@@ -761,7 +836,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ラインストリング(通常)
     var drawLineString = new ol.interaction.Draw({
-        source:drawLayer.getSource(),
+        source:H_DRAW.drawLayer.getSource(),
         type:"LineString",
         geometryFunction:linStringeGometryFunc(),
         style:linStringeStyleFunc(),
@@ -851,7 +926,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ラインストリング(フリーハンド)
     var drawLineStringFree = new ol.interaction.Draw({
-        source:drawLayer.getSource(),
+        source:H_DRAW.drawLayer.getSource(),
         type:"LineString",
         geometryFunction:linStringeGometryFunc(),
         style:linStringeStyleFunc(),
@@ -877,7 +952,7 @@ $(function() {
     //ポリゴン(通常)
     var drawPolygon = new ol.interaction.Draw({
         snapTolerance:1,
-        source:drawLayer.getSource(),
+        source:H_DRAW.drawLayer.getSource(),
         type:"Polygon",
         style:polygonStringeStyleFunc(),
         geometryFunction:polygonGometryFunc(),
@@ -951,7 +1026,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //穴を開ける
     var drawhole  = new ol.interaction.DrawHole ({
-        layers:[drawLayer],
+        layers:[H_DRAW.drawLayer],
         condition:function(e){
             var mouseButton = e["originalEvent"]["button"];
             if(mouseButton===0){//0が左クリック。2が右クリック。
@@ -963,7 +1038,7 @@ $(function() {
     //ポリゴン(フリーハンド)
     var drawPolygonFree = new ol.interaction.Draw({
         snapTolerance:1,
-        source:drawLayer.getSource(),
+        source:H_DRAW.drawLayer.getSource(),
         type:"Polygon",
         style:polygonStringeStyleFunc(),
         geometryFunction:polygonGometryFunc(),
@@ -997,11 +1072,11 @@ $(function() {
     });
     //--------------------------
     drawPolygonRange.on("drawend", function(e) {
-        rangeFeatures = [];
+        H_DRAW.rangeFeatures = [];
         var feature = e["feature"];
         var coordAr = feature.getGeometry().getCoordinates();
         var haniPolygon = turf.toWgs84(turf.polygon(coordAr));
-        features = drawLayer.getSource().getFeatures();
+        features = H_DRAW.drawLayer.getSource().getFeatures();
         for (var i = 0; i < features.length; i++) {
             var geomType = features[i].getGeometry().getType();
             var bool,point,targetGeom;
@@ -1009,7 +1084,7 @@ $(function() {
                 case "Point":
                     point = turf.toWgs84(turf.point(features[i].getGeometry().getCoordinates()));
                     bool = turf.booleanPointInPolygon(point, haniPolygon);
-                    if (bool) rangeFeatures.push(features[i]);
+                    if (bool) H_DRAW.rangeFeatures.push(features[i]);
                     break;
                 default:
                     switch (geomType) {
@@ -1045,17 +1120,17 @@ $(function() {
                             break;
                         default:
                     }
-                    if (bool) rangeFeatures.push(features[i]);
+                    if (bool) H_DRAW.rangeFeatures.push(features[i]);
                     break;
             }
             bool = false;
         }//forここまで
-        console.log(rangeFeatures);
-        drawLayer.getSource().changed();
+        console.log(H_DRAW.rangeFeatures);
+        H_DRAW.drawLayer.getSource().changed();
         var extent = feature.getGeometry().getExtent();
-        drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
+        H_DRAW.drawContextmenuOverlay.setPosition([extent[2],extent[3]]);
         //drawContextmenuCreate(featureSelect.getFeatures().getArray());
-        drawContextmenuCreate(rangeFeatures);
+        drawContextmenuCreate(H_DRAW.rangeFeatures);
     });
     //------------------------------------------------------------------------------------------------------------------
     //トランスフォーム
@@ -1157,26 +1232,26 @@ $(function() {
         drag:function(event,ui){
             var pixel = [ui.position["left"],ui.position["top"]];
             var coord = map1.getCoordinateFromPixel(pixel);
-            drawContextmenuOverlay.setPosition(coord);
+            H_DRAW.drawContextmenuOverlay.setPosition(coord);
         }
     });
     //------------------------------------------------------------------------------------------------------------------
     //ドロータイプ選択
     $("body").on("change","#drawType",function(){
-        drawContextmenuOverlay.setPosition(null);
-        rightClickedFeatyure = null;
+        H_DRAW.drawContextmenuOverlay.setPosition(null);
+        H_DRAW.rightClickedFeatyure = null;
         addInteractions()
     });
     //------------------------------------------------------------------------------------------------------------------
     //クローズ ×マーク
     $("#drawContextmenuOverlay-close").click(function(){
-        drawContextmenuOverlay.setPosition(null);
-        rightClickedFeatyure = null;
+        H_DRAW.drawContextmenuOverlay.setPosition(null);
+        H_DRAW.rightClickedFeatyure = null;
         drawTypeMsDropDown.set("selectedIndex", 0);
         addInteractions();
         map1.removeInteraction(modify);
         transform2.setVisible(false);
-        drawLayer.getSource().changed();
+        H_DRAW.drawLayer.getSource().changed();
     });
     //------------------------------------------------------------------------------------------------------------------
     //トグルオープン＆クローズ （普通は必要ない。なぜかオーバーレイ上ではbootstrapが動かないので）
@@ -1207,12 +1282,12 @@ $(function() {
         var text = $(this).text();
         switch (text) {
             case "選択物のみ削除":
-                if(rightClickedFeatyure) {
+                if(H_DRAW.rightClickedFeatyure) {
                     if (confirm("削除しますか？")) {
-                        drawLayer.getSource().removeFeature(rightClickedFeatyure);
+                        H_DRAW.drawLayer.getSource().removeFeature(H_DRAW.rightClickedFeatyure);
                         //transform2.select(null);
-                        rightClickedFeatyure = null;
-                        drawContextmenuOverlay.setPosition(null);
+                        H_DRAW.rightClickedFeatyure = null;
+                        H_DRAW.drawContextmenuOverlay.setPosition(null);
                         drawPopup.setPosition(null);
                         $(this).parents(".my-toggle-ul").hide(500);
                         transform2.setVisible(false);
@@ -1221,10 +1296,10 @@ $(function() {
                 break;
             case "全削除":
                 if (confirm("全削除しますか？")) {
-                    drawLayer.getSource().clear();
+                    H_DRAW.drawLayer.getSource().clear();
                     //transform2.select(null);
-                    rightClickedFeatyure = null;
-                    drawContextmenuOverlay.setPosition(null);
+                    H_DRAW.rightClickedFeatyure = null;
+                    H_DRAW.drawContextmenuOverlay.setPosition(null);
                     drawPopup.setPosition(null);
                     $(this).parents(".my-toggle-ul").hide(500);
                     transform2.setVisible(false);
@@ -1240,23 +1315,23 @@ $(function() {
     //削除
     /*
     $("#drawContextmenu-delete-btn").click(function(){
-        if(rightClickedFeatyure) {
+        if(H_DRAW.rightClickedFeatyure) {
             if (confirm("削除しますか？")) {
-                drawLayer.getSource().removeFeature(rightClickedFeatyure);
+                H_DRAW.drawLayer.getSource().removeFeature(H_DRAW.rightClickedFeatyure);
                 //transform2.select(null);
-                rightClickedFeatyure = null;
-                drawContextmenuOverlay.setPosition(null);
+                H_DRAW.rightClickedFeatyure = null;
+                H_DRAW.drawContextmenuOverlay.setPosition(null);
             }
         }else{
 
             var features = featureSelect.getFeatures().getArray();
             if(confirm("選択された地物を削除しますか？")){
                 for(var i = 0; i <features.length; i++){
-                    drawLayer.getSource().removeFeature(features[i]);
+                    H_DRAW.drawLayer.getSource().removeFeature(features[i]);
                 }
-                rightClickedFeatyure = null;
+                H_DRAW.rightClickedFeatyure = null;
                 featureSelect.getFeatures().clear();
-                drawContextmenuOverlay.setPosition(null);
+                H_DRAW.drawContextmenuOverlay.setPosition(null);
             }
 
         }
@@ -1281,7 +1356,7 @@ $(function() {
     $("#drawContextmenu-measure-btn").click(function(){
         $(this).toggleClass("btn-primary");
         $(this).toggleClass("btn-default");
-        drawLayer.getSource().changed();
+        H_DRAW.drawLayer.getSource().changed();
     });
     //------------------------------------------------------------------------------------------------------------------
     //色　枠色　変更のセレクトボックスをオープン
@@ -1319,13 +1394,13 @@ $(function() {
         rgb = d3.rgb(colorVal);
         opacity = $("#drawContextmenu-opacity-div3").text();
         rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + "," + opacity + ")";
-        if(rightClickedFeatyure) {
-            rightClickedFeatyure.setProperties({
+        if(H_DRAW.rightClickedFeatyure) {
+            H_DRAW.rightClickedFeatyure.setProperties({
                 "_fillColor": rgba
             });
         }else{
             console.log(rgba);
-            var features = rangeFeatures;
+            var features = H_DRAW.rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 var silentBool = true;
                 if(i===features.length-1) silentBool = false;
@@ -1349,12 +1424,12 @@ $(function() {
         var colorVal = $(this).val();
         var rgb = d3.rgb(colorVal);
         var rgba = "rgba(" + rgb.r + "," + rgb.g + "," + rgb.b + ",0.8)";
-        if(rightClickedFeatyure) {
-            rightClickedFeatyure.setProperties({
+        if(H_DRAW.rightClickedFeatyure) {
+            H_DRAW.rightClickedFeatyure.setProperties({
                 "_color": rgba
             });
         }else{
-            var features = rangeFeatures;
+            var features = H_DRAW.rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                     var silentBool = true;
@@ -1375,12 +1450,12 @@ $(function() {
     //幅　変更
     $("body").on("change","#drawContextmenu-drawColor-haba",function(){
         var val = $(this).val();
-        if(rightClickedFeatyure) {
-            rightClickedFeatyure.setProperties({
+        if(H_DRAW.rightClickedFeatyure) {
+            H_DRAW.rightClickedFeatyure.setProperties({
                 "_weight":val
             });
         }else{
-            var features = rangeFeatures;
+            var features = H_DRAW.rangeFeatures;
             for(var i = 0; i <features.length; i++){
                 if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                     var silentBool = true;
@@ -1399,12 +1474,12 @@ $(function() {
         val = H_COMMON.zen2han(val);
         $(this).val(val);
         if(val){
-            if(rightClickedFeatyure) {
-                rightClickedFeatyure.setProperties({
+            if(H_DRAW.rightClickedFeatyure) {
+                H_DRAW.rightClickedFeatyure.setProperties({
                     "_h_height":val
                 });
             }else{
-                var features = rangeFeatures;
+                var features = H_DRAW.rangeFeatures;
                 for(var i = 0; i <features.length; i++){
                     if(features[i].getGeometry().getType()!=="Point") {//ポイント以外
                         var silentBool = true;
@@ -1422,14 +1497,32 @@ $(function() {
     $(".prop-input-text-name,.prop-input-text-val").change(function() {
         var nameElements = $(".prop-input-text-name");
         var valElements = $(".prop-input-text-val");
+        var nameElementsVals = [];
+        var prop = H_DRAW.rightClickedFeatyure["D"];
         var name,val;
         //地物のプロパティを操作---------------------------------------------------
+        //1
+        var cnt = 1;
         for(var i = 0; i <nameElements.length; i++) {
             name = nameElements.eq(i).val();
             val = valElements.eq(i).val();
-            if(name) rightClickedFeatyure["D"][name] = val;
+            if(name) {
+                prop[name] = val;
+                cnt++;
+                nameElementsVals.push(name)
+            }
         }
-        //ドロー用のポップアップを操作　見やすいようにあえて冗長に書いている-------------
+        //2 属性名を変えられたときの処理
+        console.log(nameElementsVals);
+        for(key in prop){
+            if(key!=="geometry" && key.substr(0,1)!=="_"){
+                prop["_h_propOrder"] = nameElementsVals;
+                if(nameElementsVals.indexOf(key)===-1){
+                    delete prop[key];
+                }
+            }
+        }
+        //ドロー用のポップアップを操作----------------------------------------------
         var table = "<table class='draw-popup-tbl table table-bordered table-hover' style=''>";
         for(var i = 0; i <nameElements.length; i++) {
             name = nameElements.eq(i).val();
@@ -1441,6 +1534,7 @@ $(function() {
         table += "</table>";
         $(".ol-popup-content").html(table);
         //----------------------------------------------------------------------
+        geojsonText();
     });
     //------------------------------------------------------------------------------------------------------------------
     //ジオコーディング
@@ -1465,7 +1559,7 @@ $(function() {
                     "住所":feature["properties"]["title"],
                     "座標":lonlatText
                 });
-                drawLayer.getSource().addFeature(newFeature);
+                H_DRAW.drawLayer.getSource().addFeature(newFeature);
                 map1.getView().setCenter(coord);
             }
         }).fail(function () {
@@ -1473,4 +1567,3 @@ $(function() {
         });
     });
 });
-

@@ -1,9 +1,7 @@
-var map1 = null;
-var map2 = null;
-var centerTarget1 = null;
-var centerTarget2 = null;
-var swipeCtr1 = null;
-var swipeCtr2 = null;
+if (typeof H_START === 'undefined') {
+    var H_START = {};
+}
+var map1 = null,map2 = null;//
 $(function(){
     //--------------------------------------------------------------------------
     //起動時に画面リサイズ、部品リサイズ
@@ -144,8 +142,8 @@ $(function(){
     pinchRotateInteraction2.setActive(false);
     //--------------------------------------------------------------------------
     //スワイプコントロール　後の処理はlayer-00.jsのfuncHaikeiLayerSort()に
-    swipeCtr1 = new ol.control.Swipe();
-    swipeCtr2 = new ol.control.Swipe();
+    H_START.swipeCtr1 = new ol.control.Swipe();
+    H_START.swipeCtr2 = new ol.control.Swipe();
     //--------------------------------------------------------------------------
     //中心の十字を作る.
     var style =	[{
@@ -155,11 +153,17 @@ $(function(){
         }),
         radius: 15
     }];
-    centerTarget1 =  new ol.control.Target ({style:style});
-    centerTarget2 =  new ol.control.Target ({style:style});
-    map1.addControl(centerTarget1);
-    map2.addControl(centerTarget2);
-    //-------------------------------------------------------------------------
+    H_START.centerTarget1 =  new ol.control.Target ({style:style});
+    H_START.centerTarget2 =  new ol.control.Target ({style:style});
+    map1.addControl(H_START.centerTarget1);
+    map2.addControl(H_START.centerTarget2);
+    //--------------------------------------------------------------------------
+    //カーソル同期
+    /*
+    map1.addInteraction(new ol.interaction.Synchronize({maps:[map2]}));
+    map2.addInteraction(new ol.interaction.Synchronize({maps:[map1]}));
+    */
+    //--------------------------------------------------------------------------
     //現在地取得
     var hele1 = new ol.control.Button ({
             html: "<i class='fa fa-map-marker'></i>",//<i class="fa fa-smile-o"></i>',
@@ -254,9 +258,6 @@ $(function(){
             }
         });
     }
-    //map1.on("click",function(evt){
-        //console.log(ol.proj.transform(evt.coordinate,"EPSG:3857","EPSG:4326"));
-    //});
     //--------------------------------------------------------------------------
     //ピンチ時の回転を制御
     $("body").on("change",".rotate-toggle",function(){
@@ -269,7 +270,6 @@ $(function(){
         var pinchRotateInteraction2 = interactions2.filter(function(interaction) {
             return interaction instanceof ol.interaction.PinchRotate;
         })[0];
-
         if($(this).prop("checked")){
             pinchRotateInteraction1.setActive(false);
             pinchRotateInteraction2.setActive(false);

@@ -1,9 +1,9 @@
 var map1 = null;
 var map2 = null;
-var centerTarget1 = null;
-var centerTarget2 = null;
-var swipeCtr1 = null;
-var swipeCtr2 = null;
+var H_START.centerTarget1 = null;
+var H_START.centerTarget2 = null;
+var H_START.swipeCtr1 = null;
+var H_START.swipeCtr2 = null;
 $(function(){
     //--------------------------------------------------------------------------
     //起動時に画面リサイズ、部品リサイズ
@@ -141,8 +141,8 @@ $(function(){
     pinchRotateInteraction2.setActive(false);
     //--------------------------------------------------------------------------
     //スワイプコントロール　後の処理はlayer-00.jsのfuncHaikeiLayerSort()に
-    swipeCtr1 = new ol.control.Swipe();
-    swipeCtr2 = new ol.control.Swipe();
+    H_START.swipeCtr1 = new ol.control.Swipe();
+    H_START.swipeCtr2 = new ol.control.Swipe();
     //--------------------------------------------------------------------------
     //中心の十字を作る.
     var style =	[{
@@ -152,10 +152,10 @@ $(function(){
         }),
         radius: 15
     }];
-    centerTarget1 =  new ol.control.Target ({style:style});
-    centerTarget2 =  new ol.control.Target ({style:style});
-    map1.addControl(centerTarget1);
-    map2.addControl(centerTarget2);
+    H_START.centerTarget1 =  new ol.control.Target ({style:style});
+    H_START.centerTarget2 =  new ol.control.Target ({style:style});
+    map1.addControl(H_START.centerTarget1);
+    map2.addControl(H_START.centerTarget2);
     //-------------------------------------------------------------------------
     //現在地取得
     /*

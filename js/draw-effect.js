@@ -1,5 +1,5 @@
 $(function() {
-    var source = drawLayer.getSource();
+    var source = H_DRAW.drawLayer.getSource();
     $("#drawContextmenu-effect-ul a").click(function(){
         switch ($(this).text()) {
             case "リセット":
@@ -27,8 +27,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //バッファー図　実際に作ったりする
     function bufferCreate(radius){
-        if(!rightClickedFeatyure) return;
-        var features = [rightClickedFeatyure];//右クリック地物を対象とする。配列で書いているが今の所右クリック地物は一つ
+        if(!H_DRAW.rightClickedFeatyure) return;
+        var features = [H_DRAW.rightClickedFeatyure];//右クリック地物を対象とする。配列で書いているが今の所右クリック地物は一つ
         //まず右クリック地物の既存のバッファーを消す
         for(var i = 0; i <features.length; i++){
             var geomType = features[i].getGeometry().getType();
@@ -49,7 +49,7 @@ $(function() {
             var f = [],l = [];
             map1.forEachFeatureAtPixel(pixel,function(feature,layer){
                 if(layer){
-                    if(layer.getProperties()["name"]==="drawLayer"){
+                    if(layer.getProperties()["name"]==="H_DRAW.drawLayer"){
                         f.push(feature);
                         l.push(layer);
                     }

@@ -50,10 +50,9 @@ $(function(){
             //同期非同期ボタン
             $("#sync-btn").show();
             $(".dualscreen-btn").text("1画面");
-            //ハッシュから２画面にするときなぜか効かないので
+            //⭐️⭐️⭐️⭐️ハッシュから２画面にするときなぜか効かないので
             var map1View = map1.getView();
             map2.setView(map1View);
-            //---------------------------------------
         }else{//2画面にするとき
             H_COMMON.setHush("d",1);
             if($(window).width()>1000){//横幅が大きいときは横に分割
@@ -96,7 +95,7 @@ $(function(){
         if($(this).html()=="非同期"){
             var map1Center = map1.getView().getCenter();
             var map1Zoom = map1.getView().getZoom();
-            var map2View = map2.getView();
+            //var map2View = map2.getView();
             var view2 = new ol.View({
                 center:map1Center,
                 zoom:map1Zoom

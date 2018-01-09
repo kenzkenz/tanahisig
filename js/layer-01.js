@@ -3846,7 +3846,67 @@ var sizuokaCs2 = new ol.layer.Tile({
         maxZoom:17
     })
 });
+//高尾山関係-----------------------------------------------
+function takaoCs(){
+    this.folder = "child";
+    this.category = "tisitutikei";
+    this.name = "takaocs";
+    this.title = "高尾付近CS立体図";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-map fa-fw' style='color:darkred;'></i>";
+    this.coord = [139.2649501792449,35.64538694386893];
+    this.zoom = 15;
+    this.extent = transformE([139.24853557688118,35.6373330455347,139.28129381205778,35.653938456038816]);
+    this.source = new ol.source.XYZ({
+        //attributions:[new ol.Attribution({html:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図©アジア航測株式会社</a>"})],
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/cstakao/{z}/{x}/{-y}.png",
+        maxZoom:21
+    })
+}
+var takaoCs1 = new ol.layer.Tile(new takaoCs());
+var takaoCs2 = new ol.layer.Tile(new takaoCs());
+function takaoOrt(){
+    this.folder = "child";
+    this.category = "genzaisyasin";
+    this.name = "takaoort";
+    this.title = "高尾付近航空写真";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-picture-o fa-fw' style='color:green;'></i>";
+    this.coord = [139.2649501792449,35.64538694386893];
+    this.zoom = 15;
+    this.extent = transformE([139.24853557688118,35.6373330455347,139.28129381205778,35.653938456038816]);
+    this.source = new ol.source.XYZ({
+        //attributions:[new ol.Attribution({html:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図©アジア航測株式会社</a>"})],
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/orttakao/{z}/{x}/{-y}.png",
+        maxZoom:21
+    })
+}
+var takaoOrt1 = new ol.layer.Tile(new takaoOrt());
+var takaoOrt2 = new ol.layer.Tile(new takaoOrt());
 
+
+
+//高尾山関係ここまで-----------------------------------------
+/*
+var takaoCs1 = new ol.layer.Tile({
+    folder:"child",
+    category:"tisitutikei",
+    name:"takaocs",
+    title:"高尾付近CS立体図",
+    origin:"<a href='https://www.geospatial.jp/ckan/dataset/shizuokakencsmap2' target='_blank'>静岡県CS立体図</a>",
+    detail:"",
+    icon:"<i class='fa fa-map fa-fw' style='color:darkred;'></i>",
+    //extent:transformE([137.47545,34.59443,139.1504,35.64359]),
+    source: new ol.source.XYZ({
+        //attributions:[new ol.Attribution({html:"<a href='https://www.geospatial.jp/ckan/dataset/red45' target='_blank'>赤色立体地図©アジア航測株式会社</a>"})],
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/cstakao/{z}/{x}/{-y}.png",
+        //minZoom :1,
+        maxZoom:21
+    })
+});
+*/
 //地質関係ここまで--------------------------------------------------------------------------------------------------------
 //農研機構さんのラスタータイル----------------------------------------------------------------------------------------------
 var rekisitekikantou1 = new ol.layer.Tile({

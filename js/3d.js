@@ -27,6 +27,18 @@ $(function(){
 
     //3Dボタン
     $(".d3d2-btn").click(function(){
+        //カーソルシンクロを削除---------------------------------------
+        /*
+        var maps = [map1,map2];
+        for(var i = 0; i <maps.length; i++) {
+            var interactions = maps[i].getInteractions().getArray();
+            for (var j = 0; j < interactions.length; j++) {
+                var interaction = interactions[j];
+                if (interaction instanceof ol.interaction.Synchronize) maps[i].removeInteraction(interaction);
+            }
+        }
+        */
+        //----------------------------------------------------------
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
         var layers = eval(mapName).getLayers().getArray();
@@ -195,11 +207,11 @@ $(function(){
 
 
             //ドロー関係
-            if(drawLayer){
-                //rightClickedFeatyure = null;
-                //drawLayer.getSource().changed();
-                var features = drawLayer.getSource().getFeatures();
-                drawContextmenuOverlay.setPosition(null);
+            if(H_DRAW.drawLayer){
+                //H_DRAW.rightClickedFeatyure = null;
+                //H_DRAW.drawLayer.getSource().changed();
+                var features = H_DRAW.drawLayer.getSource().getFeatures();
+                H_DRAW.drawContextmenuOverlay.setPosition(null);
 
                 if(features.length) czmlCreate(features,$(this));
             }
@@ -210,6 +222,12 @@ $(function(){
                 czmlCreate(features,$(this));
             }
         }else{//2Dになるとき
+            //カーソルシンクロを復活---------------------------------------
+            /*
+            map1.addInteraction(new ol.interaction.Synchronize({maps:[map2]}));
+            map2.addInteraction(new ol.interaction.Synchronize({maps:[map1]}));
+            */
+            //----------------------------------------------------------
             $("#" + mapName + " .cesium-btn-up").hide(500);
             $("#" + mapName + " .cesium-btn-down").hide(500);
             $("#" + mapName + " .elevMag").hide(500);

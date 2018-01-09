@@ -7,7 +7,7 @@ $(function(){
     //使用するレイヤーを設定
     useLayersArr1 = [mieruneNormal1,
                     pale1,
-                    blank1,relief1,lcmfc2_1,vt.tikeiVectorTileSizen1,
+                    blank1,relief1,lcmfc2_1,H_VT.tikeiVectorTileSizen1,
                     osm1,
                     eventSuiro1,
         //mieruneさん
@@ -15,7 +15,7 @@ $(function(){
                     mierune1,mieruneMono1,
         //現在の航空写真
         sikiriGenzaiSyasin,
-                    ort1,seamlessphoto1,
+                    ort1,seamlessphoto1,takaoOrt1,
                     muro1,tondabayasik1,kago1,
         //過去の航空写真
         sikiriKakoSyasin,
@@ -28,14 +28,14 @@ $(function(){
         jpnfukuoka011,jpnnoboribetu011,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    mvt.tositiiki1,mvt.youtotiiki1,mvt.suiro1,mvt.douro1,mvt.kaigansen_1,tondabayasit1,
+                    H_MVT.tositiiki1,H_MVT.youtotiiki1,H_MVT.suiro1,H_MVT.douro1,H_MVT.kaigansen_1,tondabayasit1,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
-                    mvt.syougakkouku1,mvt.tyuugakkouku1,mvt.iryouken1,mvt.fukushi_1,
+                    H_MVT.syougakkouku1,H_MVT.tyuugakkouku1,H_MVT.iryouken1,H_MVT.fukushi_1,
         //人口と経済
         sikiriZinkouKeizai,
-                    mvt.syoutiikiH17_1,mvt.syoutiikiH22_1,mvt.syoutiiki1,
-                    mvt.mesh500_1,mvt.keizaiCensus_1,mvt.cityGeneki_1,mvt.cityZaisei_1,mvt.syougyou500m_1,mvt.syougyou1000m_s_1,mvt.syougyou1000m_g_1,mvt.syougyou1000m_k_1,mvt.suikei1000m_1,did1,
+                    H_MVT.syoutiikiH17_1,H_MVT.syoutiikiH22_1,H_MVT.syoutiiki1,
+                    H_MVT.mesh500_1,H_MVT.keizaiCensus_1,H_MVT.cityGeneki_1,H_MVT.cityZaisei_1,H_MVT.syougyou500m_1,H_MVT.syougyou1000m_s_1,H_MVT.syougyou1000m_g_1,H_MVT.syougyou1000m_k_1,H_MVT.suikei1000m_1,did1,
         //九州北部豪雨
         sikiriKyuusyuuHokubuGouu,
                     ooameasahi01,
@@ -53,7 +53,7 @@ $(function(){
                     rekisitekikantou1,zinsokugazou1,rekisitekitoukyou1,rekisitekihukuyama1,
         //遺跡文化財
         sikiriIsekibunkazai,
-                    mvt.bunkatyoudb1,mvt.zenkokuHakubutukan1,mvt.bunkazai1,mvt.zenkokuIseki1,mvt.yayoi1,mvt.kumamotoIseki1,
+                    H_MVT.bunkatyoudb1,H_MVT.zenkokuHakubutukan1,H_MVT.bunkazai1,H_MVT.zenkokuIseki1,H_MVT.yayoi1,H_MVT.kumamotoIseki1,
         //ユネスコ
         sikiriUnesco,
                     aya1,sobo1,soboZ1,
@@ -70,26 +70,26 @@ $(function(){
         //地質地形
         sikiriTisititikei,
                     kawadake1,ryuuiki1,ecoris1,sekiz1,seamlessArr1,
-                    nihonCs1,csArr1,sizuokaCs1,
-                    mvt.syokusei1,mvt.dozyouzu1,
+                    nihonCs1,csArr1,sizuokaCs1,takaoCs1,
+    H_MVT.syokusei1,H_MVT.dozyouzu1,
         //ハザード
         sikiriHazard,
-                    tunami1,mvt.tunamimvt1,sinsuisoutei1,kikenkeiryuu1,kyuukeisyakikenkasyo1,mvt.hinanzyo,
+                    tunami1,H_MVT.tunamimvt1,sinsuisoutei1,kikenkeiryuu1,kyuukeisyakikenkasyo1,H_MVT.hinanzyo,
         sikiriTest,
                     //anno1,
                     okugainobeoka_1,
                     nobeoka19521,
                     bingroad1,
                     kikenkeiryuuAll1,kyuukeisyakikenkasyoAll1,
-                    mvt.fukuiRindou1,
-                    mvt.tunamimiyazakimvt1,
-                    mvt.tunamiWakkanaimvt1,
-                    mvt.osmmvt1
+                    H_MVT.fukuiRindou1,
+                    H_MVT.tunamimiyazakimvt1,
+                    H_MVT.tunamiWakkanaimvt1,
+                    H_MVT.osmmvt1
     ];
     //------------------------------------------------------------------------------------------------------------------
     useLayersArr2 = [mieruneNormal2,
                     pale2,
-                    blank2,relief2,lcmfc2_2,vt.tikeiVectorTileSizen2,
+                    blank2,relief2,lcmfc2_2,H_VT.tikeiVectorTileSizen2,
                     osm2,
                     eventSuiro2,
         //mieruneさん
@@ -97,7 +97,7 @@ $(function(){
                     mierune2,mieruneMono2,
         //現在の航空写真
         sikiriGenzaiSyasin,
-                    ort2,seamlessphoto2,
+                    ort2,seamlessphoto2,takaoOrt2,
                     muro2,tondabayasik2,kago2,
         //過去の航空写真
         sikiriKakoSyasin,
@@ -110,14 +110,14 @@ $(function(){
                     jpnfukuoka012,jpnnoboribetu012,
         //都市・道路・河川
         sikiriToshiDouroKasen,
-                    mvt.tositiiki2,mvt.youtotiiki2,mvt.suiro2,mvt.douro2,mvt.kaigansen_2,tondabayasit2,
+                    H_MVT.tositiiki2,H_MVT.youtotiiki2,H_MVT.suiro2,H_MVT.douro2,H_MVT.kaigansen_2,tondabayasit2,
         //子育て・医療・福祉
         sikiriKosodateFukushi,
-                    mvt.syougakkouku2,mvt.tyuugakkouku2,mvt.iryouken2,mvt.fukushi_2,
+                    H_MVT.syougakkouku2,H_MVT.tyuugakkouku2,H_MVT.iryouken2,H_MVT.fukushi_2,
         //人口と経済
         sikiriZinkouKeizai,
-                    mvt.syoutiikiH17_2,mvt.syoutiikiH22_2,mvt.syoutiiki2,
-                    mvt.mesh500_2,mvt.keizaiCensus_2,mvt.cityGeneki_2,mvt.cityZaisei_2,mvt.syougyou500m_2,mvt.syougyou1000m_s_2,mvt.syougyou1000m_g_2,mvt.syougyou1000m_k_2,mvt.suikei1000m_2,did2,
+                    H_MVT.syoutiikiH17_2,H_MVT.syoutiikiH22_2,H_MVT.syoutiiki2,
+                    H_MVT.mesh500_2,H_MVT.keizaiCensus_2,H_MVT.cityGeneki_2,H_MVT.cityZaisei_2,H_MVT.syougyou500m_2,H_MVT.syougyou1000m_s_2,H_MVT.syougyou1000m_g_2,H_MVT.syougyou1000m_k_2,H_MVT.suikei1000m_2,did2,
         //九州北部豪雨
         sikiriKyuusyuuHokubuGouu,
                     ooameasahi02,
@@ -135,7 +135,7 @@ $(function(){
                     rekisitekikantou2,zinsokugazou2,rekisitekitoukyou2,rekisitekihukuyama2,
         //遺跡文化財
         sikiriIsekibunkazai,
-                    mvt.bunkatyoudb2,mvt.zenkokuHakubutukan2,mvt.bunkazai2,mvt.zenkokuIseki2,mvt.yayoi2,mvt.kumamotoIseki2,
+                    H_MVT.bunkatyoudb2,H_MVT.zenkokuHakubutukan2,H_MVT.bunkazai2,H_MVT.zenkokuIseki2,H_MVT.yayoi2,H_MVT.kumamotoIseki2,
         //ユネスコ
         sikiriUnesco,
                     aya2,sobo2,soboZ2,
@@ -152,20 +152,20 @@ $(function(){
         //地質地形
         sikiriTisititikei,
                     kawadake2,ryuuiki2,ecoris2,sekiz2,seamlessArr2,
-                    nihonCs2,csArr2,sizuokaCs2,
-                    mvt.syokusei2,mvt.dozyouzu2,
+                    nihonCs2,csArr2,sizuokaCs2,takaoCs2,
+                    H_MVT.syokusei2,H_MVT.dozyouzu2,
         //ハザード
         sikiriHazard,
-                    tunami2,mvt.tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
+                    tunami2,H_MVT.tunamimvt2,sinsuisoutei2,kikenkeiryuu2,kyuukeisyakikenkasyo2,
         sikiriTest,
                     //anno1,
                     okugainobeoka_2,
                     nobeoka19521,
                     bingroad2,
                     kikenkeiryuuAll2,kyuukeisyakikenkasyoAll2,
-                    mvt.fukuiRindou1,
-                    mvt.tunamimiyazakimvt1,
-                    mvt.tunamiWakkanaimvt1
+                    H_MVT.fukuiRindou1,
+                    H_MVT.tunamimiyazakimvt1,
+                    H_MVT.tunamiWakkanaimvt1
     ];
     $("body").on("click",".secret",function() {
         alert("");
@@ -385,9 +385,9 @@ function funcHaikeiLayerSort(mapElement,mapName){
     //--------------------------------------
     //swipeのため
     if(mapName=="map1"){
-        var swipeCtr = swipeCtr1;
+        var swipeCtr = H_START.swipeCtr1;
     }else{
-        var swipeCtr = swipeCtr2;
+        var swipeCtr = H_START.swipeCtr2;
     }
     if(mapElement.find(".swipe-toggle").prop("checked")){
         eval(mapName).addControl(swipeCtr);
@@ -580,7 +580,7 @@ $(function(){
             }else{
                 var targetLayer = useLayersArr2[layerId];
             }
-            targetLayer.setStyle(mvt.kaigansebStyleFunction(colorVal,width));
+            targetLayer.setStyle(H_MVT.kaigansebStyleFunction(colorVal,width));
             targetLayer.getSource().changed();
         }
         //--------------------------------------------------------------------------------------------------------------
@@ -622,7 +622,7 @@ $(function(){
             }else{
                 var targetLayer = useLayersArr2[layerId];
             }
-            targetLayer.setStyle(mvt.syoutiikiCommonStyleFunction(colorVal,limit));
+            targetLayer.setStyle(H_MVT.syoutiikiCommonStyleFunction(colorVal,limit));
             targetLayer.getSource().changed();
         }
         //--------------------------------------------------------------------------------------------------------------
@@ -663,7 +663,7 @@ $(function(){
             }else{
                 var targetLayer = useLayersArr2[layerId];
             }
-            targetLayer.setStyle(mvt.mesh500CommonStyleFunction(colorVal,limit,yearVal));
+            targetLayer.setStyle(H_MVT.mesh500CommonStyleFunction(colorVal,limit,yearVal));
             targetLayer.getSource().changed();
         }
         //--------------------------------------------------------------------------------------------------------------
@@ -700,7 +700,7 @@ $(function(){
             }else{
                 var targetLayer = useLayersArr2[layerId];
             }
-            targetLayer.setStyle(mvt.syougyouMeshCommonStyleFunction(colorVal,limit,yearVal));
+            targetLayer.setStyle(H_MVT.syougyouMeshCommonStyleFunction(colorVal,limit,yearVal));
         }
         //--------------------------------------------------------------------------------------------------------------
         //経済センサス
@@ -753,7 +753,7 @@ $(function(){
             }else{
                 var targetLayer = useLayersArr2[layerId];
             }
-            targetLayer.setStyle(mvt.keizaiCensusStyleFunction(colorVal,limit,columunVal));
+            targetLayer.setStyle(H_MVT.keizaiCensusStyleFunction(colorVal,limit,columunVal));
         }
         //--------------------------------------------------------------------------------------------------------------
         //福祉施設
@@ -762,7 +762,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.fukushiStyleFunction(target) );
+            targetLayer.setStyle(H_MVT.fukushiStyleFunction(target) );
         });
         //--------------------------------------------------------------------------------------------------------------
         //津波浸水想定
@@ -771,7 +771,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.tunamiMiyazakiStyleFunction(target) );
+            targetLayer.setStyle(H_MVT.tunamiMiyazakiStyleFunction(target) );
         });
         //--------------------------------------------------------------------------------------------------------------
         //北海道津波浸水想定
@@ -780,7 +780,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.tunamiHokkaidouStyleFunction(target));
+            targetLayer.setStyle(H_MVT.tunamiHokkaidouStyleFunction(target));
         });
         //--------------------------------------------------------------------------------------------------------------
         //市町村現役率
@@ -792,7 +792,7 @@ $(function(){
                 var targetLayer = mapObj["layers"][layerId];
                 var target = ui.value;
                 var colorChart = $(this).parents(".detail2-div").find(".cityGeneki-colorchart-select").val();
-                targetLayer.setStyle(mvt.cityGenekiCommonStyleFunction(target,colorChart));
+                targetLayer.setStyle(H_MVT.cityGenekiCommonStyleFunction(target,colorChart));
                 $("#" + mapName + " .cityGeneki-year-select").val(target);
             }
         });
@@ -802,7 +802,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.cityGenekiCommonStyleFunction(target,colorChart));
+            targetLayer.setStyle(H_MVT.cityGenekiCommonStyleFunction(target,colorChart));
         });
         $("#" + mapName).on("change",".cityGeneki-colorchart-select",function(){
             var target = $(this).parents(".detail2-div").find(".cityGeneki-year-select").val();
@@ -810,7 +810,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.cityGenekiCommonStyleFunction(target,colorChart));
+            targetLayer.setStyle(H_MVT.cityGenekiCommonStyleFunction(target,colorChart));
         });
         //--------------------------------------------------------------------------------------------------------------
         //市町村財政指数
@@ -822,7 +822,7 @@ $(function(){
                 var targetLayer = mapObj["layers"][layerId];
                 var target = ui.value + "_1";
                 var colorChart = $(this).parents(".detail2-div").find(".cityZaisei-colorchart-select").val();
-                targetLayer.setStyle(mvt.cityZaiseiCommonStyleFunction(target,colorChart));
+                targetLayer.setStyle(H_MVT.cityZaiseiCommonStyleFunction(target,colorChart));
                 $("#" + mapName + " .cityZaisei-year-select").val(target);
             }
         });
@@ -832,7 +832,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.cityZaiseiCommonStyleFunction(target,colorChart));
+            targetLayer.setStyle(H_MVT.cityZaiseiCommonStyleFunction(target,colorChart));
         });
         $("#" + mapName).on("change",".cityZaisei-colorchart-select",function(){
             var target = $(this).parents(".detail2-div").find(".cityZaisei-year-select").val();
@@ -840,7 +840,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.cityZaiseiCommonStyleFunction(target,colorChart));
+            targetLayer.setStyle(H_MVT.cityZaiseiCommonStyleFunction(target,colorChart));
         });
 
         //-------------------------------------------------------
@@ -850,7 +850,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.zenkokuisekiStyleFunction(target));
+            targetLayer.setStyle(H_MVT.zenkokuisekiStyleFunction(target));
             /*
             var val = $(this).val();
             console.log(val);
@@ -865,7 +865,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.d3StyleFunction(Number(target)));
+            targetLayer.setStyle(H_MVT.d3StyleFunction(Number(target)));
         });
         //-------------------------------------------------------
         //用途地域
@@ -874,7 +874,7 @@ $(function(){
             var layerId = $(this).parents(".dialog-base").find(".layer-id").val();
             var mapObj = funcMaps($(this));
             var targetLayer = mapObj["layers"][layerId];
-            targetLayer.setStyle(mvt.youtotiikiStyleFunction(Number(target)));
+            targetLayer.setStyle(H_MVT.youtotiikiStyleFunction(Number(target)));
         });
         //-------------------------------------------------------
         $("#" + mapName).on("change",".dozyouzu-cate-select",function() {

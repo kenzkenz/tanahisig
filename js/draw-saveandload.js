@@ -1,5 +1,4 @@
 $(function() {
-    var source = drawLayer.getSource();
     //ドラッグアンドドロップのインタラクション-----------------------------
     var dragAndDrop = new ol.interaction.DragAndDrop({
         formatConstructors: [ol.format.GeoJSON]
@@ -8,7 +7,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //ドラッグアンドドロップ
     dragAndDrop.on('addfeatures', function(evt) {
-        var fileExtension = evt["file"]["name"].split(".")[evt["file"]["name"].split(".").length - 1]
+        var fileExtension = evt["file"]["name"].split(".")[evt["file"]["name"].split(".").length - 1];
         switch (fileExtension) {
             case "geojson":
                 geojsonLoad(evt.file);
@@ -120,7 +119,7 @@ $(function() {
             function coordAvailable(){
                 var lonColumns = ["画面経度","経度"];
                 var latColumns = ["画面緯度","緯度"];
-                var lonColumn,latColumn,lon,lat,coord;
+                var lonColumn,latColumn,lon,lat,coord,fillColorColumn,fillColor;
                 for(var i = 0; i <topRow.length; i++){//先頭行を全てループするので最後に現れた緯度経度が対象になる
                     if(lonColumns.indexOf(topRow[i])!==-1) {
                         console.log(topRow[i]);
@@ -130,24 +129,35 @@ $(function() {
                         console.log(topRow[i]);
                         latColumn = i;
                     }
+                    if(topRow[i]==="色") fillColorColumn = i;
                 }
                 console.log(lonColumn,latColumn);
                 //2行目以降の処理
                 for (var i = 1; i < csvAr.length-1; i++) {//行頭を飛ばすので１から
                     lon = Number(csvAr[i][lonColumn]);
                     lat = Number(csvAr[i][latColumn]);
-                    console.log(lon,lat);
+                    //
+                    // console.log(lon,lat);
                     coord = ol.proj.transform([lon,lat], "EPSG:4326", "EPSG:3857");
                     var geometry = new ol.geom.Point(coord);
+                    fillColor = csvAr[i][fillColorColumn];
+                    if(!fillColor) fillColor = "blue";
                     var newFeature = new ol.Feature({
                         geometry: geometry,
-                        "_fillColor": "blue",
-                        "_h_addtime":$.now()
+                        "_fillColor":fillColor,
+                        "_h_addTime":$.now()
                     });
+                    var keys = [];
                     for (var j = 0; j < topRow.length; j++) {
-                        if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i][j];
+                        if (topRow[j].substr(0, 1) !== "_" && topRow[j] !== "色"){
+                            console.log(topRow[j])
+                            newFeature["D"][topRow[j]] = csvAr[i][j];
+                            keys.push(topRow[j]);
+                        }
                     }
-                    drawLayer.getSource().addFeature(newFeature);
+                    //console.log(keys);
+                    H_DRAW.drawLayer.getSource().addFeature(newFeature);
+                    newFeature["D"]["_h_propOrder"] = keys;
                 }
             }
             //座標がある場合　ここまで
@@ -188,16 +198,32 @@ $(function() {
                             var coord = feature["geometry"]["coordinates"];
                             coord = ol.proj.transform(coord, "EPSG:4326", "EPSG:3857");
                             var geometry = new ol.geom.Point(coord);
+
                             var newFeature = new ol.Feature({
                                 geometry: geometry,
-                                "_fillColor": "blue",
-                                "_h_addtime":$.now()
+                                "_fillColor": "blue",//初期値、値があったら上書きされる。
+                                "_h_addTime":$.now()
+                                //"_h_propOrder":
                             });
+                            var keys = [];
                             for (var j = 0; j < topRow.length; j++) {
-                                if (topRow[j].substr(0, 1) !== "_") newFeature["D"][topRow[j]] = csvAr[i + 1][j].replace(/"/gi, "");
+                                if(topRow[j] === "色"){
+                                    var fillColor = csvAr[i + 1][j];
+                                    if(fillColor) {
+                                        newFeature["D"]["_fillColor"] = csvAr[i + 1][j];
+                                    }else{
+                                        newFeature["D"]["_fillColor"] = "blue";
+                                    }
+                                }else if (topRow[j].substr(0, 1) !== "_" && topRow[j] !== "色") {
+                                    newFeature["D"][topRow[j]] = csvAr[i + 1][j].replace(/"/gi, "");
+                                    keys.push(topRow[j]);
+                                }
                             }
                             newFeature["D"]["取得住所"] = feature["properties"]["title"];
-                            drawLayer.getSource().addFeature(newFeature);
+                            keys.push("取得住所");
+                            newFeature["D"]["_h_propOrder"] = keys;
+
+                            H_DRAW.drawLayer.getSource().addFeature(newFeature);
                         } else {
                             var msg = "<i class='fa fa-exclamation-triangle fa-fw' style='color:rgba(0,0,0,1.0);'></i>";
                             msg += (i + 2) + "行目の座標を取得できませんでした。";
@@ -220,7 +246,7 @@ $(function() {
                             });
                         }
                     }
-                    map1.getView().fit(drawLayer.getSource().getExtent());
+                    map1.getView().fit(H_DRAW.drawLayer.getSource().getExtent());
                 });
             }
             //ジオコーディングここまで
@@ -235,7 +261,7 @@ $(function() {
         reader.onload = function(e){
             var geojsonObject = JSON.parse(e["target"]["result"]);
             var features = (new ol.format.GeoJSON()).readFeatures(geojsonObject,{featureProjection:'EPSG:3857'})
-            drawLayer.getSource().addFeatures(features);
+            H_DRAW.drawLayer.getSource().addFeatures(features);
         };
     }
     //------------------------------------------------------------------------------------------------------------------
@@ -255,7 +281,7 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //geojson保存
     function geojsonSave(){
-        var features = drawLayer.getSource().getFeatures();
+        var features = H_DRAW.drawLayer.getSource().getFeatures();
         var drawnGeojson = new ol.format.GeoJSON().writeFeatures(features, {
             featureProjection: "EPSG:3857"
         });
@@ -281,9 +307,8 @@ $(function() {
     //------------------------------------------------------------------------------------------------------------------
     //csv保存
     function csvSave(){
-        alert("作成中！！！！");
         var ignoreColumn = ["画面経度","画面緯度"];
-        var features = drawLayer.getSource().getFeatures();
+        var features = H_DRAW.drawLayer.getSource().getFeatures();
         console.log(features);
         if(!features.length) {
             alert("データがありません。");
@@ -302,6 +327,9 @@ $(function() {
                 }
             }
         }
+        //⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐️
+        headerAr.push("_fillColor");
+        //⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐️
         //2行目以下（先頭行は含まない）を作成----------------------------------------
         for(var i = 0; i <features.length; i++) {
             var geomType = features[i].getGeometry().getType();
@@ -314,10 +342,14 @@ $(function() {
             contentAr0 = [];
             for(var j = 0; j <headerAr.length; j++) {//全行分重複無しで取得したキー名でループ
                 var header = headerAr[j];
-                contentAr0.push(prop[header])
+                if(prop[header]) {
+                    contentAr0.push(prop[header]);
+                }else{
+                    contentAr0.push("");
+                }
             }
             contentAr0.push(lon);contentAr0.push(lat);//lonとlatを追加
-            contentAr0.push(prop["_h_addtime"]);//ソート用に仮追加
+            contentAr0.push(prop["_h_addTime"]);//ソート用に仮追加
             contentAr1.push(contentAr0);
         }
         //ソート処理------------------------------------------------
@@ -332,7 +364,14 @@ $(function() {
         }
         //ソート処理ここまで
         //----------------------------------------------------------
+        //ヘッダーを再構築
+        for(var i = 0; i <headerAr.length; i++) {
+            if (headerAr[i] === "_fillColor") {
+                headerAr[i] = "色"
+            }
+        }
         headerAr.push("画面経度");headerAr.push("画面緯度");//ヘッダー配列に追加
+        //----------------------------------------------------------
         contentAr1.unshift(headerAr);//先頭にヘッダー配列を追加
         console.log(contentAr1);
         var csv = exportcsv(contentAr1);
@@ -354,7 +393,7 @@ $(function() {
     //gist保存
     function gistSave(){
         $("#loading-fa2").show(0);
-        var features = drawLayer.getSource().getFeatures();
+        var features = H_DRAW.drawLayer.getSource().getFeatures();
         var drawnGeojson = new ol.format.GeoJSON().writeFeatures(features, {
             featureProjection: "EPSG:3857"
         });

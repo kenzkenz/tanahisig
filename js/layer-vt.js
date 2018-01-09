@@ -1,5 +1,5 @@
-if (typeof vt === 'undefined') {
-    var vt = {};
+if (typeof H_VT === 'undefined') {
+    var H_VT = {};
 }
 (function () {
     var codeList_sizen = new Array(//図式コード,"色"]
@@ -93,7 +93,7 @@ if (typeof vt === 'undefined') {
         [105,"#5e5ce6"],
         [9999,"#ff00ff"]
     );
-    vt.codeList_sizen2 = new Array(//2次元配列 [図式コード,"地形分類名","成因など","リスク"]
+    H_VT.codeList_sizen2 = new Array(//2次元配列 [図式コード,"地形分類名","成因など","リスク"]
         [999999,"地図を拡大すると表示されます。","",""],
         [100,"数値地図25000(土地条件)","地図を拡大すると表示されます。",""],
         [101,"数値地図25000(土地条件)","地図を拡大すると表示されます。",""],
@@ -201,8 +201,8 @@ if (typeof vt === 'undefined') {
         });
         this.style = sizentikeiStyleFunction;
     }
-    vt.tikeiVectorTileSizen1 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
-    vt.tikeiVectorTileSizen2 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
+    H_VT.tikeiVectorTileSizen1 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
+    H_VT.tikeiVectorTileSizen2 = new ol.layer.VectorTile(new tikeiVectorTileSizen());
     function sizentikeiStyleFunction(feature, resolution) {
         var code = Number(feature.getProperties()["code"]);
         var fillColor = 'rgba(0,0,0,0.1)';

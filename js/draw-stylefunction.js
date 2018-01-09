@@ -79,7 +79,7 @@
         */
         } else {//iconでない通常のとき
             var color,width;
-            if(feature===rightClickedFeatyure || rangeFeatures.indexOf(feature)!==-1) {
+            if(feature===H_DRAW.rightClickedFeatyure || H_DRAW.rangeFeatures.indexOf(feature)!==-1) {
                 color = "red";
                 width = 3;
             }else{
@@ -122,7 +122,7 @@
         var tDistance;
         //tDistance = funcTDistance(feature);
         tDistance = measure("distance",feature);
-        if(feature!==rightClickedFeatyure && rangeFeatures.indexOf(feature)===-1) {
+        if(feature!==H_DRAW.rightClickedFeatyure && H_DRAW.rangeFeatures.indexOf(feature)===-1) {
             var style = [
                 new ol.style.Style({
                     stroke: new ol.style.Stroke({
@@ -297,7 +297,7 @@
                 zIndex: 0
             })
         ];
-        if(feature!==rightClickedFeatyure && rangeFeatures.indexOf(feature)===-1) {
+        if(feature!==H_DRAW.rightClickedFeatyure && H_DRAW.rangeFeatures.indexOf(feature)===-1) {
             var style = [
                 new ol.style.Style({
                     fill: new ol.style.Fill({
