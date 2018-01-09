@@ -44,6 +44,7 @@ $(function(){
         if(features.length) return;
         //--------------------------
         var layers = eval(map).getLayers().getArray();
+        console.log(layers)
         for (i = 0; i < layers.length; i++) {
             console.log(String(layers[i].getProperties()["title"]));
             if(String(layers[i].getProperties()["title"])==="シームレス地質図V2") {

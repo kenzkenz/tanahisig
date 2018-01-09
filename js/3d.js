@@ -132,6 +132,11 @@ $(function(){
             var tiltI = 0;
             ol3d.getCamera().setTilt(0);
             ol3d.setEnabled(true);
+
+            H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
+
+            console.log(ol3d.getEnabled());
+
             function cTilt(){
                 tiltI++;
                 ol3d.getCamera().setTilt(prevTilt/10*tiltI);
@@ -244,13 +249,17 @@ $(function(){
                     clearTimeout(st);
                     ol3d.getCamera().setTilt(0);
                     ol3d.setEnabled(false);
+                    H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
                 }
             }
             cTilt2();
             $(this).text("3D");
 
             if($("#mydialog-draw-dialog")) $("#mydialog-draw-dialog").show();//ドローダイアログがあったら表示する。
+
+
         }
+
     });
     //------------------------------------------------------------
 
@@ -301,6 +310,7 @@ $(function(){
                             if (tilt > 0) ol3d.getCamera().setTilt(tilt - 0.05);
                         }
                     }
+                    H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
                     setTimeout(function () {
                         tiltUp(upDown)
                     }, 20);
@@ -340,6 +350,7 @@ $(function(){
                 }else{
                     clearTimeout(tiltLeft);
                 }
+
             };
             if($(this).attr("class").match("cesium-btn-left")){
                 tiltLeft("left");
@@ -362,6 +373,7 @@ $(function(){
                 }else{
                     clearTimeout(tiltLeft);
                 }
+                H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
             };
             if($(this).attr("class").match("cesium-btn-left")){
                 tiltLeft("left");

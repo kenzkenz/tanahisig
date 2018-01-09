@@ -165,8 +165,45 @@ H_COMMON.getHush = function() {
             }
         }
     }
-    //レイヤー順ここまで
-    //最後に座標とズームをセット
+    //レイヤー順ここまで--------------------------------------------
+    //3d cesium--------------------------------------------------
+    var d3json = hashObj["3d"];
+    if(d3json){
+        d3json = JSON.parse(decodeURI(d3json));
+        console.log(d3json);
+        var ol3ds = [ol3d1,ol3d2];
+        for(var i = 0; i <ol3ds.length; i++) {
+            var obj = d3json[i][0];
+            console.log(obj);
+            var enabled_J = obj["e"];
+            var tilt_J = obj["t"];
+            var head_J = obj["h"];
+
+            console.log(enabled_J,tilt_J,head_J);
+
+            if(enabled_J) {
+                console.log(i);
+                if(i===0) {
+                    $("#map1 .d3d2-btn").click();
+                    ol3d1.getCamera().setTilt(tilt_J);
+                    ol3d1.getCamera().setHeading(head_J);
+                    ol3d1.getCamera().setDistance(obj["d"]);
+                    ol3d1.getCamera().setAltitude(obj["a"]);
+                    ol3d1.getCamera().setPosition(obj["p"]);
+                    ol3d1.getCamera().setCenter(obj["c"]);
+                }else{
+                    $("#map2 .d3d2-btn").click();
+                    ol3d2.getCamera().setTilt(tilt_J);
+                    ol3d2.getCamera().setHeading(head_J);
+                    ol3d2.getCamera().setDistance(obj["d"]);
+                    ol3d2.getCamera().setAltitude(obj["a"]);
+                    ol3d2.getCamera().setPosition(obj["p"]);
+                    ol3d2.getCamera().setCenter(obj["c"]);
+                }
+            }
+        }
+    }
+    //最後に座標とズームをセット-------------------------------------
     var zxy = hashAr[0];
     if(zxy){
         var zxyAr = zxy.replace("#","").split("/");
@@ -203,6 +240,33 @@ H_COMMON.getHushJson = function(){
         });
         arr0.push(arr1)
     }
+    var parametor = encodeURI(JSON.stringify(arr0));
+    return parametor;
+};
+//----------------------------------------------------------
+//ハッシュ用のレイヤーcesium関係のjsonをつくる
+H_COMMON.getHush3dJson = function(){
+    var ol3ds = [ol3d1,ol3d2];
+    var arr0 = [];
+    for(var i = 0; i <ol3ds.length; i++){
+        var enabled =  ol3ds[i].getEnabled();
+        var tilt = ol3ds[i].getCamera().getTilt();
+        var head = ol3ds[i].getCamera().getHeading();
+        var distance = ol3ds[i].getCamera().getDistance();
+        var altitude = ol3ds[i].getCamera().getAltitude();
+        var position = ol3ds[i].getCamera().getPosition();
+        var center = ol3ds[i].getCamera().getCenter();
+        var arr1 = [];
+        var obj;
+        if(enabled) {
+            obj = {"e": enabled, "t": tilt, "h": head, "d": distance, "a": altitude, "p": position, "c": center};
+        }else{
+            obj = {"e": enabled}
+        }
+        arr1.push(obj);
+        arr0.push(arr1);
+    }
+    console.log(arr0);
     var parametor = encodeURI(JSON.stringify(arr0));
     return parametor;
 };

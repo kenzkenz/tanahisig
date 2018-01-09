@@ -188,6 +188,7 @@ $(function(){
     //マップイベント関係
     //ムーブエンド時にwevストレージに中心座標とズーム率を記憶
     map1.on("moveend",function(evt){
+        if(ol3d1) if(ol3d1.getEnabled()) H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
         /*
         localStorage.setItem("lonlat",JSON.stringify(map1.getView().getCenter()));
         localStorage.setItem("zoom",map1.getView().getZoom());
@@ -196,6 +197,7 @@ $(function(){
         $("#map1 .zoom-div .zoom-span").text("zoom=" + Math.floor(map1.getView().getZoom()));
     });
     map2.on("moveend",function(evt){
+        if(ol3d2) if(ol3d2.getEnabled()) H_COMMON.setHush("3d",H_COMMON.getHush3dJson());
         $("#map2 .zoom-div .zoom-span").text("zoom=" + Math.floor(map2.getView().getZoom()));
     });
     //ムーブ時に標高取得。
