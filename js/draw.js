@@ -2,6 +2,7 @@ if (typeof H_DRAW === 'undefined') {
     var H_DRAW = {};
 }
 H_DRAW.drawLayer = null;
+H_DRAW.heatmapLayer = null;
 H_DRAW.drawSourceChangeFlg = false;
 H_DRAW.drawContextmenuOverlay = null;
 H_DRAW.rightClickedFeatyure = null;
@@ -665,27 +666,16 @@ $(function() {
                 $(".draw-popup-th:contains('画面緯度')").parents("tr").find(".draw-popup-td").text(coord[1]);
             }
         }
-
-        /*
-        var key = Object.keys(e["target"]["s"])[0];
-        if(key){
-            var feature = e["target"]["s"][key];
-            var coord = feature.getGeometry().getCoordinates();
-            coord = ol.proj.transform(coord, "EPSG:3857", "EPSG:4326");
-            console.log(coord);
-            feature.setProperties({
-                "画面経度":coord[0],
-                "画面緯度":coord[1]
-            });
-            $(".prop-input-text-name").each(function(){
-                if($(this).val()==='画面経度') $(this).parents("tr").find(".prop-input-text-val").val(coord[0]);
-                if($(this).val()==='画面緯度') $(this).parents("tr").find(".prop-input-text-val").val(coord[1]);
-            });
-            $(".draw-popup-th:contains('画面経度')").parents("tr").find(".draw-popup-td").text(coord[0]);
-            $(".draw-popup-th:contains('画面緯度')").parents("tr").find(".draw-popup-td").text(coord[1]);
-        }
-        */
     });
+    //--------------------------------------------------------
+    //ヒートマップ用レイヤー
+    H_DRAW.heatmapLayer = new ol.layer.Heatmap({
+        source:H_DRAW.drawLayer.getSource(),
+        name:"heatmapLayer"
+    });
+    //map1.addLayer(H_DRAW.heatmapLayer);
+    //H_DRAW.heatmapLayer.setZIndex(9999);
+    //--------------------------------------------------------
     //範囲指定用レイヤー
     rangeLayer = new ol.layer.Vector({
         source:new ol.source.Vector(),

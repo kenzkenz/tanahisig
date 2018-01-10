@@ -9,7 +9,7 @@ $(function() {
                 voronoiCreate();
                 break;
             case "ヒートマップ":
-                alert("作成中！");
+                heatmapCreate();
                 break;
             default:
                 return;
@@ -23,6 +23,12 @@ $(function() {
             var type = features[i].getProperties()["_type"];
             if(type==="voronoi" || type==="buffer") source.removeFeature(features[i])
         }
+        //-----------------------------------
+        map1.removeLayer(H_DRAW.drawLayer);
+        map1.removeLayer(H_DRAW.heatmapLayer);
+        map1.addLayer(H_DRAW.drawLayer);
+        H_DRAW.drawLayer.set("altitudeMode","clampToGround");
+        H_DRAW.drawLayer.setZIndex(9999);
     }
     //------------------------------------------------------------------------------------------------------------------
     //バッファー図　実際に作ったりする
@@ -166,4 +172,15 @@ $(function() {
             source.addFeature(newFeature);
         }
     }
+    //------------------------------------------------------------------------------------------------------------------
+    //ヒートマップ
+    function heatmapCreate() {
+        map1.removeLayer(H_DRAW.drawLayer);
+        map1.removeLayer(H_DRAW.heatmapLayer);
+        map1.addLayer(H_DRAW.heatmapLayer);
+        H_DRAW.heatmapLayer.set("selectable",true);
+        H_DRAW.heatmapLayer.set("altitudeMode","clampToGround");
+        H_DRAW.heatmapLayer.setZIndex(9999);
+    }
+    //------------------------------------------------------------------------------------------------------------------
 });

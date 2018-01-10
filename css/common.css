@@ -402,7 +402,12 @@ label:hover{
     text-align:right;
     margin-top:10px;
 }
-.plus-input{
+.plus-url-input{
+    width:400px;
+    font-size:12px;
+}
+.plus-name-input{
+    margin-top:10px;
     width:400px;
     font-size:12px;
 }

@@ -1,3 +1,6 @@
+if (typeof H_layer00 === 'undefined') {
+    var H_layer00  = {};
+}
 var useLayersArr1 = null;
 var useLayersArr2 = null;
 var plusLayer1 = [];
@@ -970,7 +973,8 @@ $(function(){
             content += "<div style='padding:0 0 0 20px'>";
             content += "<a href='https://mapwarper.h-gis.jp' target='_blank'>日本版Map Warper</a>";
             content += "</div>";
-            content += "<input type='text' class='form-control plus-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
+            content += "<input type='text' class='form-control plus-url-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
+            content += "<input type='text' class='form-control plus-name-input' placeholder='名前'>";
             content += '<div class="plus-div"><button type="button" class="btn btn-primary plus-btn">追加</button></div>';
         mydialog({
             id: id,
@@ -987,18 +991,16 @@ $(function(){
     });
     //------------------------------------------------------------
     //レイヤー追加ボタンを押した時
-    $("body").on("click",".plus-btn",function() {
+    H_layer00.layerPlus = function(elem,plusUrl,plusName){
         plI++;
-        var mapObj = funcMaps($(this));
+        var mapObj = funcMaps(elem);
         var mapName = mapObj["name"];
-        var plusUrl = $(this).parents(".dialog-base").find(".plus-input").val();
-        if(plusUrl=="") return;
-        if(plusUrl.indexOf("mtile.pref.miyazaki")!=-1) {
-            plusUrl = plusUrl;
-        }else{
+        var plusUrl0 = plusUrl;
+        if(plusUrl==="") return;
+        if(plusUrl.indexOf("mtile.pref.miyazaki")===-1) {
             plusUrl = "./php/proxy-png.php?url=" + plusUrl;
         }
-        $(this).parents(".dialog-base").find(".plus-input").val("");
+        $(this).parents(".dialog-base").find(".plus-url-input").val("");
         plusLayer1[plI] = new ol.layer.Tile({
             title:"pulus",
             origin:"",
@@ -1024,9 +1026,18 @@ $(function(){
         }else{
             var plusLayer = plusLayer2[plI];
         }
+        plusLayer.setProperties({
+            "name":"plusLayer",
+            "plusName":plusName,
+            "plusUrl":plusUrl0
+        });
         eval(mapName).addLayer(plusLayer);
+        plusLayer.set("altitudeMode","clampToGround");
+        plusLayer.set("selectable",true);
+
         var htmlChar = "<tr class='plus-tr'>";
-        htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='" + plI + "' checked> <i class='fa fa-map-o fa-fw' style='color:red;'></i> 追加レイヤー" + plI + "</label></td>";
+        //htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='" + plI + "' checked> <i class='fa fa-map-o fa-fw' style='color:red;'></i> 追加レイヤー" + plI + "</label></td>";
+        htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='" + plI + "' checked> <i class='fa fa-map-o fa-fw' style='color:red;'></i> " + plusName + "</label></td>";
         htmlChar += "<td class='td-slider'><div class='haikei-slider'></div></td>";
         htmlChar += "<td class='td-sort' title='ドラッグします。'><i class='fa fa-bars fa-lg'></i></td>";
         htmlChar += "<td class='td-info'><i class='fa fa-info-circle fa-lg primary'></i></td>";
@@ -1060,6 +1071,13 @@ $(function(){
                 H_COMMON.setHush("l",H_COMMON.getHushJson());
             }
         });
+        return plusLayer;
+    };
+    $("body").on("click",".plus-btn",function() {
+        var plusUrl = $(this).parents(".dialog-base").find(".plus-url-input").val();
+        var plusName = $(this).parents(".dialog-base").find(".plus-name-input").val();
+        H_layer00.layerPlus($(this),plusUrl,plusName)
+        H_COMMON.setHush("l",H_COMMON.getHushJson());
     });
     //------------------------------------------------------------
     //レイヤー追加ボタンを押した時

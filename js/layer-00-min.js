@@ -941,7 +941,7 @@ $(function(){
             content += "<div style='padding:0 0 0 20px'>";
             content += "<a href='https://mapwarper.h-gis.jp' target='_blank'>日本版Map Warper</a>";
             content += "</div>";
-            content += "<input type='text' class='form-control plus-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
+            content += "<input type='text' class='form-control plus-url-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
             content += '<div class="plus-div"><button type="button" class="btn btn-primary plus-btn">追加</button></div>';
         mydialog({
             id: id,
@@ -962,14 +962,14 @@ $(function(){
         plI++;
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
-        var plusUrl = $(this).parents(".dialog-base").find(".plus-input").val();
+        var plusUrl = $(this).parents(".dialog-base").find(".plus-url-input").val();
         if(plusUrl=="") return;
         if(plusUrl.indexOf("mtile.pref.miyazaki")!=-1) {
             plusUrl = plusUrl;
         }else{
             plusUrl = "./php/proxy-png.php?url=" + plusUrl;
         }
-        $(this).parents(".dialog-base").find(".plus-input").val("");
+        $(this).parents(".dialog-base").find(".plus-url-input").val("");
         plusLayer1[plI] = new ol.layer.Tile({
             title:"pulus",
             origin:"",

@@ -14,7 +14,7 @@ $(document).ajaxStop(function (){
     }
 });
 //----------------------------------------------------------
-//ハッシュをセット
+//URLにハッシュをセット
 H_COMMON.setHush = function(key,parameter){
     var href = location["href"].split("#")[0];
     var urlHash = location.hash;
@@ -127,6 +127,7 @@ H_COMMON.getHush = function() {
     if(layerJson) {
         layerJson = decodeURI(layerJson);
         layerJson = JSON.parse(layerJson);
+        console.log(layerJson);
         var maps = [map1,map2];
         for(var i = 0; i <maps.length; i++) {
             if(maps[i]===map1) {
@@ -144,6 +145,22 @@ H_COMMON.getHush = function() {
                 //var zIndex_J = Number(obj["z"]);
                 var useLayersArr;
                 var element;
+
+
+
+                if (name_J === "plusLayer") {
+                    var plusUrl = obj["pu"];
+                    var plusName = obj["pn"];
+                    var plusLayer = H_layer00.layerPlus(element.find(".top-left-div"),plusUrl,plusName);
+                    var tgtTr = element.find(".haikei-tbl tbody tr:first");
+                    tgtTr.find(".ui-slider-handle").css({
+                        left:String(opacity_J*100) + "%"
+                    });
+                    plusLayer.setOpacity(opacity_J);
+                }
+
+
+
                 for(var k = 0; k <useLayersArr.length; k++){
                     var layer = useLayersArr[k];
                     var name;
@@ -158,7 +175,6 @@ H_COMMON.getHush = function() {
                                     left:String(opacity_J*100) + "%"
                                 });
                                 tgtTr.show();
-
                                 layer.setOpacity(opacity_J);
                                 tgtTr.removeClass("tr-" + layer.getProperties()["category"]);
                             }
@@ -246,11 +262,21 @@ H_COMMON.getHushJson = function(){
         var arr1 = [];
         for(var j = 0; j <layers.length; j++){
             if(layers[j].getProperties()["title"]){
+
                 var prop = layers[j].getProperties();
                 var name = prop["name"];
                 var opacity = prop["opacity"];
                 var zIndex = prop["zIndex"];
-                var obj = {"n":name,"o":opacity,"z":zIndex};
+                var obj;
+
+                if(name==="plusLayer") {
+                    var plusName = prop["plusName"];
+                    var plusUrl = prop["plusUrl"];
+                    console.log(plusUrl);
+                    obj = {"n":name,"o":opacity,"z":zIndex,"pn":plusName,"pu":plusUrl};
+                }else{
+                    obj = {"n":name,"o":opacity,"z":zIndex};
+                }
                 arr1.push(obj)
             }
         }

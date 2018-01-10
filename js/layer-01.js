@@ -378,151 +378,26 @@ function obi_(){
 }
 var obi1 = new ol.layer.Tile(new obi_());
 var obi2 = new ol.layer.Tile(new obi_());
-
-//千葉県管内全図(大正14年)
-var mrtiba1 = new ol.layer.Tile({
-    title:"千葉県管内全図(大正14年)",
-    origin:"<a href='http://mapwarper.net/maps/20822' target='_blank' >Map Warper</a>",
-    detail:"sHigashiさんがNDLデジコレにあったパブリックドメインな大正末期頃の千葉県地図を地図タイル化したものです。" ,
-    coord:[140.28233,35.55577],
-    zoom:9,
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    extent:transformE([139.70417,34.892768,140.893444,36.113549]),
-    source: new ol.source.XYZ({
-        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/20822/{z}/{x}/{y}.png',
-        crossOrigin:"anonymous",
-        //maxZoom:19
-    })
-});
-var mrtiba2 = new ol.layer.Tile({
-    title:"千葉県管内全図(大正14年)",
-    origin:"<a href='http://mapwarper.net/maps/20822' target='_blank' >Map Warper</a>",
-    detail:"sHigashiさんがNDLデジコレにあったパブリックドメインな大正末期頃の千葉県地図を地図タイル化したものです。" ,
-    coord:[140.28233,35.55577],
-    zoom:9,
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    extent:transformE([139.70417,34.892768,140.893444,36.113549]),
-    source: new ol.source.XYZ({
-        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/20822/{z}/{x}/{y}.png',
-        crossOrigin:"anonymous",
-        //maxZoom:19
-    })
-});
-//安政改正御江戸大絵図
-var mransei1 = new ol.layer.Tile({
-    title:"安政改正御江戸大絵図",
-    origin:"<a href='http://mapwarper.net/maps/16142' target='_blank' >Map Warper</a>",
-    detail:"" ,
-    coord:[139.7515142,35.68605197],
-    zoom:14,
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    message:"1858年",
-    //extent:transformE([139.70417,34.892768,140.893444,36.113549]),
-    source: new ol.source.XYZ({
-        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/16142/{z}/{x}/{y}.png',
-        crossOrigin:"anonymous",
-        //maxZoom:19
-    })
-});
-var mransei2 = new ol.layer.Tile({
-    title:"安政改正御江戸大絵図",
-    origin:"<a href='http://mapwarper.net/maps/16142' target='_blank' >Map Warper</a>",
-    detail:"" ,
-    coord:[139.7515142,35.68605197],
-    zoom:14,
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    message:"1858年",
-    //extent:transformE([139.70417,34.892768,140.893444,36.113549]),
-    source: new ol.source.XYZ({
-        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/16142/{z}/{x}/{y}.png',
-        crossOrigin:"anonymous",
-        //maxZoom:19
-    })
-});
-//九州１Kメッシュ人口
-var mesh1000z1 = new ol.layer.Tile({
-    title:"九州１Kメッシュ人口",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:red;'></i>",
-    source: new ol.source.XYZ({
-        url:"https://mtile.pref.miyazaki.lg.jp/tile/9syuuzinkoured2/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        maxZoom:13
-    })
-});
-var mesh1000z2 = new ol.layer.Tile({
-    title:"九州１Kメッシュ人口",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:red;'></i>",
-    source: new ol.source.XYZ({
-        url:"https://mtile.pref.miyazaki.lg.jp/tile/9syuuzinkoured2/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        maxZoom:13
-    })
-});
-//九州高速道路
-var kousoku9syu1 = new ol.layer.Tile({
-    title:"九州高速道路",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-car fa-fw' style='color:red;'></i>",
-    extent:transformE([129.578874,31.011182,132.034319,34.055661]),
-    source: new ol.source.XYZ({
-        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/9syuukousoku/{z}/{x}/{-y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        maxZoom:13
-    })
-});
-var kousoku9syu2 = new ol.layer.Tile({
-    title:"九州高速道路",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-car fa-fw' style='color:red;'></i>",
-    extent:transformE([129.578874,31.011182,132.034319,34.055661]),
-    source: new ol.source.XYZ({
-        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/9syuukousoku/{z}/{x}/{-y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        maxZoom:13
-    })
-});
-
-var bingroad1 = new ol.layer.Tile({
-    folder:"child",
-    category:"test",
-    name:"bingroad",
-    title:"MS-bing実験中",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.BingMaps({
+//------------------------------------------------------------------------------
+//MSbing
+function bingroad_(){
+    this.folder = "child";
+    this.category = "test";
+    this.name = "bingroad";
+    this.title = "MS-bing実験中";
+    this.origin = "";
+    this.detail = "";
+    this.icon = "<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>";
+    this.source = new ol.source.BingMaps({
         key:"Aq19sLpEft2flnbhBLVikhnuROsQb4VKtrbooDXFk0zlWS_sVxHWVN2sZ4B3y89Z",
         culture:'ja-jp',
         imagerySet:['Road'],
         maxZoom:19
     })
-});
+}
+var bingroad1 = new ol.layer.Tile(new bingroad_());
+var bingroad2 = new ol.layer.Tile(new bingroad_());
 
-var bingroad2 = new ol.layer.Tile({
-    folder:"child",
-    category:"test",
-    name:"bingroad",
-    title:"MS-bing実験中",
-    origin:"",
-    detail:"",
-    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
-    source: new ol.source.BingMaps({
-        key:"Aq19sLpEft2flnbhBLVikhnuROsQb4VKtrbooDXFk0zlWS_sVxHWVN2sZ4B3y89Z",
-        culture:'ja-jp',
-        imagerySet:['Road'],
-        maxZoom:19
-    })
-});
 //九州北部大雨７月７日作成
 //大雨被害（日田市）
 var t0707dol1 =  new ol.layer.Tile({
@@ -537,9 +412,7 @@ var t0707dol1 =  new ol.layer.Tile({
     zoom:12,
     source: new ol.source.XYZ({
         url:"https://maps.gsi.go.jp/xyz/20170705typhoon3_0707dol/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        //maxZoom:13
+        crossOrigin:"anonymous"
     })
 });
 var t0707dol2 =  new ol.layer.Tile({
@@ -554,9 +427,7 @@ var t0707dol2 =  new ol.layer.Tile({
     zoom:12,
     source: new ol.source.XYZ({
         url:"https://maps.gsi.go.jp/xyz/20170705typhoon3_0707dol/{z}/{x}/{y}.png",
-        crossOrigin:"anonymous",
-        //minZoom :1,
-        //maxZoom:13
+        crossOrigin:"anonymous"
     })
 });
 //九州北部大雨７月７日作成UAV(ドローン)
@@ -4637,3 +4508,93 @@ function okugainobeoka_(){
 }
 var okugainobeoka_1 = new ol.layer.Tile(new okugainobeoka_());
 var okugainobeoka_2 = new ol.layer.Tile(new okugainobeoka_());
+
+
+
+//千葉県管内全図(大正14年)
+var mrtiba1 = new ol.layer.Tile({
+    title:"千葉県管内全図(大正14年)",
+    origin:"<a href='http://mapwarper.net/maps/20822' target='_blank' >Map Warper</a>",
+    detail:"sHigashiさんがNDLデジコレにあったパブリックドメインな大正末期頃の千葉県地図を地図タイル化したものです。" ,
+    coord:[140.28233,35.55577],
+    zoom:9,
+    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    extent:transformE([139.70417,34.892768,140.893444,36.113549]),
+    source: new ol.source.XYZ({
+        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/20822/{z}/{x}/{y}.png',
+        crossOrigin:"anonymous",
+        //maxZoom:19
+    })
+});
+var mrtiba2 = new ol.layer.Tile({
+    title:"千葉県管内全図(大正14年)",
+    origin:"<a href='http://mapwarper.net/maps/20822' target='_blank' >Map Warper</a>",
+    detail:"sHigashiさんがNDLデジコレにあったパブリックドメインな大正末期頃の千葉県地図を地図タイル化したものです。" ,
+    coord:[140.28233,35.55577],
+    zoom:9,
+    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    extent:transformE([139.70417,34.892768,140.893444,36.113549]),
+    source: new ol.source.XYZ({
+        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/20822/{z}/{x}/{y}.png',
+        crossOrigin:"anonymous",
+        //maxZoom:19
+    })
+});
+//安政改正御江戸大絵図
+var mransei1 = new ol.layer.Tile({
+    title:"安政改正御江戸大絵図",
+    origin:"<a href='http://mapwarper.net/maps/16142' target='_blank' >Map Warper</a>",
+    detail:"" ,
+    coord:[139.7515142,35.68605197],
+    zoom:14,
+    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    message:"1858年",
+    //extent:transformE([139.70417,34.892768,140.893444,36.113549]),
+    source: new ol.source.XYZ({
+        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/16142/{z}/{x}/{y}.png',
+        crossOrigin:"anonymous",
+        //maxZoom:19
+    })
+});
+var mransei2 = new ol.layer.Tile({
+    title:"安政改正御江戸大絵図",
+    origin:"<a href='http://mapwarper.net/maps/16142' target='_blank' >Map Warper</a>",
+    detail:"" ,
+    coord:[139.7515142,35.68605197],
+    zoom:14,
+    icon:"<i class='fa fa-map-o fa-fw' style='color:dimgrey;'></i>",
+    message:"1858年",
+    //extent:transformE([139.70417,34.892768,140.893444,36.113549]),
+    source: new ol.source.XYZ({
+        url:'./php/proxy-png.php?url=http://mapwarper.net/maps/tile/16142/{z}/{x}/{y}.png',
+        crossOrigin:"anonymous",
+        //maxZoom:19
+    })
+});
+//九州高速道路
+var kousoku9syu1 = new ol.layer.Tile({
+    title:"九州高速道路",
+    origin:"",
+    detail:"",
+    icon:"<i class='fa fa-car fa-fw' style='color:red;'></i>",
+    extent:transformE([129.578874,31.011182,132.034319,34.055661]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/9syuukousoku/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
+var kousoku9syu2 = new ol.layer.Tile({
+    title:"九州高速道路",
+    origin:"",
+    detail:"",
+    icon:"<i class='fa fa-car fa-fw' style='color:red;'></i>",
+    extent:transformE([129.578874,31.011182,132.034319,34.055661]),
+    source: new ol.source.XYZ({
+        url:"https://mtile.pref.miyazaki.lg.jp/tile/hoka/9syuukousoku/{z}/{x}/{-y}.png",
+        crossOrigin:"anonymous",
+        //minZoom :1,
+        maxZoom:13
+    })
+});
