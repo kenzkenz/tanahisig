@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Ajax</title>
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script>
+            $(function () {
+                $("#button1").on('click', function (event) {
+                    event.preventDefault();
+                    var myData = JSON.parse($("#srcjson").val());
+                    myData = JSON.stringify(myData);
+                    $.ajax({
+                        type: "POST",
+                        url: "php/jsondb-test.php",
+                        data: myData,
+                        crossDomain: false,
+                        dataType: "json",
+                        scriptCharset: 'utf-8'
+                    }).done(function (myJson) {
+                        $('#outuid').append(JSON.stringify(myJson) + '<br>');
+                    }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    });
+                });
+                
+                $("#button2").on('click', function (event) {
+                    event.preventDefault();
+                    var myData = JSON.parse($("#uid").val());
+                    myData = JSON.stringify(myData);
+                    $.ajax({
+                        type: "POST",
+                        url: "php/jsondb-test.php",
+                        data: myData,
+                        crossDomain: false,
+                        dataType: "json",
+                        scriptCharset: 'utf-8'
+                    }).done(function (myJson) {
+                        $('#outjson').append(JSON.stringify(myJson) + '<br>');
+                    }).fail(function (XMLHttpRequest, textStatus, errorThrown) {
+                        alert(errorThrown);
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        
+        送信するJSON：<br>
+        <textarea id="srcjson" cols="50" rows="10">{
+ "type": "FeatureCollection",
+ "features": [
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     130.8614973291016,
+     31.938459927890676
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgb(0,0,255)",
+    "_icon": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     131.22816603027348,
+     31.948947909608236
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgb(0,0,255)",
+    "_icon": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     131.0935835107422,
+     31.73312132290293
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgb(0,0,255)",
+    "_icon": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     130.89170973144536,
+     31.778661884288752
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgb(0,0,255)",
+    "_icon": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     131.0207990869141,
+     32.029315982473676
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgb(0,0,255)",
+    "_icon": null
+   }
+  },
+  {
+   "type": "Feature",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       130.97273390136723,
+       31.898827863678903
+      ],
+      [
+       131.28859083496096,
+       31.888334165333475
+      ],
+      [
+       131.07573072753908,
+       31.612739900330766
+      ],
+      [
+       130.81343214355473,
+       31.77515955970101
+      ],
+      [
+       130.97273390136723,
+       31.898827863678903
+      ]
+     ]
+    ]
+   },
+   "properties": {
+    "_fillColor": "rgba(192,192,192,0.5)",
+    "_color": "rgba(0,0,255,0.7)",
+    "_weight": 1
+   }
+  }
+ ]
+}</textarea>
+        <br>
+        <button id="button1">JSONを送信してUIDを発行</button><br>
+        <div id="outuid"></div>
+        <br>
+        <br>
+        <input id ="uid" type="text" size="50" value='{"uid": "2c01d8088abe3cc108a717f07ca708c7"}'><button id="button2">UIDでJSON取得</button><br />
+        <div id="outjson"></div>
+    </body>
+</html>

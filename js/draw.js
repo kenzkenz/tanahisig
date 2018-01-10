@@ -162,6 +162,8 @@ $(function() {
     menu += "<ul id='drawContextmenu-file-ul' class='dropdown-menu my-toggle-ul'>";
     menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">csvの場合、「変換元住所」<br>の列があると座標を取得</span>'>ファイル読込</a></li>";
     menu += "<hr class='my-hr'>";
+    menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">描画した全てをひなたGISサーバに保存</span>'>サーバー保存</a></li>";
+    menu += "<hr class='my-hr'>";
     menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">描画した全てをローカルに保存</span>'>geojson保存</a></li>";
     menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">点だけをローカルに保存</span>'>csv保存</a></li>";
     menu += "<li><a data-toggle='tooltip' data-placement='bottom' title='<span style=\"font-size:10px;\">描画した全てをネット上に保存</span>'>gist保存</a></li>";

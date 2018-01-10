@@ -56,7 +56,27 @@ H_COMMON.getHush = function() {
         var kvAr = hashAr[i].split("=");
         hashObj[kvAr[0]]=kvAr[1]
     }
+    //うちのサーバー------------------------------------------
+    var uid = hashObj["uid"];
+    if(uid){
+        $.ajax({
+            type: "POST",
+            url: "php/jsondb.php",
+            dataType: "json",
+            data: {
+                "uid":uid,
+                "drawnGeojson":null
+            }
+        }).done(function (json) {
+            json = JSON.parse(json);
+            var targetGeojson = new ol.format.GeoJSON().readFeatures(json, {featureProjection: 'EPSG:3857'});
+            H_DRAW.drawLayer.getSource().addFeatures(targetGeojson);
+        }).fail(function () {
+            console.log("エラー")
+        });
+    }
     //gist--------------------------------------------------
+    /*
     var gist = hashObj["g"];
     if(gist) {
         $.ajax({
@@ -94,6 +114,7 @@ H_COMMON.getHush = function() {
             console.log("失敗!");
         });
     }
+    */
     //2画面---------------------------------------------------
     var dual = hashObj["d"];
     if(dual){

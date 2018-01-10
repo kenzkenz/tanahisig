@@ -26,6 +26,9 @@ $(function() {
             case "ファイル読込":
                 fileLoad();
                 break;
+            case "サーバー保存":
+                serverSave();
+                break;
             case "geojson保存":
                 geojsonSave();
                 break;
@@ -279,6 +282,32 @@ $(function() {
         H_DRAW.drawSourceChangeFlg = false;
     }
     //------------------------------------------------------------------------------------------------------------------
+    //サーバー保存
+    function serverSave(){
+        var features = H_DRAW.drawLayer.getSource().getFeatures();
+        var drawnGeojson = new ol.format.GeoJSON().writeFeatures(features, {
+            featureProjection: "EPSG:3857"
+        });
+        drawnGeojson = JSON.stringify(JSON.parse(drawnGeojson),null,1);
+        $.ajax({
+            type: "POST",
+            url: "php/jsondb.php",
+            dataType: "json",
+            data: {
+                "uid":null,
+                "drawnGeojson": drawnGeojson
+            }
+        }).done(function (json) {
+            if(json["uid"]){
+                H_COMMON.setHush("uid",json["uid"]);
+                H_DRAW.drawSourceChangeFlg = false;
+                alert("サーバーに保存しました。URLで共有できます。")
+            }
+        }).fail(function () {
+            console.log("エラー")
+        });
+    }
+    //------------------------------------------------------------------------------------------------------------------
     //geojson保存
     function geojsonSave(){
         var features = H_DRAW.drawLayer.getSource().getFeatures();
@@ -422,8 +451,8 @@ $(function() {
                 "target":"_blank"
             });
 
-            var gistId = gistUrl.split("/")[gistUrl.split("/").length-1];
-            H_COMMON.setHush("g",gistId);
+            //var gistId = gistUrl.split("/")[gistUrl.split("/").length-1];
+            //H_COMMON.setHush("g",gistId);
 
             var msg = "<i class='fa fa-github-alt fa-fw' style='color:rgba(0,0,0,1.0);'></i>gistに保存しました。";
             msg += "<br>gistを削除するときはgist画面の右上のDeleteで！";
