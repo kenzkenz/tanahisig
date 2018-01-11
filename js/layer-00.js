@@ -466,7 +466,33 @@ $(function(){
         var mapObj = funcMaps($(this));
         var mapName = mapObj["name"];
         var layerVal = $(this).parents("tr").find("input").val();
+
         console.log(layerVal);
+        //--------------------------------------------
+        if(layerVal==="pluslayer") {
+            var dialog = layerPlusDialog($(this));
+            dialog = $("#mydialog-" + dialog);
+            var layers = eval(mapName).getLayers().getArray();
+            for(var i = 0; i <layers.length; i++){
+                if(layers[i].getProperties()["plusName"]) {
+                    var layerPlusName = layers[i].getProperties()["plusName"];
+                    var inputPlusName = $(this).parents("tr").find("input").data("plusname");
+                    if(layerPlusName===inputPlusName){
+                        var plusName = layers[i].getProperties()["plusName"];
+                        var plusUrl = layers[i].getProperties()["plusUrl"];
+                        dialog.find(".plus-name-input").val(plusName);
+                        dialog.find(".plus-url-input").val(plusUrl);
+                        dialog.find(".plus-btn").prop("disabled","disabled");
+                        dialog.find(".plus-edit-btn").prop("disabled",false);
+                        dialog.find(".plus-delete-btn").prop("disabled",false);
+
+                        dialog.attr("data-plusname",plusName)
+                    }
+                }
+            }
+            return false;
+        }
+        //--------------------------------------------
         var layer = mapObj["layers"][layerVal];
         if(!Array.isArray(layer)){
             var layerName = layer.getProperties()["name"];
@@ -478,9 +504,6 @@ $(function(){
         var targetDialog = $("#mydialog-" + mapName + "-info-dialog-" + layerName);
         console.log(targetDialog.length);
         if(targetDialog.length) {//既に作成すみのとき
-            //dialogbaseMaxzindex(targetDialog);
-            //targetDialog.css({"display":"block"});
-            //dialogbaseMaxzindex(targetDialog);
             targetDialog.show(function(){
                 dialogbaseMaxzindex(targetDialog);
             });
@@ -500,7 +523,6 @@ $(function(){
         content += "<tr><td>説明</td><td class='detail-td'>" + prop["detail"] + "</td></tr>";
         content += "</table>";
         content += "<input type='hidden' class='layer-id' value='" + $(this).parents("tr").find("input").val() + "'>";
-            //$(this).parents("tr").find("input").val();
 
         if(prop["detail2"]) content += prop["detail2"];
 
@@ -965,17 +987,37 @@ $(function(){
     //------------------------------------------------------------
     //プラスアイコンを押した時
     $("body").on("click",".dialog-plus",function(){
-        var mapObj = funcMaps($(this));
+        //layerPlusDialog($(this));
+        var dialog = layerPlusDialog($(this));
+        dialog = $("#mydialog-" + dialog);
+        dialog.find(".plus-name-input").val("");
+        dialog.find(".plus-url-input").val("");
+        dialog.find(".plus-btn").prop("disabled",false);
+        dialog.find(".plus-edit-btn").prop("disabled","disabled");
+        dialog.find(".plus-delete-btn").prop("disabled","disabled");
+        dialog.attr("data-plusname","");
+        return false;
+    });
+    function layerPlusDialog(elem){
+        var mapObj = funcMaps(elem);
         var id = "plus-dialog-" + mapObj["name"];
-        var content = "地図タイルのURLを入力します。<br>・国土地理院標準地図の例：<br>　http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
-            content += "<br>・国土地理院空中写真（1936年頃：東京都23区）の例<br>　http://cyberjapandata.gsi.go.jp/xyz/ort_riku10/{z}/{x}/{y}.png";
-            content += "<br>・タイルを配信しているサイト";
-            content += "<div style='padding:0 0 0 20px'>";
-            content += "<a href='https://mapwarper.h-gis.jp' target='_blank'>日本版Map Warper</a>";
-            content += "</div>";
-            content += "<input type='text' class='form-control plus-url-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
-            content += "<input type='text' class='form-control plus-name-input' placeholder='名前'>";
-            content += '<div class="plus-div"><button type="button" class="btn btn-primary plus-btn">追加</button></div>';
+        var content = "地図タイルのURLを入力します。";
+        /*
+        content += "<br>・国土地理院標準地図の例：<br>　http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png";
+        content += "<br>・国土地理院空中写真（1936年頃：東京都23区）の例<br>　http://cyberjapandata.gsi.go.jp/xyz/ort_riku10/{z}/{x}/{y}.png";
+        content += "<br>・タイルを配信しているサイト";
+        content += "<div style='padding:0 0 0 20px'>";
+        content += "<a href='https://mapwarper.h-gis.jp' target='_blank'>日本版Map Warper</a>";
+        content += "</div>";
+        */
+        content += "<input type='text' class='form-control plus-url-input' placeholder='例：http://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png'>";
+        content += "名前を入力します。";
+        content += "<input type='text' class='form-control plus-name-input' placeholder='名前'>";
+        content += "<div class='plus-div'>";
+        content += "<div class='plus-div'><button type='button' class='btn btn-primary btn-sm plus-btn'>追加</button>";
+        content += " <button type='button' class='btn btn-primary btn-sm plus-edit-btn' disabled='disabled'>編集</button>";
+        content += " <button type='button' class='btn btn-primary btn-sm plus-delete-btn' disabled='disabled'>削除</button>";
+        content += "</div>";
         mydialog({
             id: id,
             class: "plus-dialog",
@@ -987,8 +1029,8 @@ $(function(){
             //hide:true,
             //plus:true
         });
-        return false;
-    });
+        return id;
+    }
     //------------------------------------------------------------
     //レイヤー追加ボタンを押した時
     H_layer00.layerPlus = function(elem,plusUrl,plusName){
@@ -1037,7 +1079,7 @@ $(function(){
 
         var htmlChar = "<tr class='plus-tr'>";
         //htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='" + plI + "' checked> <i class='fa fa-map-o fa-fw' style='color:red;'></i> 追加レイヤー" + plI + "</label></td>";
-        htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='" + plI + "' checked> <i class='fa fa-map-o fa-fw' style='color:red;'></i> " + plusName + "</label></td>";
+        htmlChar += "<td><label><input type='checkbox' name='haikei-check-plus' value='pluslayer' data-plusname='" + plusName + "' checked> <i class='fa fa-thumbs-up fa-fw fa-lg' style='color:rgb(51,122,183);'></i> " + plusName + "</label></td>";
         htmlChar += "<td class='td-slider'><div class='haikei-slider'></div></td>";
         htmlChar += "<td class='td-sort' title='ドラッグします。'><i class='fa fa-bars fa-lg'></i></td>";
         htmlChar += "<td class='td-info'><i class='fa fa-info-circle fa-lg primary'></i></td>";
@@ -1074,13 +1116,67 @@ $(function(){
         return plusLayer;
     };
     $("body").on("click",".plus-btn",function() {
-        var plusUrl = $(this).parents(".dialog-base").find(".plus-url-input").val();
-        var plusName = $(this).parents(".dialog-base").find(".plus-name-input").val();
-        H_layer00.layerPlus($(this),plusUrl,plusName)
+        var dialog = $(this).parents(".dialog-base");
+        var plusUrl = dialog.find(".plus-url-input").val();
+        var plusName = dialog.find(".plus-name-input").val();
+        H_layer00.layerPlus($(this),plusUrl,plusName);
         H_COMMON.setHush("l",H_COMMON.getHushJson());
+        dialog.find(".plus-url-input").val("");
+        dialog.find(".plus-name-input").val("");
+        dialog.hide(500);
     });
     //------------------------------------------------------------
-    //レイヤー追加ボタンを押した時
+    //レイヤー追加の編集ボタンを押した時
+    $("body").on("click",".plus-edit-btn",function() {
+        console.log(9999999)
+        var mapObj = funcMaps($(this));
+        var mapName = mapObj["name"];
+        var dialog = $(this).parents(".dialog-base");
+        var dialogPlusName = dialog.data("plusname");
+        var inputPlusUrl = dialog.find(".plus-url-input").val();
+        var inputPlusName = dialog.find(".plus-name-input").val();
+
+        var layers = eval(mapName).getLayers().getArray();
+        for(var i = 0; i <layers.length; i++){
+            if(layers[i].getProperties()["plusName"]) {
+                var layerPlusName = layers[i].getProperties()["plusName"];
+                if(layerPlusName===dialogPlusName){
+                    console.log(layers[i]);
+                    layers[i]["D"]["plusName"] = inputPlusName;
+                    layers[i]["D"]["plusUrl"] = inputPlusUrl;
+                    //$("#" + mapName).find()
+                    H_COMMON.setHush("l",H_COMMON.getHushJson());
+                    alert("変更を反映するには再起動してください。");
+                    break;
+                }
+            }
+        }
+    });
+    //------------------------------------------------------------
+    //レイヤー追加の削除ボタンを押した時
+    $("body").on("click",".plus-delete-btn",function() {
+        console.log("削除");
+        var mapObj = funcMaps($(this));
+        var mapName = mapObj["name"];
+        var dialog = $(this).parents(".dialog-base");
+        var dialogPlusName = dialog.data("plusname");
+        var layers = eval(mapName).getLayers().getArray();
+        for(var i = 0; i <layers.length; i++){
+            if(layers[i].getProperties()["plusName"]) {
+                var layerPlusName = layers[i].getProperties()["plusName"];
+                if(layerPlusName===dialogPlusName){
+                    console.log(layers[i]);
+                    layers.splice(i,1);
+                    //$("#" + mapName).find()
+                    H_COMMON.setHush("l",H_COMMON.getHushJson());
+                    alert("変更を反映するには再起動してください。");
+                    break;
+                }
+            }
+        }
+    });
+    //------------------------------------------------------------
+    //
     $("body").on("click",".crop-btn",function() {
         alert("実験中！");
         //var mapObj = funcMaps($(this));

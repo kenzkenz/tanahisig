@@ -312,7 +312,7 @@ $(function() {
                 map1.addInteraction(snap);
                 transform2.select(H_DRAW.rightClickedFeatyure);
                 transform2.setVisible(true);
-                console.log(H_DRAW.rightClickedFeatyure)
+                console.log(H_DRAW.rightClickedFeatyure);
                 //------------------------------------------------
                 prop = feature.getProperties();
                 geomType = feature.getGeometry().getType();
